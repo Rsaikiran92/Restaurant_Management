@@ -1,22 +1,23 @@
 import express from "express";
-import mongoose from "mongoose";
-import userRoute from "./routes/userRoute";
+import dotenv from "dotenv";
+import cors from "cors";
+import connectDB from "./config/db.js";
+import userRouter from "./routes/userRoute.js";
+
+dotenv.config();
+connectDB();
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
+app.use("/api/users", userRouter);
 
-// Routes
-app.use("/", userRoute);
+app.get("/", (req, res) => {
+  res.send("API Running");
+});
 
+const PORT = process.env.PORT || 5000;
 
-app.listen(5000,async()=>{
-    try {
-        await mongoose.connect("mongodb+srv://saikiran92rk_db_user:X7KxuOshEND7aKjA@cluster0.zxcb5vm.mongodb.net/?appName=Cluster0");
-        console.log("Connected success")
-    } catch (error) {
-        console.log("not able to connect to data base")
-    }
-    console.log("Server running")
-})
+app.listen(PORT, () => console.log(`Server running on ${PORT}`));

@@ -1,13 +1,20 @@
-import express from "express"
+import express from "express";
+import {
+  createUser,
+  getUsers,
+  updateUser,
+  deleteUser,
+} from "../controllers/userController.js";
+import { auth, isAdmin } from "../middleware/authMiddleware.js"
 
-const userRoute=express.Router();
 
-userRoute.get("/",async()=>{
-    try {
-        console.log("fod")
-    } catch (error) {
-        console.log("error")
-    }
-})
+const userRouter = express.Router();
 
-export default userRoute
+
+userRouter
+.post("/",createUser)
+.get("/", auth, isAdmin, getUsers)
+.put("/:id", auth, isAdmin, updateUser)
+.delete("/:id", auth, isAdmin, deleteUser);
+
+export default userRouter
