@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import userRouter from "./routes/userRoute.js";
+import menuRouter from "./routes/menuRoute.js";
+import authRouter from "./routes/authRoute.js";
 
 dotenv.config();
 connectDB();
@@ -11,8 +13,9 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-
+app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
+app.use("/api/menu", menuRouter);
 
 app.get("/", (req, res) => {
   res.send("API Running");
