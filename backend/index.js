@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import userRouter from "./routes/userRoute.js";
 import menuRouter from "./routes/menuRoute.js";
 import authRouter from "./routes/authRoute.js";
+import orderRouter from "./routes/orderRoute.js";
 
 dotenv.config();
 connectDB();
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/menu", menuRouter);
+app.use("/api/orders",orderRouter);
 
 app.get("/", (req, res) => {
   res.send("API Running");
