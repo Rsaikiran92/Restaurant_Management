@@ -2,6 +2,14 @@ import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
   {
+    orderNumber: {
+      type: Number,
+    },
+    orderType: {
+      type: String,
+      enum: ["dine-in", "takeaway"],
+      required: true,
+    },
     tableNumber: {
       type: Number,
       required: true,
