@@ -15,11 +15,12 @@ import Navbar from "../src/components/Navbar"
 
 function App() {
   return (
-     <Theme appearance="light">
+    <Theme appearance="light">
+      
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-
+        
         <Route
           path="/admin"
           element={
@@ -33,6 +34,7 @@ function App() {
           path="/waiter"
           element={
             <PrivateRoute role="waiter">
+              <Navbar/>
               <WaiterDashboard />
             </PrivateRoute>
           }
@@ -42,7 +44,7 @@ function App() {
           path="/kitchen"
           element={
             <PrivateRoute role="kitchen">
-              <Navbar/>
+              
               <KitchenDashboard />
             </PrivateRoute>
           }

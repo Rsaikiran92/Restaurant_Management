@@ -131,7 +131,7 @@ const Login = () => {
             {/* <InputLeftElement children={<FaEnvelope />} color="white" /> */}
             <Input
               placeholder="Email"
-              color="white"
+            
               onChange={(e) =>
                 setForm({ ...form, email: e.target.value })
               }
@@ -143,7 +143,7 @@ const Login = () => {
             <Input
               type="password"
               placeholder="Password"
-              color="white"
+              
               onChange={(e) =>
                 setForm({ ...form, password: e.target.value })
               }
