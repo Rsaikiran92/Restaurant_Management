@@ -1,0 +1,127 @@
+.navbar {
+  /* background: #3d1a00; */
+  background: linear-gradient(135deg, #7c3d0a 0%, #b84c00 100%);
+  padding: 5px 20px;
+  box-shadow: 0 2px 12px rgba(120, 50, 0, 0.3);
+  flex-shrink: 0;
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 58px;
+  gap: 12px;
+}
+
+/* ── Left: logo ── */
+.navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.navbar__logo-box {
+  width: 36px;
+  height: 36px;
+  background: #b84c00;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar__title {
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.navbar__subtitle {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 11px;
+}
+
+/* ── Center: nav pills ── */
+.navbar__tabs {
+  display: flex;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.22);
+  border-radius: 10px;
+  padding: 3px;
+}
+
+.navbar__tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 13px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 400;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.68);
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+  position: relative;
+}
+
+.navbar__tab--active {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  font-weight: 600;
+}
+
+.navbar__tab:not(.navbar__tab--active):hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.navbar__tab-badge {
+  background: #ff6b35;
+  color: #fff;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  min-width: 16px;
+  text-align: center;
+}
+
+/* ── Right: actions ── */
+.navbar__right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.navbar__pending-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.navbar__avatar {
+  width: 34px;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+}

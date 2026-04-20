@@ -1,0 +1,112 @@
+.sidebar {
+  /* background: #3d1a00; */
+  background: linear-gradient(160deg, #7c3d0a 0%, #b84c00 55%, #d4620a 100%);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.22s ease;
+  overflow: hidden;
+  flex-shrink: 0;
+  height: 90vh;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.sidebar--open  { width: 224px; }
+.sidebar--closed { width: 56px; }
+
+/* ── Nav ── */
+.sidebar__nav {
+  flex: 1;
+  padding: 10px 7px;
+  overflow-y: auto;
+}
+
+.sidebar__group {
+  margin-bottom: 6px;
+}
+
+.sidebar__group-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.28);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 8px 8px 3px;
+}
+
+.sidebar__nav-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 2px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.58);
+  transition: background 0.12s, color 0.12s;
+  position: relative;
+}
+
+.sidebar--open  .sidebar__nav-btn { gap: 10px; padding: 9px 10px; justify-content: flex-start; }
+.sidebar--closed .sidebar__nav-btn { gap: 0;  padding: 9px 0;  justify-content: center; }
+
+.sidebar__nav-btn--active {
+  background: #b84c00;
+  color: #fff;
+}
+
+.sidebar__nav-btn:not(.sidebar__nav-btn--active):hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.sidebar__nav-icon {
+  flex-shrink: 0;
+  display: flex;
+}
+
+.sidebar__nav-label {
+  font-size: 13px;
+  flex: 1;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.sidebar__nav-btn--active .sidebar__nav-label { font-weight: 600; }
+
+.sidebar__cart-badge {
+  background: #ff6b35;
+  color: #fff;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  min-width: 16px;
+  text-align: center;
+}
+
+/* ── Collapse toggle ── */
+.sidebar__collapse {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 14px;
+  background: transparent;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 11px;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.sidebar--open  .sidebar__collapse { justify-content: flex-end; }
+.sidebar--closed .sidebar__collapse { justify-content: center; }
+
+.sidebar__collapse-icon {
+  transition: transform 0.2s;
+}
+
+.sidebar--open  .sidebar__collapse-icon { transform: rotate(180deg); }
+.sidebar--closed .sidebar__collapse-icon { transform: rotate(0deg); }

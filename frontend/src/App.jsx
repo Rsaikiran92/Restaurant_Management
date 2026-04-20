@@ -4,22 +4,23 @@ import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./pages/Login";
+
 import AdminDashboard from "./pages/AdminDashboard";
 import WaiterDashboard from "./pages/WaiterDashboard";
 import KitchenDashboard from "./pages/KitchenDashboard";
 import FrontDeskDashboard from "./pages/FrontDeskDashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import { Theme } from '@chakra-ui/react';
-import Navbar from "../src/components/Navbar"
+import Navbar from './components/Navbar/Navbar';
+import Sidebar from './components/Sidebar/Sidebar';
+import Login from './pages/Login/Login';
 
 function App() {
   return (
     <Theme appearance="light">
-      
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Login/>} />
         
         <Route
           path="/admin"
@@ -35,7 +36,7 @@ function App() {
           element={
             <PrivateRoute role="waiter">
               <Navbar/>
-              <WaiterDashboard />
+              <Sidebar/>
             </PrivateRoute>
           }
         />
