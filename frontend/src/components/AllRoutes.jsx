@@ -3,6 +3,7 @@ import PrivateRoute from "./PrivateRoute";
 import OrderPanel from "../pages/OrderPanel/OrderPanel";
 import Login from "../pages/Login/Login";
 import Navbar from "./Navbar/Navbar";
+import Dashboard from "../pages/Dashboard/Dashboard";
 
 function AllRoutes() {
   return (
@@ -15,7 +16,14 @@ function AllRoutes() {
               </PrivateRoute>
             }
           /> */}
-
+      <Route
+        path="/dashboard"
+        element={
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        }
+      />
       <Route
         path="/takeaway"
         element={
@@ -28,7 +36,7 @@ function AllRoutes() {
         path="/dine"
         element={
           <PrivateRoute>
-            <OrderPanel  />
+            <OrderPanel />
           </PrivateRoute>
         }
       />
