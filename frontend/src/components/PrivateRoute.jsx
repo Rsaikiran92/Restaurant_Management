@@ -1,16 +1,10 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
-const PrivateRoute = ({ children, role }) => {
+const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
-  const userRole = localStorage.getItem("role");
-
-  if (!token) return <Navigate to="/" />;
-
-  if (role && userRole !== role) {
-    return <Navigate to="/" />;
-  }
-
-  return children;
+  
+  // if (!token) return <Navigate to="/login" />;
+  return <Outlet/>;
 };
 
 export default PrivateRoute;

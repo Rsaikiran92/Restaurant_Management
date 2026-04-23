@@ -18,11 +18,7 @@ import AllRoutes from "./components/AllRoutes";
 function App() {
   return (
     <Theme appearance="light">
-      <Navbar/>
-      <div style={{display:"flex"}}>
-        <Sidebar />
-        <AllRoutes />
-      </div>
+      <AllRoutes />
     </Theme>
   );
 }

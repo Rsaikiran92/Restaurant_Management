@@ -6,6 +6,8 @@ import {
   Utensils,
   ClipboardList,
   Users,
+  SquareMenu,
+  Menu
 } from "lucide-react";
 import "./Sidebar.css";
 import { NAV_GROUPS } from "../../data/constants";

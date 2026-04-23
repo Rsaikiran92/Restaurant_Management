@@ -1,7 +1,9 @@
 .dashboard {
   padding: 20px;
   overflow-y: auto;
+  height: 90vh;
   flex: 1;
+  
 }
 
 .dashboard__greeting {

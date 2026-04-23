@@ -85,6 +85,20 @@ export const NAV_GROUPS = [
     items: [{ id: "dashboard", label: "Dashboard", icon: "LayoutDashboard" }],
   },
   {
+    key: "users",
+    label: "Users",
+    items: [
+      { id: "users", label: "users", icon: "Users"  },
+    ],
+  },
+  {
+    key: "Menu",
+    label: "Menu",
+    items: [
+      { id: "Menu", label: "Menu", icon: "Menu"  },
+    ],
+  },
+  {
     key: "place",
     label: "Place Orders",
     items: [
