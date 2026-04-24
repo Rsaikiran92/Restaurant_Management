@@ -352,3 +352,12 @@
   opacity: 0.45;
   cursor: not-allowed;
 }
+@media (max-width: 768px) {
+  .order-panel{
+    flex-direction: column;
+    height: 90vh;
+  }
+  .order-panel__menu {
+   
+  }
+}

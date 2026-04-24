@@ -1,0 +1,402 @@
+/* ══════════════════════════════════════════
+   Shared Admin Page Styles
+   Used by: ManageUsers, ManageMenu, ManageTables
+═══════════════════════════════════════════ */
+
+/* ── Page Shell ── */
+.admin-page {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ── Page Header ── */
+.admin-page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.admin-page__title-block {}
+
+.admin-page__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2d1a00;
+  line-height: 1.2;
+}
+
+.admin-page__subtitle {
+  font-size: 13px;
+  color: #a0704a;
+  margin-top: 3px;
+}
+
+.admin-page__add-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  background: #b84c00;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.admin-page__add-btn:hover { background: #9c3e00; }
+
+/* ── Search & Filter Bar ── */
+.admin-page__toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.admin-page__search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1.5px solid #e8c9a0;
+  border-radius: 9px;
+  padding: 7px 12px;
+  flex: 1;
+  min-width: 180px;
+  transition: border-color 0.15s;
+}
+.admin-page__search:focus-within { border-color: #b84c00; }
+
+.admin-page__search input {
+  border: none;
+  outline: none;
+  font-size: 13px;
+  background: transparent;
+  width: 100%;
+  color: #2d1a00;
+  font-family: inherit;
+}
+
+.admin-page__filter-select {
+  padding: 7px 12px;
+  border: 1.5px solid #e8c9a0;
+  border-radius: 9px;
+  font-size: 13px;
+  background: #fff;
+  color: #2d1a00;
+  outline: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+.admin-page__filter-select:focus { border-color: #b84c00; }
+
+/* ── Data Table ── */
+.admin-table-wrap {
+  background: #fff;
+  border: 1px solid #f0d5b0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  overflow-x: auto;
+}
+
+.admin-table thead {
+  background: #fdf0e0;
+}
+
+.admin-table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #7c3d0a;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid #f0d5b0;
+  white-space: nowrap;
+}
+
+.admin-table td {
+  padding: 13px 16px;
+  color: #2d1a00;
+  border-bottom: 1px solid #faf0e4;
+  vertical-align: middle;
+}
+
+.admin-table tbody tr:last-child td { border-bottom: none; }
+
+.admin-table tbody tr:hover { background: #fffbf6; }
+
+/* action buttons inside table */
+.admin-table__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-table__btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  border: 1px solid;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, color 0.12s;
+  font-family: inherit;
+}
+
+.admin-table__btn--edit {
+  background: #e3f2fd;
+  border-color: #90caf9;
+  color: #1565c0;
+}
+.admin-table__btn--edit:hover { background: #bbdefb; }
+
+.admin-table__btn--delete {
+  background: #fdecea;
+  border-color: #ef9a9a;
+  color: #c62828;
+}
+.admin-table__btn--delete:hover { background: #ffcdd2; }
+
+/* empty state */
+.admin-table__empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: #c09060;
+  font-size: 14px;
+}
+
+/* ── Status Pills ── */
+.admin-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.admin-pill--active   { background: #e8f5e9; color: #2e7d32; }
+.admin-pill--inactive { background: #f5f5f5; color: #757575; }
+.admin-pill--available{ background: #e8f5e9; color: #2e7d32; }
+.admin-pill--occupied { background: #fdecea; color: #c62828; }
+.admin-pill--reserved { background: #fff3e0; color: #e65100; }
+
+/* ══════════════════════════════════════════
+   Modal
+═══════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 10, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: overlayIn 0.18s ease;
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 20px 60px rgba(60, 20, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+  from { transform: scale(0.95) translateY(8px); opacity: 0; }
+  to   { transform: scale(1)    translateY(0);   opacity: 1; }
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid #f0d5b0;
+}
+
+.modal__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2d1a00;
+}
+
+.modal__close {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid #e8c9a0;
+  background: #fff8f0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a0704a;
+  transition: background 0.12s;
+}
+.modal__close:hover { background: #fce8d8; color: #7c3d0a; }
+
+.modal__body {
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 20px;
+  border-top: 1px solid #f0d5b0;
+}
+
+/* ── Form Fields (inside modal) ── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #5a2d0c;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 9px 12px;
+  border: 1.5px solid #e8c9a0;
+  border-radius: 9px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #2d1a00;
+  background: #fdf8f3;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #b84c00;
+  box-shadow: 0 0 0 3px rgba(184, 76, 0, 0.1);
+  background: #fff;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ── Modal Buttons ── */
+.btn-cancel {
+  padding: 8px 18px;
+  border-radius: 9px;
+  border: 1.5px solid #e8c9a0;
+  background: #fff;
+  color: #6b3d1e;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s;
+}
+.btn-cancel:hover { background: #fdf8f3; }
+
+.btn-save {
+  padding: 8px 22px;
+  border-radius: 9px;
+  border: none;
+  background: #b84c00;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.btn-save:hover { background: #9c3e00; }
+
+/* ── Delete confirm modal ── */
+.modal--confirm .modal__body {
+  text-align: center;
+  padding: 28px 24px;
+  align-items: center;
+}
+
+.modal--confirm .confirm-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #fdecea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.modal--confirm .confirm-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #2d1a00;
+  margin-bottom: 6px;
+}
+
+.modal--confirm .confirm-desc {
+  font-size: 13px;
+  color: #a0704a;
+  line-height: 1.6;
+}
+
+.btn-delete {
+  padding: 8px 22px;
+  border-radius: 9px;
+  border: none;
+  background: #c62828;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.btn-delete:hover { background: #b71c1c; }

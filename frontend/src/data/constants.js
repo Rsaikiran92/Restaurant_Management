@@ -115,3 +115,13 @@ export const NAV_GROUPS = [
     ],
   },
 ];
+
+
+export const SEED_USERS = [
+  { id: 1, name: "Admin",      email: "admin@spice.in",     role: "admin",   password: "admin123", status: "active"   },
+  { id: 2, name: "Front Desk", email: "frontdesk@spice.in", role: "desk",    password: "desk123",  status: "active"   },
+  { id: 3, name: "Manager",    email: "manager@spice.in",   role: "manager", password: "mgr123",   status: "active"   },
+  { id: 4, name: "Rajan",      email: "rajan@spice.in",     role: "waiter",  password: "wait123",  status: "active"   },
+  { id: 5, name: "Priya",      email: "priya@spice.in",     role: "waiter",  password: "wait123",  status: "active"   },
+  { id: 6, name: "Arjun",      email: "arjun@spice.in",     role: "waiter",  password: "wait123",  status: "inactive" },
+];
