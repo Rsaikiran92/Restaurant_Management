@@ -6,6 +6,7 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import MainLayout from "./MainLayout";
 import ManageUsers from "../pages/ManageUsers/ManageUsers";
 import ManageMenu from "../pages/ManageMenu/ManageMenu";
+import Menu from "../pages/Menu/Menu";
 
 function AllRoutes() {
   return (
@@ -18,7 +19,7 @@ function AllRoutes() {
           <Route path="/menu" element={<ManageMenu/>} />
           <Route path="/takeaway" element={<OrderPanel type="takeaway" />} />
           <Route path="/dine" element={<OrderPanel />} />
-        
+         <Route path="/tkList" element={<Menu/>} />
         </Route>
       </Route>
     </Routes>

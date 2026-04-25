@@ -4,18 +4,18 @@ import "./OrderPanel.css";
 import { MENU, CATS, TABLES, WAITERS } from "../../data/constants";
 
 export default function OrderPanel({ type, onPlace }) {
-  const [cat,    setCat]   = useState("All");
-  const [query,  setQuery] = useState("");
-  const [name,   setName]  = useState("");
-  const [phone,  setPhone] = useState("");
-  const [table,  setTable] = useState("T-1");
-  const [waiter, setWaiter]= useState("Rajan");
-  const [ cart, setCart]=useState([])
+  const [cat, setCat] = useState("All");
+  const [query, setQuery] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [table, setTable] = useState("T-1");
+  const [waiter, setWaiter] = useState("Rajan");
+  const [cart, setCart] = useState([]);
 
   const filteredMenu = MENU.filter(
     (m) =>
       (cat === "All" || m.category === cat) &&
-      m.name.toLowerCase().includes(query.toLowerCase())
+      m.name.toLowerCase().includes(query.toLowerCase()),
   );
 
   const addItem = (item) =>
@@ -28,14 +28,17 @@ export default function OrderPanel({ type, onPlace }) {
 
   const updateQty = (id, delta) =>
     setCart((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, qty: c.qty + delta } : c)).filter((c) => c.qty > 0)
+      prev
+        .map((c) => (c.id === id ? { ...c, qty: c.qty + delta } : c))
+        .filter((c) => c.qty > 0),
     );
 
-  const subtotal  = cart.reduce((s, c) => s + c.price * c.qty, 0);
-  const gst       = Math.round(subtotal * 0.05);
-  const total     = subtotal + gst;
-  const totalQty  = cart.reduce((s, c) => s + c.qty, 0);
-  const canPlace  = cart.length > 0 && (type === "dine" ? table && waiter : name.trim());
+  const subtotal = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  const gst = Math.round(subtotal * 0.05);
+  const total = subtotal + gst;
+  const totalQty = cart.reduce((s, c) => s + c.qty, 0);
+  const canPlace =
+    cart.length > 0 && (type === "dine" ? table && waiter : name.trim());
 
   const handlePlace = () => {
     onPlace({ name, phone, table, waiter });
@@ -45,10 +48,8 @@ export default function OrderPanel({ type, onPlace }) {
 
   return (
     <div className="order-panel">
-
       {/* ── Menu ── */}
       <div className="order-panel__menu">
-
         {/* Search */}
         <div className="order-panel__search-bar">
           <Search size={13} color="#a0704a" />
@@ -84,19 +85,32 @@ export default function OrderPanel({ type, onPlace }) {
                   <div className="order-panel__menu-name">{item.name}</div>
                   <div className="order-panel__menu-desc">{item.desc}</div>
                   <div className="order-panel__menu-footer">
-                    <span className="order-panel__menu-price">₹{item.price}</span>
+                    <span className="order-panel__menu-price">
+                      ₹{item.price}
+                    </span>
                     {inCart ? (
                       <div className="order-panel__qty">
-                        <button className="order-panel__qty-btn" onClick={() => updateQty(item.id, -1)}>
+                        <button
+                          className="order-panel__qty-btn"
+                          onClick={() => updateQty(item.id, -1)}
+                        >
                           <Minus size={10} />
                         </button>
-                        <span className="order-panel__qty-num">{inCart.qty}</span>
-                        <button className="order-panel__qty-btn" onClick={() => addItem(item)}>
+                        <span className="order-panel__qty-num">
+                          {inCart.qty}
+                        </span>
+                        <button
+                          className="order-panel__qty-btn"
+                          onClick={() => addItem(item)}
+                        >
                           <Plus size={10} />
                         </button>
                       </div>
                     ) : (
-                      <button className="order-panel__add-btn" onClick={() => addItem(item)}>
+                      <button
+                        className="order-panel__add-btn"
+                        onClick={() => addItem(item)}
+                      >
                         <Plus size={12} /> Add
                       </button>
                     )}
@@ -149,13 +163,17 @@ export default function OrderPanel({ type, onPlace }) {
                   </button>
                 ))}
               </div>
-              <div className="order-panel__form-label" style={{ marginTop: 6 }}>Assign Waiter</div>
+              <div className="order-panel__form-label" style={{ marginTop: 6 }}>
+                Assign Waiter
+              </div>
               <select
                 className="order-panel__input"
                 value={waiter}
                 onChange={(e) => setWaiter(e.target.value)}
               >
-                {WAITERS.map((w) => <option key={w}>{w}</option>)}
+                {WAITERS.map((w) => (
+                  <option key={w}>{w}</option>
+                ))}
               </select>
               <input
                 className="order-panel__input"
@@ -179,7 +197,9 @@ export default function OrderPanel({ type, onPlace }) {
         {cart.length === 0 ? (
           <div className="order-panel__empty">
             <ShoppingCart size={26} color="#d4a87a" />
-            <span className="order-panel__empty-text">Add items from the menu</span>
+            <span className="order-panel__empty-text">
+              Add items from the menu
+            </span>
           </div>
         ) : (
           <>
@@ -188,21 +208,33 @@ export default function OrderPanel({ type, onPlace }) {
               {cart.map((item) => (
                 <div key={item.id} className="order-panel__cart-item">
                   <div className="order-panel__cart-item-info">
-                    <div className="order-panel__cart-item-name">{item.name}</div>
+                    <div className="order-panel__cart-item-name">
+                      {item.name}
+                    </div>
                     <div className="order-panel__cart-item-price">
-                      ₹{item.price} × {item.qty} = <b>₹{item.price * item.qty}</b>
+                      ₹{item.price} × {item.qty} ={" "}
+                      <b>₹{item.price * item.qty}</b>
                     </div>
                   </div>
                   <div className="order-panel__qty">
-                    <button className="order-panel__qty-btn" onClick={() => updateQty(item.id, -1)}>
+                    <button
+                      className="order-panel__qty-btn"
+                      onClick={() => updateQty(item.id, -1)}
+                    >
                       <Minus size={10} />
                     </button>
                     <span className="order-panel__qty-num">{item.qty}</span>
-                    <button className="order-panel__qty-btn" onClick={() => updateQty(item.id, 1)}>
+                    <button
+                      className="order-panel__qty-btn"
+                      onClick={() => updateQty(item.id, 1)}
+                    >
                       <Plus size={10} />
                     </button>
                   </div>
-                  <button className="order-panel__remove-btn" onClick={() => updateQty(item.id, -item.qty)}>
+                  <button
+                    className="order-panel__remove-btn"
+                    onClick={() => updateQty(item.id, -item.qty)}
+                  >
                     <X size={12} />
                   </button>
                 </div>
@@ -212,13 +244,16 @@ export default function OrderPanel({ type, onPlace }) {
             {/* Summary */}
             <div className="order-panel__summary">
               <div className="order-panel__summary-row">
-                <span>Subtotal</span><span>₹{subtotal}</span>
+                <span>Subtotal</span>
+                <span>₹{subtotal}</span>
               </div>
               <div className="order-panel__summary-row">
-                <span>GST (5%)</span><span>₹{gst}</span>
+                <span>GST (5%)</span>
+                <span>₹{gst}</span>
               </div>
               <div className="order-panel__summary-row order-panel__summary-row--total">
-                <span>Total</span><span>₹{total}</span>
+                <span>Total</span>
+                <span>₹{total}</span>
               </div>
               <button
                 className="order-panel__place-btn"

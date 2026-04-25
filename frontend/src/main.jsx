@@ -5,12 +5,15 @@ import App from "./App.jsx";
 import { Provider } from "../src/components/ui/provider.jsx";
 
 import { BrowserRouter } from "react-router-dom";
+import ContextProvider from "./contextAPI/UserContextapi.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <Provider>
-        <App />
+        <ContextProvider>
+          <App />
+        </ContextProvider>
       </Provider>
     </BrowserRouter>
   </StrictMode>,

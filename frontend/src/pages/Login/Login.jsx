@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useReducer, useState } from "react";
 import {
   ChefHat,
   Mail,
@@ -14,6 +14,7 @@ import {
 import "./Login.css";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../contextAPI/UserContextapi";
 
 const FEATURES = [
   {
@@ -34,39 +35,62 @@ const FEATURES = [
   },
 ];
 
+const initialState={
+  email:"",
+  password:"",
+  loading:false,
+  error:"",
+  showPwd:false
+}
+
+function reducer(state,action){
+  switch(action.type){
+    case "email":
+      return {...state,email:action.value};
+    case "password":
+      return {...state,password:action.value};
+    case "loading":
+      return {...state,loading:action.value};
+    case "error":
+      return {...state,error:action.value};
+    case "showPwd":
+      return {...state,showPwd:action.value};  
+    default :
+    return state
+  }
+}
+
 function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPwd, setShowPwd] = useState(false);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [state,dispatch]=useReducer(reducer,initialState)
   const [touched, setTouched] = useState({ username: false, password: false });
   const navigate = useNavigate();
+  const {setdata}=useContext(UserContext)
 
   const usernameErr =
-    touched.username && !username.trim() ? "Username is required" : "";
+    touched.username && !state.email.trim() ? "Username is required" : "";
   const passwordErr =
-    touched.password && !password.trim() ? "Password is required" : "";
+    touched.password && !state.password.trim() ? "Password is required" : "";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setTouched({ username: true, password: true });
-    if (!username.trim() || !password.trim()) return;
 
-    setLoading(true);
-    setError("");
+    setTouched({ username: true, password: true });
+    if (!state.email.trim() || !state.password.trim()) return;
+
+    dispatch({type:"loading",value:true})
+    dispatch({type:"error",value:""})
 
     try {
-      const res = await API.post("/auth/login", { email: username, password });
+      const res = await API.post("/auth/login", { email: state.email, password:state.password });
 
       const { token, user } = res.data;
-
+      setdata(user)
       localStorage.setItem("token", token);
       localStorage.setItem("role", user.role);
       navigate("/dashboard");
     } catch (err) {
-      setError("Invalid credentials or role mismatch. Please try again.");
-      setLoading(false);
+      dispatch({type:"loading",value:false})
+      dispatch({type:"error",value:"Invalid credentials or role mismatch. Please try again."})
     }
   };
 
@@ -123,10 +147,10 @@ function Login() {
           </div>
 
           {/* Error alert */}
-          {error && (
+          {state.error && (
             <div className="login-page__alert" style={{ marginBottom: 20 }}>
               <AlertCircle size={15} />
-              {error}
+              {state.error}
             </div>
           )}
 
@@ -134,7 +158,7 @@ function Login() {
             {/* Username */}
             <div className="login-form__group">
               <label className="login-form__label" htmlFor="username">
-                Username / Email
+                 Email
               </label>
               <div className="login-form__input-wrap">
                 <span className="login-form__input-icon">
@@ -144,11 +168,12 @@ function Login() {
                   id="username"
                   type="email"
                   className={`login-form__input${usernameErr ? " login-form__input--error" : ""}`}
-                  placeholder="you@spice.in"
-                  value={username}
+                  placeholder="you@gmail.com"
+                  value={state.email}
                   onChange={(e) => {
-                    setUsername(e.target.value);
-                    setError("");
+                    // setUsername(e.target.value);
+                    dispatch({type:"email",value:e.target.value})
+                    dispatch({type:"error",value:""})
                   }}
                   onBlur={() => setTouched((t) => ({ ...t, username: true }))}
                   autoComplete="username"
@@ -172,13 +197,14 @@ function Login() {
                 </span>
                 <input
                   id="password"
-                  type={showPwd ? "text" : "password"}
+                  type={state.showPwd ? "text" : "password"}
                   className={`login-form__input${passwordErr ? " login-form__input--error" : ""}`}
                   placeholder="Enter your password"
-                  value={password}
+                  value={state.password}
                   onChange={(e) => {
-                    setPassword(e.target.value);
-                    setError("");
+                    // setPassword(e.target.value);
+                    dispatch({type:"password",value:e.target.value})
+                    dispatch({type:"error",value:""})
                   }}
                   onBlur={() => setTouched((t) => ({ ...t, password: true }))}
                   autoComplete="current-password"
@@ -186,10 +212,10 @@ function Login() {
                 <button
                   type="button"
                   className="login-form__input-toggle"
-                  onClick={() => setShowPwd((s) => !s)}
+                  onClick={() => dispatch({type:"showPwd",value:!state.showPwd})}
                   tabIndex={-1}
                 >
-                  {showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
+                  {state.showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
               </div>
               {passwordErr && (
@@ -203,9 +229,9 @@ function Login() {
             <button
               type="submit"
               className="login-form__submit"
-              disabled={loading}
+              disabled={state.loading}
             >
-              {loading ? (
+              {state.loading ? (
                 <>
                   <span className="login-form__spinner" />
                   Signing in…
