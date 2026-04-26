@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ShoppingCart, Search, Plus, Minus, X } from "lucide-react";
 import "./OrderPanel.css";
 import { MENU, CATS, TABLES, WAITERS } from "../../data/constants";
+import { Accordion } from "@chakra-ui/react";
 
 export default function OrderPanel({ type, onPlace }) {
   const [cat, setCat] = useState("All");
@@ -123,149 +124,169 @@ export default function OrderPanel({ type, onPlace }) {
       </div>
 
       {/* ── Cart ── */}
-      <div className="order-panel__cart">
-        <div className="order-panel__cart-title">
-          {type === "takeaway" ? "Takeaway Details" : "Dine-in Details"}
-        </div>
-
-        {/* Form */}
-        <div className="order-panel__form-box">
-          {type === "takeaway" ? (
-            <>
-              <input
-                className="order-panel__input"
-                placeholder="Customer Name *"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-              <input
-                className="order-panel__input"
-                placeholder="Phone Number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-            </>
-          ) : (
-            <>
-              <div className="order-panel__form-label">Select Table</div>
-              <div className="order-panel__table-grid">
-                {TABLES.map((t) => (
-                  <button
-                    key={t}
-                    className={`order-panel__table-btn ${
-                      table === t
-                        ? "order-panel__table-btn--active"
-                        : "order-panel__table-btn--inactive"
-                    }`}
-                    onClick={() => setTable(t)}
-                  >
-                    {t}
-                  </button>
-                ))}
+      <Accordion.Root variant={"plain"} collapsible className="order-panel__cart">
+        <Accordion.Item>
+          <div>
+            <Accordion.ItemTrigger>
+              <div className="order-panel__cart-title">
+                {type === "takeaway" ? "Takeaway Details" : "Dine-in Details"}
               </div>
-              <div className="order-panel__form-label" style={{ marginTop: 6 }}>
-                Assign Waiter
-              </div>
-              <select
-                className="order-panel__input"
-                value={waiter}
-                onChange={(e) => setWaiter(e.target.value)}
-              >
-                {WAITERS.map((w) => (
-                  <option key={w}>{w}</option>
-                ))}
-              </select>
-              <input
-                className="order-panel__input"
-                placeholder="Customer name (optional)"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </>
-          )}
-        </div>
-
-        {/* Cart label */}
-        <div className="order-panel__cart-label">
-          Cart{" "}
-          {totalQty > 0 && (
-            <span className="order-panel__cart-count">({totalQty} items)</span>
-          )}
-        </div>
-
-        {/* Empty state */}
-        {cart.length === 0 ? (
-          <div className="order-panel__empty">
-            <ShoppingCart size={26} color="#d4a87a" />
-            <span className="order-panel__empty-text">
-              Add items from the menu
-            </span>
-          </div>
-        ) : (
-          <>
-            {/* Cart items */}
-            <div className="order-panel__cart-items">
-              {cart.map((item) => (
-                <div key={item.id} className="order-panel__cart-item">
-                  <div className="order-panel__cart-item-info">
-                    <div className="order-panel__cart-item-name">
-                      {item.name}
-                    </div>
-                    <div className="order-panel__cart-item-price">
-                      ₹{item.price} × {item.qty} ={" "}
-                      <b>₹{item.price * item.qty}</b>
-                    </div>
-                  </div>
-                  <div className="order-panel__qty">
-                    <button
-                      className="order-panel__qty-btn"
-                      onClick={() => updateQty(item.id, -1)}
-                    >
-                      <Minus size={10} />
-                    </button>
-                    <span className="order-panel__qty-num">{item.qty}</span>
-                    <button
-                      className="order-panel__qty-btn"
-                      onClick={() => updateQty(item.id, 1)}
-                    >
-                      <Plus size={10} />
-                    </button>
-                  </div>
-                  <button
-                    className="order-panel__remove-btn"
-                    onClick={() => updateQty(item.id, -item.qty)}
-                  >
-                    <X size={12} />
-                  </button>
+              <Accordion.ItemIndicator />
+            </Accordion.ItemTrigger>
+            {/* Form */}
+            <Accordion.ItemContent>
+              <Accordion.ItemBody>
+                <div className="order-panel__form-box">
+                  {type === "takeaway" ? (
+                    <>
+                      <input
+                        className="order-panel__input"
+                        placeholder="Customer Name *"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                      <input
+                        className="order-panel__input"
+                        placeholder="Phone Number"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <div className="order-panel__form-label">
+                        Select Table
+                      </div>
+                      <div className="order-panel__table-grid">
+                        {TABLES.map((t) => (
+                          <button
+                            key={t}
+                            className={`order-panel__table-btn ${
+                              table === t
+                                ? "order-panel__table-btn--active"
+                                : "order-panel__table-btn--inactive"
+                            }`}
+                            onClick={() => setTable(t)}
+                          >
+                            {t}
+                          </button>
+                        ))}
+                      </div>
+                      <div
+                        className="order-panel__form-label"
+                        style={{ marginTop: 6 }}
+                      >
+                        Assign Waiter
+                      </div>
+                      <select
+                        className="order-panel__input"
+                        value={waiter}
+                        onChange={(e) => setWaiter(e.target.value)}
+                      >
+                        {WAITERS.map((w) => (
+                          <option key={w}>{w}</option>
+                        ))}
+                      </select>
+                      <input
+                        className="order-panel__input"
+                        placeholder="Customer name (optional)"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                    </>
+                  )}
                 </div>
-              ))}
-            </div>
 
-            {/* Summary */}
-            <div className="order-panel__summary">
-              <div className="order-panel__summary-row">
-                <span>Subtotal</span>
-                <span>₹{subtotal}</span>
-              </div>
-              <div className="order-panel__summary-row">
-                <span>GST (5%)</span>
-                <span>₹{gst}</span>
-              </div>
-              <div className="order-panel__summary-row order-panel__summary-row--total">
-                <span>Total</span>
-                <span>₹{total}</span>
-              </div>
-              <button
-                className="order-panel__place-btn"
-                onClick={handlePlace}
-                disabled={!canPlace}
-              >
-                Place {type === "takeaway" ? "Takeaway" : "Dine-in"} Order
-              </button>
-            </div>
-          </>
-        )}
-      </div>
+                {/* Cart label */}
+                <div className="order-panel__cart-label">
+                  Cart{" "}
+                  {totalQty > 0 && (
+                    <span className="order-panel__cart-count">
+                      ({totalQty} items)
+                    </span>
+                  )}
+                </div>
+
+                {/* Empty state */}
+                {cart.length === 0 ? (
+                  <div className="order-panel__empty">
+                    <ShoppingCart size={26} color="#d4a87a" />
+                    <span className="order-panel__empty-text">
+                      Add items from the menu
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    {/* Cart items */}
+                    <div className="order-panel__cart-items">
+                      {cart.map((item) => (
+                        <div key={item.id} className="order-panel__cart-item">
+                          <div className="order-panel__cart-item-info">
+                            <div className="order-panel__cart-item-name">
+                              {item.name}
+                            </div>
+                            <div className="order-panel__cart-item-price">
+                              ₹{item.price} × {item.qty} ={" "}
+                              <b>₹{item.price * item.qty}</b>
+                            </div>
+                          </div>
+                          <div className="order-panel__qty">
+                            <button
+                              className="order-panel__qty-btn"
+                              onClick={() => updateQty(item.id, -1)}
+                            >
+                              <Minus size={10} />
+                            </button>
+                            <span className="order-panel__qty-num">
+                              {item.qty}
+                            </span>
+                            <button
+                              className="order-panel__qty-btn"
+                              onClick={() => updateQty(item.id, 1)}
+                            >
+                              <Plus size={10} />
+                            </button>
+                          </div>
+                          <button
+                            className="order-panel__remove-btn"
+                            onClick={() => updateQty(item.id, -item.qty)}
+                          >
+                            <X size={12} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Summary */}
+                    <div className="order-panel__summary">
+                      <div className="order-panel__summary-row">
+                        <span>Subtotal</span>
+                        <span>₹{subtotal}</span>
+                      </div>
+                      <div className="order-panel__summary-row">
+                        <span>GST (5%)</span>
+                        <span>₹{gst}</span>
+                      </div>
+                      <div className="order-panel__summary-row order-panel__summary-row--total">
+                        <span>Total</span>
+                        <span>₹{total}</span>
+                      </div>
+                      <button
+                        className="order-panel__place-btn"
+                        onClick={handlePlace}
+                        disabled={!canPlace}
+                      >
+                        Place {type === "takeaway" ? "Takeaway" : "Dine-in"}{" "}
+                        Order
+                      </button>
+                    </div>
+                  </>
+                )}
+              </Accordion.ItemBody>
+            </Accordion.ItemContent>
+          </div>
+        </Accordion.Item>
+      </Accordion.Root>
     </div>
   );
 }

@@ -231,37 +231,18 @@ function ManageUsers() {
             "& [data-sticky]": {
               position: "sticky",
               zIndex: 1,
-              bg: "bg",
-
-              _after: {
-                content: '""',
-                position: "absolute",
-                pointerEvents: "none",
-                top: "0",
-                bottom: "-1px",
-                width: "32px",
-              },
+              bg: "#fdf0e0",
             },
 
             "& [data-sticky=end]": {
-              _after: {
-                insetInlineEnd: "0",
-                translate: "100% 0",
-              },
-            },
-
-            "& [data-sticky=start]": {
-              _after: {
-                insetInlineStart: "0",
-                translate: "-100% 0",
-              },
+                bg:"white",
             },
           }}
         >
           <Table.Header>
             <Table.Row>
               <Table.ColumnHeader>#</Table.ColumnHeader>
-              <Table.ColumnHeader data-sticky="end" minW="160px" left="0">
+              <Table.ColumnHeader data-sticky minW="160px" left="0">
                 Name
               </Table.ColumnHeader>
               <Table.ColumnHeader>Email</Table.ColumnHeader>

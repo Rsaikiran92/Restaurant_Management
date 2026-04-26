@@ -304,6 +304,7 @@ export default function ManageMenu() {
           >
             <Table.Header>
               <Table.Row>
+                <Table.ColumnHeader>#</Table.ColumnHeader>
                 <Table.ColumnHeader data-sticky="end" minW="160px" left="0">
                   Item
                 </Table.ColumnHeader>
@@ -322,11 +323,14 @@ export default function ManageMenu() {
                   </Table.Cell>
                 </Table.Row>
               ) : (
-                filtered.map((m) => {
+                filtered.map((m,i) => {
                   const cc = CAT_COLORS[m.category] || {};
                   return (
                     <Table.Row key={m.id}>
-                      <Table.Cell data-sticky="end">
+                       <Table.Cell style={{ color: "#a0704a", fontWeight: 600 }}>
+                      {i + 1}
+                    </Table.Cell>
+                      <Table.Cell data-sticky="end" >
                         <div
                           style={{
                             display: "flex",

@@ -7,6 +7,7 @@ import MainLayout from "./MainLayout";
 import ManageUsers from "../pages/ManageUsers/ManageUsers";
 import ManageMenu from "../pages/ManageMenu/ManageMenu";
 import Menu from "../pages/Menu/Menu";
+import ManageTables from "../pages/ManageTables/ManageTables";
 
 function AllRoutes() {
   return (
@@ -15,11 +16,12 @@ function AllRoutes() {
       <Route element={<PrivateRoute />}>
         <Route element={<MainLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/users" element={<ManageUsers/>}/>
-          <Route path="/menu" element={<ManageMenu/>} />
+          <Route path="/manageusers" element={<ManageUsers/>}/>
+          <Route path="/managemenu" element={<ManageMenu/>} />
+          <Route path="/managetable" element={<ManageTables/>}/>
           <Route path="/takeaway" element={<OrderPanel type="takeaway" />} />
           <Route path="/dine" element={<OrderPanel />} />
-         <Route path="/tkList" element={<Menu/>} />
+         <Route path="/menu" element={<Menu/>} />
         </Route>
       </Route>
     </Routes>

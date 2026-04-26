@@ -13,4 +13,15 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
+
+export const fetchUsers = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/fetchAllTasks`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching notes", error);
+    return [];
+  }
+};
+
 export default API;

@@ -85,17 +85,19 @@ export const NAV_GROUPS = [
     items: [{ id: "dashboard", label: "Dashboard", icon: "LayoutDashboard" }],
   },
   {
-    key: "users",
-    label: "Users",
+    key: "Manage",
+    label: "Manage",
     items: [
-      { id: "users", label: "users", icon: "Users"  },
+      { id: "manageusers", label: "Manage users", icon: "Users"  },
+      { id: "managemenu", label: "Manage Menu", icon: "Menu"  },
+      { id: "managetable", label: "Manage Table", icon: "Menu"  },
     ],
   },
   {
     key: "Menu",
     label: "Menu",
     items: [
-      { id: "Menu", label: "Menu", icon: "Menu"  },
+      { id: "menu", label: "Menu", icon: "Menu"  },
     ],
   },
   {
@@ -124,4 +126,17 @@ export const SEED_USERS = [
   { id: 4, name: "Rajan",      email: "rajan@spice.in",     role: "waiter",  password: "wait123",  status: "active"   },
   { id: 5, name: "Priya",      email: "priya@spice.in",     role: "waiter",  password: "wait123",  status: "active"   },
   { id: 6, name: "Arjun",      email: "arjun@spice.in",     role: "waiter",  password: "wait123",  status: "inactive" },
+];
+
+export const SEED_TABLES = [
+  { id: "T-1",  capacity: 2, status: "available" },
+  { id: "T-2",  capacity: 4, status: "occupied"  },
+  { id: "T-3",  capacity: 4, status: "available" },
+  { id: "T-4",  capacity: 6, status: "occupied"  },
+  { id: "T-5",  capacity: 2, status: "reserved"  },
+  { id: "T-6",  capacity: 4, status: "available" },
+  { id: "T-7",  capacity: 8, status: "occupied"  },
+  { id: "T-8",  capacity: 2, status: "available" },
+  { id: "T-9",  capacity: 6, status: "reserved"  },
+  { id: "T-10", capacity: 4, status: "available" },
 ];

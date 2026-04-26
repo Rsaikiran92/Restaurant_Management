@@ -20,6 +20,7 @@ const ICON_MAP = {
   Utensils: <Utensils size={15} />,
   ClipboardList: <ClipboardList size={15} />,
   Users: <Users size={15} />,
+  Menu: <SquareMenu size={15} />
 };
 
 export default function Sidebar() {
