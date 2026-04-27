@@ -97,6 +97,7 @@
   cursor: pointer;
   font-family: inherit;
   transition: border-color 0.15s;
+  
 }
 .admin-page__filter-select:focus { border-color: #b84c00; }
 

@@ -34,3 +34,51 @@
 .users-table tbody tr:last-child td { border-bottom: none; }
 
 .users-table tbody tr:hover { background: #fffbf6; }
+
+.tables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.table-card {
+  border-radius: 14px;
+  border: 2px solid;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow 0.15s;
+}
+
+.table-card:hover { box-shadow: 0 4px 16px rgba(120, 50, 0, 0.1); }
+
+.table-card--available { background: #f0fdf4; border-color: #86efac; }
+.table-card--occupied  { background: #fff1f2; border-color: #fca5a5; }
+
+
+.table-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.table-card__id {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2d1a00;
+}
+
+.table-card__seats {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #6b3d1e;
+}
+
+.table-card__actions {
+  display: flex;
+  gap: 6px;
+  margin-top: auto;
+}

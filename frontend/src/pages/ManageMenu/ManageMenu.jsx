@@ -195,6 +195,7 @@ export default function ManageMenu() {
   const [items, setItems] = useState(
     MENU.map((m) => ({ ...m, available: true })),
   );
+  const [view, setView] = useState("grid");
   const [search, setSearch] = useState("");
   const [catFilter, setCatFilter] = useState("All");
   const [modal, setModal] = useState(null);
@@ -229,7 +230,7 @@ export default function ManageMenu() {
   };
 
   return (
-    <div className="admin-page" style={{height:"90vh"}}>
+    <div className="admin-page" style={{ height: "90vh" }}>
       <div className="admin-page__header">
         <div className="admin-page__title-block">
           <div className="admin-page__title">Manage Menu</div>
@@ -237,12 +238,43 @@ export default function ManageMenu() {
             {items.length} items {CATS.length - 1} categories
           </div>
         </div>
-        <button
-          className="admin-page__add-btn"
-          onClick={() => setModal({ type: "add" })}
-        >
-          <Plus size={15} /> Add Item
-        </button>
+        <div style={{ display: "flex", gap: 8 }}>
+          <div
+            style={{
+              display: "flex",
+              background: "#fff",
+              border: "1px solid #e8c9a0",
+              borderRadius: 9,
+              overflow: "hidden",
+            }}
+          >
+            {["grid", "list"].map((v) => (
+              <button
+                key={v}
+                onClick={() => setView(v)}
+                style={{
+                  padding: "7px 14px",
+                  border: "none",
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  transition: "background 0.12s",
+                  background: view === v ? "#b84c00" : "transparent",
+                  color: view === v ? "#fff" : "#6b3d1e",
+                }}
+              >
+                {v.charAt(0).toUpperCase() + v.slice(1)}
+              </button>
+            ))}
+          </div>
+          <button
+            className="admin-page__add-btn"
+            onClick={() => setModal({ type: "add" })}
+          >
+            <Plus size={15} /> Add Item
+          </button>
+        </div>
       </div>
 
       <div className="admin-page__toolbar">
@@ -265,47 +297,72 @@ export default function ManageMenu() {
         </select>
       </div>
 
-      <div  >
-        <Table.ScrollArea borderWidth="1px" maxW="100%" className="users-table" >
+      {view === "grid" ? (
+        <div className="tables-grid">
+          {filtered.map((t) => {
+            // const rc = ROLE_COLORS[t.role] || {};
+            // const cfg = STATUS_CFG[t.status];
+            return (
+              <div className={`table-card `}>
+                <div className="table-card__header">
+                  <span className="table-card__id">{t.name}</span>
+                </div>
+                <div>
+                  {/* <span
+                    className="admin-pill"
+                    // style={{ background: rc.bg, color: rc.color }}
+                  >
+                    {t.role === "admin" && <ShieldCheck size={10} />}
+                    {t.role !== "admin" && <User size={10} />}
+                    {t.role.charAt(0).toUpperCase() + t.role.slice(1)}
+                  </span> */}
+                  <span className={`admin-pill `}>{t.available ? "Available" : "Unavailable"}</span>
+                </div>
+                <div className="table-card__seats">
+                  
+                  <span> </span>
+                </div>
+                <div className="table-card__actions">
+                  <button
+                    className="admin-table__btn admin-table__btn--edit"
+                    title="Edit"
+                    onClick={() => setModal({ type: "edit", user: t })}
+                  >
+                    <Pencil size={13} />
+                  </button>
+                  <button
+                    className="admin-table__btn admin-table__btn--delete"
+                    title="Delete"
+                    onClick={() => setModal({ type: "delete", user: t })}
+                  >
+                    <Trash2 size={13} />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <Table.ScrollArea borderWidth="1px" maxW="100%" className="users-table">
           <Table.Root
             size="sm"
             variant="outline"
-            
             css={{
               "& [data-sticky]": {
                 position: "sticky",
                 zIndex: 1,
-                bg: "bg",
-
-                _after: {
-                  content: '""',
-                  position: "absolute",
-                  pointerEvents: "none",
-                  top: "0",
-                  bottom: "-1px",
-                  width: "32px",
-                },
+                bg: "#fdf0e0",
               },
 
               "& [data-sticky=end]": {
-                _after: {
-                  insetInlineEnd: "0",
-                  translate: "100% 0",
-                },
-              },
-
-              "& [data-sticky=start]": {
-                _after: {
-                  insetInlineStart: "0",
-                  translate: "-100% 0",
-                },
+                bg: "white",
               },
             }}
           >
             <Table.Header>
               <Table.Row>
                 <Table.ColumnHeader>#</Table.ColumnHeader>
-                <Table.ColumnHeader data-sticky="end" minW="160px" left="0">
+                <Table.ColumnHeader data-sticky minW="100px" left="0">
                   Item
                 </Table.ColumnHeader>
                 <Table.ColumnHeader>Category</Table.ColumnHeader>
@@ -323,14 +380,14 @@ export default function ManageMenu() {
                   </Table.Cell>
                 </Table.Row>
               ) : (
-                filtered.map((m,i) => {
+                filtered.map((m, i) => {
                   const cc = CAT_COLORS[m.category] || {};
                   return (
                     <Table.Row key={m.id}>
-                       <Table.Cell style={{ color: "#a0704a", fontWeight: 600 }}>
-                      {i + 1}
-                    </Table.Cell>
-                      <Table.Cell data-sticky="end" >
+                      <Table.Cell style={{ color: "#a0704a", fontWeight: 600 }}>
+                        {i + 1}
+                      </Table.Cell>
+                      <Table.Cell data-sticky="end" left={0}>
                         <div
                           style={{
                             display: "flex",
@@ -398,95 +455,7 @@ export default function ManageMenu() {
             </Table.Body>
           </Table.Root>
         </Table.ScrollArea>
-        {/* <table className="admin-table">
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Category</th>
-              <th>Price</th>
-              <th>Description</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.length === 0 ? (
-              <tr>
-                <Table.Cell colSpan={6} className="admin-table__empty">
-                  No menu items found
-                </Table.Cell>
-              </tr>
-            ) : (
-              filtered.map((m) => {
-                const cc = CAT_COLORS[m.category] || {};
-                return (
-                  <tr key={m.id}>
-                    <Table.Cell>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 10,
-                        }}
-                      >
-                        <span style={{ fontSize: 22 }}>{m.emoji}</span>
-                        <span style={{ fontWeight: 600 }}>{m.name}</span>
-                      </div>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span
-                        className="admin-pill"
-                        style={{ background: cc.bg, color: cc.color }}
-                      >
-                        {m.category}
-                      </span>
-                    </Table.Cell>
-                    <Table.Cell style={{ fontWeight: 700, color: "#b84c00" }}>
-                      ₹{m.price}
-                    </Table.Cell>
-                    <Table.Cell
-                      style={{
-                        color: "#6b3d1e",
-                        maxWidth: 200,
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {m.desc}
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span
-                        className={`admin-pill ${m.available ? "admin-pill--active" : "admin-pill--inactive"}`}
-                      >
-                        {m.available ? "Available" : "Unavailable"}
-                      </span>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <div className="admin-table__actions">
-                        <button
-                          className="admin-table__btn admin-table__btn--edit"
-                          onClick={() => setModal({ type: "edit", item: m })}
-                          title="Edit"
-                        >
-                          <Pencil size={13} />
-                        </button>
-                        <button
-                          className="admin-table__btn admin-table__btn--delete"
-                          onClick={() => setModal({ type: "delete", item: m })}
-                          title="Delete"
-                        >
-                          <Trash2 size={13} />
-                        </button>
-                      </div>
-                    </Table.Cell>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table> */}
-      </div>
+      )}
 
       {(modal?.type === "add" || modal?.type === "edit") && (
         <MenuModal
