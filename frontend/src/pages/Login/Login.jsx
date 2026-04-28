@@ -12,7 +12,7 @@ import {
   Users,
 } from "lucide-react";
 import "./Login.css";
-import API from "../../utils/api";
+import API, { userLogin } from "../../utils/api";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../contextAPI/UserContextapi";
 
@@ -76,22 +76,24 @@ function Login() {
 
     setTouched({ username: true, password: true });
     if (!state.email.trim() || !state.password.trim()) return;
+    
+    userLogin(state,dispatch,setdata,navigate)
 
-    dispatch({type:"loading",value:true})
-    dispatch({type:"error",value:""})
+    // dispatch({type:"loading",value:true})
+    // dispatch({type:"error",value:""})
 
-    try {
-      const res = await API.post("/auth/login", { email: state.email, password:state.password });
+    // try {
+    //   const res = await API.post("/auth/login", { email: state.email, password:state.password });
 
-      const { token, user } = res.data;
-      setdata(user)
-      localStorage.setItem("token", token);
-      localStorage.setItem("role", user.role);
-      navigate("/dashboard");
-    } catch (err) {
-      dispatch({type:"loading",value:false})
-      dispatch({type:"error",value:"Invalid credentials or role mismatch. Please try again."})
-    }
+    //   const { token, user } = res.data;
+    //   setdata(user)
+    //   localStorage.setItem("token", token);
+    //   localStorage.setItem("role", user.role);
+    //   navigate("/dashboard");
+    // } catch (err) {
+    //   dispatch({type:"loading",value:false})
+    //   dispatch({type:"error",value:"Invalid credentials or role mismatch. Please try again."})
+    // }
   };
 
   return (

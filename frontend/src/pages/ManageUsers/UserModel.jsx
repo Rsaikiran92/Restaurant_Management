@@ -1,12 +1,11 @@
 import { X } from "lucide-react";
 import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { loading, success, error } from "../../redux/slices/userSlices";
+
 
 const ROLES = ["admin", "desk", "manager", "waiter"];
 
 function UserModal({ user, onSave, onClose }) {
-  const { loading, success, error }= useSelector((state) => state.user)
+
   const [form, setForm] = useState(
     user || {
       name: "",

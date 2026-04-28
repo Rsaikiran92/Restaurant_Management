@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Plus,
   Search,
@@ -15,6 +15,9 @@ import { SEED_USERS } from "../../data/constants";
 import { Table } from "@chakra-ui/react";
 import DeleteUserModal from "./DeleteUserModel";
 import UserModal from "./UserModel";
+import {  get_user } from "../../utils/api";
+import { useSelector, useDispatch } from "react-redux";
+import { loading, success, error } from "../../redux/slice/userSlice.js";
 
 const ROLES = ["admin", "desk", "manager", "waiter"];
 
@@ -39,11 +42,17 @@ const ROLE_COLORS = {
 };
 
 function ManageUsers() {
-  const [users, setUsers] = useState(SEED_USERS);
+  // const [users, setUsers] = useState(SEED_USERS);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [modal, setModal] = useState(null); // null | { type: "add"|"edit"|"delete", user? }
   const [view, setView] = useState("list");
+  const { users }= useSelector((state) => state.user)
+  const dispatch=useDispatch()
+
+  useEffect(()=>{
+    get_user(dispatch,success,loading,error)
+  },[])
 
   const filtered = users.filter(
     (u) =>
@@ -51,7 +60,8 @@ function ManageUsers() {
       (u.name.toLowerCase().includes(search.toLowerCase()) ||
         u.email.toLowerCase().includes(search.toLowerCase())),
   );
-
+  
+  
   const handleSave = (form) => {
     if (modal.user) {
       setUsers((prev) =>
@@ -113,7 +123,7 @@ function ManageUsers() {
             onClick={() => setModal({ type: "add" })}
           >
             <Plus size={15} /> Add User
-          </button>
+          </button> 
         </div>
       </div>
 

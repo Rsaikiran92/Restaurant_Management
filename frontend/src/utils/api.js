@@ -13,15 +13,50 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
+// user login
+export const userLogin = async (state, dispatch, setdata, navigate) => {
+  dispatch({ type: "loading", value: true });
+  dispatch({ type: "error", value: "" });
 
-export const fetchUsers = async () => {
   try {
-    const response = await axios.get(`${API_URL}/fetchAllTasks`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching notes", error);
-    return [];
+    const res = await API.post("/auth/login", {
+      email: state.email,
+      password: state.password,
+    });
+    const { token, user } = res.data;
+    setdata(user);
+    localStorage.setItem("token", token);
+    localStorage.setItem("role", user.role);
+    navigate("/dashboard");
+  } catch (err) {
+    console.log(err);
+    dispatch({ type: "loading", value: false });
+    dispatch({
+      type: "error",
+      value: "Invalid credentials or role mismatch. Please try again.",
+    });
   }
+};
+
+//create user
+export const get_user = async (dispatch, success, loading, err) => {
+  try {
+    dispatch(loading());
+    const responce = await API.get("/users");
+    dispatch(success(responce.data));
+  } catch (error) {}
+};
+
+//edit users
+export const edit_user = async () => {
+  try {
+  } catch (error) {}
+};
+
+// delete users
+export const delete_user = async () => {
+  try {
+  } catch (error) {}
 };
 
 export default API;
