@@ -12,7 +12,7 @@ const menuSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ["starter-veg","starter-nonveg","veg", "non-veg", "drinks", "dessert"],
+      enum: ["Mains","Starters","Breads", "Drinks", "drinks", "Desserts"],
       required: true,
     },
     isAvailable: {

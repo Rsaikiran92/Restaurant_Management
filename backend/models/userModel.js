@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema(
       enum: ["admin", "waiter", "kitchen", "frontdesk"],
       default: "waiter",
     },
+    status:{
+      type:String,
+      enum:["active","inactive"],
+      default:"active"
+    }
   },
   { timestamps: true }
 );

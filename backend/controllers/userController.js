@@ -1,10 +1,10 @@
-import User from "../models/userModel.js"
-import bcrypt from "bcrypt"
+import User from "../models/userModel.js";
+import bcrypt from "bcrypt";
 
 // CREATE USER
 const createUser = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, status } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -13,13 +13,14 @@ const createUser = async (req, res) => {
       email,
       password: hashedPassword,
       role,
+      status,
     });
 
-    
     await user.save();
-
-    res.status(201).json({ msg: "User created", user });
+    const users = await User.find();
+    res.status(201).json({ msg: "User created", users });
   } catch (err) {
+    console.log(err)
     res.status(500).json({ error: err.message });
   }
 };
@@ -30,6 +31,7 @@ const getUsers = async (req, res) => {
     const users = await User.find().select("-password");
     res.json(users);
   } catch (err) {
+   
     res.status(500).json({ error: err.message });
   }
 };
@@ -39,13 +41,10 @@ const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      req.body,
-      { new: true }
-    );
-
-    res.json(updatedUser);
+    const updatedUser = await User.findByIdAndUpdate(id, req.body);
+    const users = await User.find();
+    res.status(201).json({ msg: "User created", users });
+    // res.json(updatedUser);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -57,16 +56,11 @@ const deleteUser = async (req, res) => {
     const { id } = req.params;
 
     await User.findByIdAndDelete(id);
-
-    res.json({ msg: "User deleted" });
+    const users = await User.find();
+    res.json({ msg: "User deleted", users });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-export {
-  createUser,
-  getUsers,
-  updateUser,
-  deleteUser,
-};
+export { createUser, getUsers, updateUser, deleteUser };
