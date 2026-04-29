@@ -13,6 +13,11 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
+
+API.interceptors.response.use(
+  (res) => res,
+  (err) => Promise.reject(err.error)
+);
 // user login
 export const userLogin = async (state, dispatch, setdata, navigate) => {
   dispatch({ type: "loading", value: true });
@@ -38,25 +43,5 @@ export const userLogin = async (state, dispatch, setdata, navigate) => {
   }
 };
 
-//create user
-export const get_user = async (dispatch, success, loading, err) => {
-  try {
-    dispatch(loading());
-    const responce = await API.get("/users");
-    dispatch(success(responce.data));
-  } catch (error) {}
-};
-
-//edit users
-export const edit_user = async () => {
-  try {
-  } catch (error) {}
-};
-
-// delete users
-export const delete_user = async () => {
-  try {
-  } catch (error) {}
-};
 
 export default API;

@@ -1,11 +1,12 @@
+import { Button } from "@chakra-ui/react";
 import { X } from "lucide-react";
 import { useState } from "react";
-
+import { useSelector } from "react-redux";
 
 const ROLES = ["admin", "desk", "manager", "waiter"];
 
 function UserModal({ user, onSave, onClose }) {
-
+  const { loading } = useSelector((state) => state.user);
   const [form, setForm] = useState(
     user || {
       name: "",
@@ -88,14 +89,20 @@ function UserModal({ user, onSave, onClose }) {
           <button className="btn-cancel" onClick={onClose}>
             Cancel
           </button>
-          <button
-            className="btn-save"
-            onClick={() => {
-              if (form.name && form.email) onSave(form);
-            }}
-          >
-            {isEdit ? "Save Changes" : "Add User"}
-          </button>
+          {loading ? (
+            <Button className="btn-save" loading loadingText="Saving...">
+              Click me
+            </Button>
+          ) : (
+            <button
+              className="btn-save"
+              onClick={() => {
+                if (form.name && form.email) onSave(form);
+              }}
+            >
+              {isEdit ? "Save Changes" : "Add User"}
+            </button>
+          )}
         </div>
       </div>
     </div>
