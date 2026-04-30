@@ -3,7 +3,8 @@ import Menu from "../models/menuModel.js";
 // CREATE MENU ITEM
 const createMenu = async (req, res) => {
   try {
-    const menu = await Menu.create(req.body);
+    await Menu.create(req.body);
+    const menu = await Menu.find();
     res.status(201).json({ msg: "Menu item created", menu });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -13,8 +14,8 @@ const createMenu = async (req, res) => {
 // GET ALL MENU ITEMS
 const getMenus = async (req, res) => {
   try {
-    const menus = await Menu.find();
-    res.json(menus);
+    const menu = await Menu.find();
+    res.json(menu);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -28,8 +29,8 @@ const updateMenu = async (req, res) => {
     const updatedMenu = await Menu.findByIdAndUpdate(id, req.body, {
       new: true,
     });
-
-    res.json(updatedMenu);
+    const menu = await Menu.find();
+    res.json({ msg: "Menu item edited", menu });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -41,8 +42,8 @@ const deleteMenu = async (req, res) => {
     const { id } = req.params;
 
     await Menu.findByIdAndDelete(id);
-
-    res.json({ msg: "Menu deleted" });
+    const menu = await Menu.find();
+    res.json({ msg: "Menu deleted", menu });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
