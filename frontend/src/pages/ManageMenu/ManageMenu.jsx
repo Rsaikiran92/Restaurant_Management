@@ -1,154 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus, Search, Pencil, Trash2, X } from "lucide-react";
 import "../admin.shared.css";
 import { MENU, CATS } from "../../data/constants";
 import { Table } from "@chakra-ui/react";
+import API from "../../utils/api";
+import {loadingMenu, successMenu, errorMenu } from "../../redux/slice/menuSlice";
+import { useDispatch, useSelector } from "react-redux";
+import Loading from "../../components/Loading";
+import MenuModal from "./MenuModel";
+import { toaster } from "../../components/ui/toaster";
 
-const EMOJIS = [
-  "🍛",
-  "🧀",
-  "🍚",
-  "🫘",
-  "🫓",
-  "🍗",
-  "☕",
-  "🥭",
-  "🍮",
-  "🍼",
-  "🥟",
-  "🍱",
-  "🥗",
-  "🍜",
-  "🫕",
-];
 
-function MenuModal({ item, onSave, onClose }) {
-  const [form, setForm] = useState(
-    item || {
-      name: "",
-      category: "Mains",
-      price: "",
-      emoji: "🍛",
-      desc: "",
-      available: true,
-    },
-  );
-  const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
-
-  return (
-    <div className="modal-overlay">
-      <div className="modal">
-        <div className="modal__header">
-          <span className="modal__title">
-            {item ? "Edit Menu Item" : "Add Menu Item"}
-          </span>
-          <button className="modal__close" onClick={onClose}>
-            <X size={14} />
-          </button>
-        </div>
-        <div className="modal__body">
-          <div className="form-row">
-            <div className="form-group">
-              <label>Item Name *</label>
-              <input
-                value={form.name}
-                onChange={(e) => set("name", e.target.value)}
-                placeholder="e.g. Butter Chicken"
-              />
-            </div>
-            <div className="form-group">
-              <label>Category *</label>
-              <select
-                value={form.category}
-                onChange={(e) => set("category", e.target.value)}
-              >
-                {CATS.filter((c) => c !== "All").map((c) => (
-                  <option key={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div className="form-row">
-            <div className="form-group">
-              <label>Price (₹) *</label>
-              <input
-                type="number"
-                min="0"
-                value={form.price}
-                onChange={(e) => set("price", e.target.value)}
-                placeholder="e.g. 220"
-              />
-            </div>
-            <div className="form-group">
-              <label>Availability</label>
-              <select
-                value={form.available ? "yes" : "no"}
-                onChange={(e) => set("available", e.target.value === "yes")}
-              >
-                <option value="yes">Available</option>
-                <option value="no">Unavailable</option>
-              </select>
-            </div>
-          </div>
-          <div className="form-group">
-            <label>Description</label>
-            <textarea
-              rows={2}
-              value={form.desc}
-              onChange={(e) => set("desc", e.target.value)}
-              placeholder="Short description of the dish…"
-              style={{ resize: "none" }}
-            />
-          </div>
-          <div className="form-group">
-            <label>Emoji Icon</label>
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 6,
-                marginTop: 4,
-              }}
-            >
-              {EMOJIS.map((e) => (
-                <button
-                  key={e}
-                  type="button"
-                  onClick={() => set("emoji", e)}
-                  style={{
-                    fontSize: 20,
-                    width: 36,
-                    height: 36,
-                    borderRadius: 8,
-                    border: "1.5px solid",
-                    borderColor: form.emoji === e ? "#b84c00" : "#e8c9a0",
-                    background: form.emoji === e ? "#fff8f0" : "#fff",
-                    cursor: "pointer",
-                  }}
-                >
-                  {e}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className="modal__footer">
-          <button className="btn-cancel" onClick={onClose}>
-            Cancel
-          </button>
-          <button
-            className="btn-save"
-            onClick={() => {
-              if (form.name && form.price) onSave(form);
-            }}
-          >
-            {item ? "Save Changes" : "Add Item"}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function DeleteModal({ item, onConfirm, onClose }) {
   return (
@@ -192,41 +54,79 @@ const CAT_COLORS = {
 };
 
 export default function ManageMenu() {
-  const [items, setItems] = useState(
-    MENU.map((m) => ({ ...m, available: true })),
-  );
-  const [view, setView] = useState("grid");
+  const dispatch=useDispatch()
+  const {loading,menu,error}=useSelector((state)=>state.menu)
+  const [view, setView] = useState("list");
   const [search, setSearch] = useState("");
   const [catFilter, setCatFilter] = useState("All");
   const [modal, setModal] = useState(null);
 
-  const filtered = items.filter(
+   useEffect(() => {
+    async function fetchData() {
+      try {
+        dispatch(loadingMenu());
+        const responce = await API.get("/menu");
+        dispatch(successMenu(responce.data));
+      } catch (err) {
+        dispatch(errorMenu("Failed to get users data. Please try again."));
+      }
+    }
+    fetchData();
+  }, []);
+
+  const filtered = menu.filter(
     (m) =>
       (catFilter === "All" || m.category === catFilter) &&
       m.name.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const handleSave = (form) => {
+  const handleSave = async (form) => {
     if (modal.item) {
-      setItems((prev) =>
-        prev.map((m) =>
-          m.id === modal.item.id
-            ? { ...m, ...form, price: Number(form.price) }
-            : m,
-        ),
-      );
+      try {
+        dispatch(loadingMenu())
+        const responce=await API.put(`/menu/${modal.item._id}`,form)
+        dispatch(successMenu(responce.data.menu))
+        setModal(null);
+      } catch (error) {
+        console.log(error)
+        dispatch(error("Failed to edit item"))
+      }
     } else {
-      setItems((prev) => [
-        ...prev,
-        { ...form, id: Date.now(), price: Number(form.price) },
-      ]);
+      try {
+        dispatch(loadingMenu())
+        const responce = await API.post("/menu", form);
+        dispatch(successMenu(responce.data));
+        setModal(null);
+      } catch (error) {
+        console.log(error);
+        dispatch(error("Failed to create menu"))
+      }
     }
-    setModal(null);
+    
   };
 
-  const handleDelete = () => {
-    setItems((prev) => prev.filter((m) => m.id !== modal.item.id));
-    setModal(null);
+  const handleDelete = async() => {
+    try {
+      dispatch(loadingMenu());
+      const responce = await API.delete(`/menu/${modal.item._id}`);
+      dispatch(successMenu(responce.data.menu));
+      toaster.success({
+        title: "Acount deleted successful",
+        description: "Acount deleted successfully from the server",
+        closable: false,
+        action: {
+          label: "ok",
+        },
+      });
+      setModal(null);
+    } catch (err) {
+      toaster.create({
+        title: "Acount deleted failed. Please try again.",
+        description: err,
+        type: error,
+      });
+      dispatch(errorMenu("Failed to delete user acount. Please try again."));
+    }
   };
 
   return (
@@ -235,7 +135,7 @@ export default function ManageMenu() {
         <div className="admin-page__title-block">
           <div className="admin-page__title">Manage Menu</div>
           <div className="admin-page__subtitle">
-            {items.length} items {CATS.length - 1} categories
+            {menu.length} items {CATS.length - 1} categories
           </div>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
@@ -296,14 +196,14 @@ export default function ManageMenu() {
           ))}
         </select>
       </div>
-
-      {view === "grid" ? (
+      {loading?<Loading/>:
+      view === "grid" ? (
         <div className="tables-grid">
           {filtered.map((t) => {
             // const rc = ROLE_COLORS[t.role] || {};
             // const cfg = STATUS_CFG[t.status];
             return (
-              <div className={`table-card `}>
+              <div className={`table-card `} key={t._id}>
                 <div className="table-card__header">
                   <span className="table-card__id">{t.name}</span>
                 </div>
@@ -316,10 +216,11 @@ export default function ManageMenu() {
                     {t.role !== "admin" && <User size={10} />}
                     {t.role.charAt(0).toUpperCase() + t.role.slice(1)}
                   </span> */}
-                  <span className={`admin-pill `}>{t.available ? "Available" : "Unavailable"}</span>
+                  <span className={`admin-pill `}>
+                    {t.available ? "Available" : "Unavailable"}
+                  </span>
                 </div>
                 <div className="table-card__seats">
-                  
                   <span> </span>
                 </div>
                 <div className="table-card__actions">
@@ -383,7 +284,7 @@ export default function ManageMenu() {
                 filtered.map((m, i) => {
                   const cc = CAT_COLORS[m.category] || {};
                   return (
-                    <Table.Row key={m.id}>
+                    <Table.Row key={m._id}>
                       <Table.Cell style={{ color: "#a0704a", fontWeight: 600 }}>
                         {i + 1}
                       </Table.Cell>
@@ -395,7 +296,7 @@ export default function ManageMenu() {
                             gap: 10,
                           }}
                         >
-                          <span style={{ fontSize: 22 }}>{m.emoji}</span>
+                         
                           <span style={{ fontWeight: 600 }}>{m.name}</span>
                         </div>
                       </Table.Cell>
@@ -419,13 +320,13 @@ export default function ManageMenu() {
                           whiteSpace: "nowrap",
                         }}
                       >
-                        {m.desc}
+                        {m.description}
                       </Table.Cell>
                       <Table.Cell>
                         <span
-                          className={`admin-pill ${m.available ? "admin-pill--active" : "admin-pill--inactive"}`}
+                          className={`admin-pill ${m.isAvailable ? "admin-pill--active" : "admin-pill--inactive"}`}
                         >
-                          {m.available ? "Available" : "Unavailable"}
+                          {m.isAvailable ? "Available" : "Unavailable"}
                         </span>
                       </Table.Cell>
                       <Table.Cell>

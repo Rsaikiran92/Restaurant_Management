@@ -8,10 +8,10 @@ const userSlice = createSlice({
     users:[]
   },
   reducers: {
-    loading: (state) => {
+    pending: (state) => {
       return { ...state, loading: true };
     },
-    error: (state, action) => {
+    failed: (state, action) => {
       return { ...state, loading: false, error: action.payload };
     },
     success: (state, action) => {
@@ -20,6 +20,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { loading, error, success } = userSlice.actions;
+export const { pending, failed, success } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -17,7 +17,8 @@ import DeleteUserModal from "./DeleteUserModel";
 import UserModal from "./UserModel";
 import API from "../../utils/api";
 import { useSelector, useDispatch } from "react-redux";
-import { loading, success, error } from "../../redux/slice/userSlice.js";
+import { pending, success, failed } from "../../redux/slice/userSlice.js";
+import Loading from "../../components/Loading.jsx";
 
 const ROLES = ["admin", "desk", "manager", "waiter"];
 
@@ -46,18 +47,17 @@ function ManageUsers() {
   const [roleFilter, setRoleFilter] = useState("all");
   const [modal, setModal] = useState(null); // null | { type: "add"|"edit"|"delete", user? }
   const [view, setView] = useState("list");
-  const { users } = useSelector((state) => state.user);
+  const { users,loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
     async function fetchData() {
       try {
-        dispatch(loading());
+        dispatch(pending());
         const responce = await API.get("/users");
         dispatch(success(responce.data));
       } catch (err) {
-        console.log(err);
-        dispatch(error("Failed to get users data. Please try again."));
+        dispatch(failed("Failed to get users data. Please try again."));
       }
     }
     fetchData();
@@ -74,7 +74,7 @@ function ManageUsers() {
     if (modal.type == "edit") {
       // edit user acount
       try {
-        dispatch(loading());
+        dispatch(pending());
         const response = await API.put(`/users/${modal.user._id}`, form);
         dispatch(success(response.data.users));
         toaster.success({
@@ -93,12 +93,12 @@ function ManageUsers() {
           description: err,
           type: error,
         });
-        dispatch(error("Failed to edit user informasion. Please try again."));
+        dispatch(failed("Failed to edit user informasion. Please try again."));
       }
     } else {
       // create user acount
       try {
-        dispatch(loading());
+        dispatch(pending());
         const responce = await API.post("/users", form);
         dispatch(success(responce.data.users));
         toaster.success({
@@ -111,30 +111,29 @@ function ManageUsers() {
         });
         setModal(null);
       } catch (err) {
-       
         toaster.create({
           title: "Created Acount failed. Please try again.",
           description: err,
           type: "error",
         });
-        dispatch(error("Failed to create user acount. Please try again."));
+        dispatch(failed("Failed to create user acount. Please try again."));
       }
     }
   };
 
   const handleDelete = async () => {
     try {
-      dispatch(loading());
+      dispatch(pending());
       const responce = await API.delete(`/users/${modal.user._id}`);
       dispatch(success(responce.data.users));
       toaster.success({
-          title: "Acount deleted successful",
-          description: "Acount deleted successfully from the server",
-          closable: false,
-          action: {
-            label: "ok",
-          },
-        });
+        title: "Acount deleted successful",
+        description: "Acount deleted successfully from the server",
+        closable: false,
+        action: {
+          label: "ok",
+        },
+      });
       setModal(null);
     } catch (err) {
       toaster.create({
@@ -142,7 +141,7 @@ function ManageUsers() {
         description: err,
         type: error,
       });
-      dispatch(error("Failed to delete user acount. Please try again."));
+      dispatch(failed("Failed to delete user acount. Please try again."));
     }
   };
 
@@ -226,8 +225,9 @@ function ManageUsers() {
         </div>
 
         {/* Table */}
-       
-        {view === "grid" ?( 
+        {loading ? (
+          <Loading/>
+        ) : view === "grid" ? (
           <div className="tables-grid">
             {filtered.map((t) => {
               const rc = ROLE_COLORS[t.role] || {};
