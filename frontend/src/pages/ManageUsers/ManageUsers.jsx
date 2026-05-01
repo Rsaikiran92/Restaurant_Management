@@ -50,18 +50,7 @@ function ManageUsers() {
   const { users,loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        dispatch(pending());
-        const responce = await API.get("/users");
-        dispatch(success(responce.data));
-      } catch (err) {
-        dispatch(failed("Failed to get users data. Please try again."));
-      }
-    }
-    fetchData();
-  }, []);
+  
 
   const filtered = users.filter(
     (u) =>

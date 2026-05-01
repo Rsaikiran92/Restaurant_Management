@@ -1,18 +1,14 @@
-import { useEffect, useState } from "react";
+import {loadingMenu, successMenu, errorMenu} from "../../redux/slice/menuSlice";
 import { Plus, Search, Pencil, Trash2, X } from "lucide-react";
-import "../admin.shared.css";
-import { CATS } from "../../data/constants";
-import { Table, Toaster } from "@chakra-ui/react";
-import API from "../../utils/api";
-import {
-  loadingMenu,
-  successMenu,
-  errorMenu,
-} from "../../redux/slice/menuSlice";
 import { useDispatch, useSelector } from "react-redux";
-import Loading from "../../components/Loading";
-import MenuModal from "./MenuModel";
 import { toaster } from "../../components/ui/toaster";
+import { Table, Toaster } from "@chakra-ui/react";
+import API, { fetchMenu } from "../../utils/api";
+import Loading from "../../components/Loading";
+import { useEffect, useState } from "react";
+import { CATS } from "../../data/constants";
+import MenuModal from "./MenuModel";
+import "../admin.shared.css";
 
 function DeleteModal({ item, onConfirm, onClose }) {
   return (
@@ -56,25 +52,14 @@ const CAT_COLORS = {
 };
 
 export default function ManageMenu() {
-  const dispatch = useDispatch();
   const { loading, menu, error } = useSelector((state) => state.menu);
+  const [catFilter, setCatFilter] = useState("All");
   const [view, setView] = useState("list");
   const [search, setSearch] = useState("");
-  const [catFilter, setCatFilter] = useState("All");
   const [modal, setModal] = useState(null);
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        dispatch(loadingMenu());
-        const responce = await API.get("/menu");
-        dispatch(successMenu(responce.data));
-      } catch (err) {
-        dispatch(errorMenu("Failed to get users data. Please try again."));
-      }
-    }
-    fetchData();
-  }, []);
+ 
 
   const filtered = menu.filter(
     (m) =>
@@ -97,7 +82,7 @@ export default function ManageMenu() {
       try {
         dispatch(loadingMenu());
         const responce = await API.post("/menu", form);
-        dispatch(successMenu(responce.data));
+        dispatch(successMenu(responce.data.menu));
         setModal(null);
       } catch (error) {
         console.log(error);

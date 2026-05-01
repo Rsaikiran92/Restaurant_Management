@@ -1,38 +1,67 @@
-import { useState } from "react";
 import { ShoppingCart, Search, Plus, Minus, X } from "lucide-react";
-import "./OrderPanel.css";
-import { CATS, TABLES, WAITERS } from "../../data/constants";
+import { useContext, useEffect, useReducer, useState } from "react";
+import { UserContext } from "../../contextAPI/UserContextapi";
 import { Accordion } from "@chakra-ui/react";
+import { CATS } from "../../data/constants";
 import { useSelector } from "react-redux";
+import "../OrderPanel/OrderPanel.css";
 
-export default function OrderPanel({ type, onPlace }) {
-  const {loading,menu,error}=useSelector((state)=>state.menu);
-  const [cat, setCat] = useState("All");
-  const [query, setQuery] = useState("");
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [table, setTable] = useState("T-1");
-  const [waiter, setWaiter] = useState("Rajan");
+const initialstate = {
+  cat: "All",
+  phone: "",
+  query: "",
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "phone":
+      return { ...state, phone: action.payload };
+    case "query":
+      return { ...state, query: action.payload };
+    case "cat":
+      return { ...state, cat: action.payload };
+    default:
+      return state;
+  }
+};
+
+export default function Takeaway({ onPlace }) {
+  const { loading, menu, error } = useSelector((state) => state.menu);
+  const [val, dispatch] = useReducer(reducer, initialstate);
+  const user = useContext(UserContext);
   const [cart, setCart] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+
+    const handleResize = () => setIsMobile(mediaQuery.matches);
+
+    handleResize(); // initial check
+    mediaQuery.addEventListener("change", handleResize);
+
+    return () => mediaQuery.removeEventListener("change", handleResize);
+  }, []);
 
   const filteredMenu = menu.filter(
     (m) =>
-      (cat === "All" || m.category === cat) &&
-      m.name.toLowerCase().includes(query.toLowerCase()),
+      (val.cat === "All" || m.category === val.cat) &&
+      m.name.toLowerCase().includes(val.query.toLowerCase()),
   );
 
-  const addItem = (item) =>
+  const addItem = (item) => {
     setCart((prev) => {
-      const existing = prev.find((c) => c.id === item.id);
+      const existing = prev.find((c) => c._id === item._id);
       return existing
-        ? prev.map((c) => (c.id === item.id ? { ...c, qty: c.qty + 1 } : c))
+        ? prev.map((c) => (c._id === item._id ? { ...c, qty: c.qty + 1 } : c))
         : [...prev, { ...item, qty: 1 }];
     });
+  };
 
   const updateQty = (id, delta) =>
     setCart((prev) =>
       prev
-        .map((c) => (c.id === id ? { ...c, qty: c.qty + delta } : c))
+        .map((c) => (c._id === id ? { ...c, qty: c.qty + delta } : c))
         .filter((c) => c.qty > 0),
     );
 
@@ -40,13 +69,31 @@ export default function OrderPanel({ type, onPlace }) {
   const gst = Math.round(subtotal * 0.05);
   const total = subtotal + gst;
   const totalQty = cart.reduce((s, c) => s + c.qty, 0);
-  const canPlace =
-    cart.length > 0 && (type === "dine" ? table && waiter : name.trim());
+  const canPlace = cart.length > 0 && val.phone !== "";
 
   const handlePlace = () => {
-    onPlace({ name, phone, table, waiter });
-    setName("");
-    setPhone("");
+    console.log(val);
+    const from = {
+      customerNumber: val.phone,
+      orderType: "takeaway",
+      tableNumber: null,
+      items: cart.map((item) => ({ menuId: item._id, quantity: item.qty })),
+      totalAmount: total,
+      paymentMethod: null,
+      createdBy: user.data.id,
+    };
+    console.log(from);
+    // setName("");
+    // setPhone("");
+    // {
+    //     orderType: "dine-in",
+    //     tableNumber: 5,
+    //     items: [
+    //       { menuId: "661f123abc123abc123abc12", quantity: 2 },
+    //     ],
+    //     totalAmount: 500,
+    //     paymentMethod: "cash",
+    //   }
   };
 
   return (
@@ -59,8 +106,10 @@ export default function OrderPanel({ type, onPlace }) {
           <input
             className="order-panel__search-input"
             placeholder="Search dishes…"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            value={val.query}
+            onChange={(e) =>
+              dispatch({ type: "query", payload: e.target.value })
+            }
           />
         </div>
 
@@ -69,8 +118,8 @@ export default function OrderPanel({ type, onPlace }) {
           {CATS.map((c) => (
             <button
               key={c}
-              className={`order-panel__cat-btn${cat === c ? " order-panel__cat-btn--active" : ""}`}
-              onClick={() => setCat(c)}
+              className={`order-panel__cat-btn${val.cat === c ? " order-panel__cat-btn--active" : ""}`}
+              onClick={() => dispatch({ type: "cat", payload: c })}
             >
               {c}
             </button>
@@ -82,11 +131,13 @@ export default function OrderPanel({ type, onPlace }) {
           {filteredMenu.map((item) => {
             const inCart = cart.find((c) => c._id === item._id);
             return (
-              <div key={item.id} className="order-panel__menu-card">
+              <div key={item._id} className="order-panel__menu-card">
                 {/* <div className="order-panel__menu-emoji">{item.emoji}</div> */}
                 <div className="order-panel__menu-body">
                   <div className="order-panel__menu-name">{item.name}</div>
-                  <div className="order-panel__menu-desc">{item.description}</div>
+                  <div className="order-panel__menu-desc">
+                    {item.description}
+                  </div>
                   <div className="order-panel__menu-footer">
                     <span className="order-panel__menu-price">
                       ₹{item.price}
@@ -95,7 +146,7 @@ export default function OrderPanel({ type, onPlace }) {
                       <div className="order-panel__qty">
                         <button
                           className="order-panel__qty-btn"
-                          onClick={() => updateQty(item.id, -1)}
+                          onClick={() => updateQty(item._id, -1)}
                         >
                           <Minus size={10} />
                         </button>
@@ -126,77 +177,32 @@ export default function OrderPanel({ type, onPlace }) {
       </div>
 
       {/* ── Cart ── */}
-      <Accordion.Root variant={"plain"} collapsible className="order-panel__cart">
-        <Accordion.Item>
+      <Accordion.Root
+        variant={"plain"}
+        collapsible={isMobile ? true : false}
+        defaultValue={isMobile ? ["b"] : ["a"]}
+        className="order-panel__cart"
+      >
+        <Accordion.Item value="a">
           <div>
             <Accordion.ItemTrigger>
-              <div className="order-panel__cart-title">
-                {type === "takeaway" ? "Takeaway Details" : "Dine-in Details"}
-              </div>
-              <Accordion.ItemIndicator />
+              <div className="order-panel__cart-title">Takeaway Details {isMobile && <span className="order-panel__cart-count">
+                      ({totalQty} items)
+                    </span>}</div>
+              {isMobile && <Accordion.ItemIndicator />}
             </Accordion.ItemTrigger>
             {/* Form */}
             <Accordion.ItemContent>
               <Accordion.ItemBody>
                 <div className="order-panel__form-box">
-                  {type === "takeaway" ? (
-                    <>
-                      <input
-                        className="order-panel__input"
-                        placeholder="Customer Name *"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                      <input
-                        className="order-panel__input"
-                        placeholder="Phone Number"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <div className="order-panel__form-label">
-                        Select Table
-                      </div>
-                      <div className="order-panel__table-grid">
-                        {TABLES.map((t) => (
-                          <button
-                            key={t}
-                            className={`order-panel__table-btn ${
-                              table === t
-                                ? "order-panel__table-btn--active"
-                                : "order-panel__table-btn--inactive"
-                            }`}
-                            onClick={() => setTable(t)}
-                          >
-                            {t}
-                          </button>
-                        ))}
-                      </div>
-                      <div
-                        className="order-panel__form-label"
-                        style={{ marginTop: 6 }}
-                      >
-                        Assign Waiter
-                      </div>
-                      <select
-                        className="order-panel__input"
-                        value={waiter}
-                        onChange={(e) => setWaiter(e.target.value)}
-                      >
-                        {WAITERS.map((w) => (
-                          <option key={w}>{w}</option>
-                        ))}
-                      </select>
-                      <input
-                        className="order-panel__input"
-                        placeholder="Customer name (optional)"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                    </>
-                  )}
+                  <input
+                    className="order-panel__input"
+                    placeholder="Phone Number"
+                    value={val.phone}
+                    onChange={(e) =>
+                      dispatch({ type: "phone", payload: e.target.value })
+                    }
+                  />
                 </div>
 
                 {/* Cart label */}
@@ -235,7 +241,7 @@ export default function OrderPanel({ type, onPlace }) {
                           <div className="order-panel__qty">
                             <button
                               className="order-panel__qty-btn"
-                              onClick={() => updateQty(item.id, -1)}
+                              onClick={() => updateQty(item._id, -1)}
                             >
                               <Minus size={10} />
                             </button>
@@ -244,14 +250,14 @@ export default function OrderPanel({ type, onPlace }) {
                             </span>
                             <button
                               className="order-panel__qty-btn"
-                              onClick={() => updateQty(item.id, 1)}
+                              onClick={() => updateQty(item._id, 1)}
                             >
                               <Plus size={10} />
                             </button>
                           </div>
                           <button
                             className="order-panel__remove-btn"
-                            onClick={() => updateQty(item.id, -item.qty)}
+                            onClick={() => updateQty(item._id, -item.qty)}
                           >
                             <X size={12} />
                           </button>
@@ -278,8 +284,7 @@ export default function OrderPanel({ type, onPlace }) {
                         onClick={handlePlace}
                         disabled={!canPlace}
                       >
-                        Place {type === "takeaway" ? "Takeaway" : "Dine-in"}{" "}
-                        Order
+                        Place Takeaway Order
                       </button>
                     </div>
                   </>

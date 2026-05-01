@@ -6,8 +6,8 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import MainLayout from "./MainLayout";
 import ManageUsers from "../pages/ManageUsers/ManageUsers";
 import ManageMenu from "../pages/ManageMenu/ManageMenu";
-import Menu from "../pages/Menu/Menu";
 import ManageTables from "../pages/ManageTables/ManageTables";
+import Takeaway from "../pages/Takeaway/Takeaway";
 
 function AllRoutes() {
   return (
@@ -19,9 +19,8 @@ function AllRoutes() {
           <Route path="/manageusers" element={<ManageUsers/>}/>
           <Route path="/managemenu" element={<ManageMenu/>} />
           <Route path="/managetable" element={<ManageTables/>}/>
-          <Route path="/takeaway" element={<OrderPanel type="takeaway" />} />
+          <Route path="/takeaway" element={<Takeaway/>} />
           <Route path="/dine" element={<OrderPanel />} />
-         <Route path="/menu" element={<Menu/>} />
         </Route>
       </Route>
     </Routes>

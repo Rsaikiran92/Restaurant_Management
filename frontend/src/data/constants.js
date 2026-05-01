@@ -94,13 +94,6 @@ export const NAV_GROUPS = [
     ],
   },
   {
-    key: "Menu",
-    label: "Menu",
-    items: [
-      { id: "menu", label: "Menu", icon: "Menu"  },
-    ],
-  },
-  {
     key: "place",
     label: "Place Orders",
     items: [
@@ -119,24 +112,24 @@ export const NAV_GROUPS = [
 ];
 
 
-export const SEED_USERS = [
-  { id: 1, name: "Admin",      email: "admin@spice.in",     role: "admin",   password: "admin123", status: "active"   },
-  { id: 2, name: "Front Desk", email: "frontdesk@spice.in", role: "desk",    password: "desk123",  status: "active"   },
-  { id: 3, name: "Manager",    email: "manager@spice.in",   role: "manager", password: "mgr123",   status: "active"   },
-  { id: 4, name: "Rajan",      email: "rajan@spice.in",     role: "waiter",  password: "wait123",  status: "active"   },
-  { id: 5, name: "Priya",      email: "priya@spice.in",     role: "waiter",  password: "wait123",  status: "active"   },
-  { id: 6, name: "Arjun",      email: "arjun@spice.in",     role: "waiter",  password: "wait123",  status: "inactive" },
-];
+// export const SEED_USERS = [
+//   { id: 1, name: "Admin",      email: "admin@spice.in",     role: "admin",   password: "admin123", status: "active"   },
+//   { id: 2, name: "Front Desk", email: "frontdesk@spice.in", role: "desk",    password: "desk123",  status: "active"   },
+//   { id: 3, name: "Manager",    email: "manager@spice.in",   role: "manager", password: "mgr123",   status: "active"   },
+//   { id: 4, name: "Rajan",      email: "rajan@spice.in",     role: "waiter",  password: "wait123",  status: "active"   },
+//   { id: 5, name: "Priya",      email: "priya@spice.in",     role: "waiter",  password: "wait123",  status: "active"   },
+//   { id: 6, name: "Arjun",      email: "arjun@spice.in",     role: "waiter",  password: "wait123",  status: "inactive" },
+// ];
 
-export const SEED_TABLES = [
-  { id: "T-1",  capacity: 2, status: "available" },
-  { id: "T-2",  capacity: 4, status: "occupied"  },
-  { id: "T-3",  capacity: 4, status: "available" },
-  { id: "T-4",  capacity: 6, status: "occupied"  },
-  { id: "T-5",  capacity: 2, status: "reserved"  },
-  { id: "T-6",  capacity: 4, status: "available" },
-  { id: "T-7",  capacity: 8, status: "occupied"  },
-  { id: "T-8",  capacity: 2, status: "available" },
-  { id: "T-9",  capacity: 6, status: "reserved"  },
-  { id: "T-10", capacity: 4, status: "available" },
-];
+// export const SEED_TABLES = [
+//   { id: "T-1",  capacity: 2, status: "available" },
+//   { id: "T-2",  capacity: 4, status: "occupied"  },
+//   { id: "T-3",  capacity: 4, status: "available" },
+//   { id: "T-4",  capacity: 6, status: "occupied"  },
+//   { id: "T-5",  capacity: 2, status: "reserved"  },
+//   { id: "T-6",  capacity: 4, status: "available" },
+//   { id: "T-7",  capacity: 8, status: "occupied"  },
+//   { id: "T-8",  capacity: 2, status: "available" },
+//   { id: "T-9",  capacity: 6, status: "reserved"  },
+//   { id: "T-10", capacity: 4, status: "available" },
+// ];

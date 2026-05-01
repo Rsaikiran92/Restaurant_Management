@@ -1,4 +1,8 @@
-import { errorTable, loadingTable, successTable } from "../../redux/slice/tableSlice";
+import {
+  errorTable,
+  loadingTable,
+  successTable,
+} from "../../redux/slice/tableSlice";
 import { Plus, Pencil, Trash2, Users } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { toaster } from "../../components/ui/toaster";
@@ -9,6 +13,7 @@ import API from "../../utils/api";
 import "../admin.shared.css";
 import "./ManageTables.css";
 import { Toaster } from "@chakra-ui/react";
+import Loading from "../../components/Loading";
 
 const STATUS_CFG = {
   available: {
@@ -32,20 +37,9 @@ export default function ManageTables() {
   const [modal, setModal] = useState(null);
   const [view, setView] = useState("grid");
   const dispatch = useDispatch();
-  const {loading,tables,error} = useSelector((state) => state.table);
+  const { loading, tables, error } = useSelector((state) => state.table);
 
-   useEffect(() => {
-      async function fetchData() {
-        try {
-          dispatch(loadingTable());
-          const responce = await API.get("/table");
-          dispatch(successTable(responce.data));
-        } catch (err) {
-          dispatch(errorTable("Failed to get users data. Please try again."));
-        }
-      }
-      fetchData();
-    }, []);
+ 
 
   const handleSave = async (form) => {
     if (modal.type == "edit") {
@@ -70,7 +64,9 @@ export default function ManageTables() {
           description: err,
           type: error,
         });
-        dispatch(errorTable("Failed to edit user informasion. Please try again."));
+        dispatch(
+          errorTable("Failed to edit user informasion. Please try again."),
+        );
       }
     } else {
       // create user acount
@@ -98,7 +94,7 @@ export default function ManageTables() {
     }
   };
 
-  const handleDelete = async() => {
+  const handleDelete = async () => {
     try {
       dispatch(loadingTable());
       const responce = await API.delete(`/table/${modal.table._id}`);
@@ -129,8 +125,6 @@ export default function ManageTables() {
   };
 
   return (
-   
-
     <div className="admin-page">
       {/* Header */}
       <div className="admin-page__header">
@@ -222,7 +216,9 @@ export default function ManageTables() {
       </div>
 
       {/* Grid view */}
-      {view === "grid" ? (
+      {loading ? (
+        <Loading />
+      ) : view === "grid" ? (
         <div className="tables-grid">
           {tables.map((t) => {
             const cfg = STATUS_CFG[t.status];
