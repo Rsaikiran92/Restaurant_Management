@@ -133,3 +133,5 @@ export const NAV_GROUPS = [
 //   { id: "T-9",  capacity: 6, status: "reserved"  },
 //   { id: "T-10", capacity: 4, status: "available" },
 // ];
+
+export const ITEM_STATUSES=["pending", "preparing", "ready", "served"]

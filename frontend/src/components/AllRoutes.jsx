@@ -8,6 +8,7 @@ import ManageUsers from "../pages/ManageUsers/ManageUsers";
 import ManageMenu from "../pages/ManageMenu/ManageMenu";
 import ManageTables from "../pages/ManageTables/ManageTables";
 import Takeaway from "../pages/Takeaway/Takeaway";
+import OrdersList from "../pages/OrderList/OrderList";
 
 function AllRoutes() {
   return (
@@ -21,6 +22,7 @@ function AllRoutes() {
           <Route path="/managetable" element={<ManageTables/>}/>
           <Route path="/takeaway" element={<Takeaway/>} />
           <Route path="/dine" element={<OrderPanel />} />
+          <Route path="/tkList" element={<OrdersList/>}/>
         </Route>
       </Route>
     </Routes>
