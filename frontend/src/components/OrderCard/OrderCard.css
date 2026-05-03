@@ -67,9 +67,11 @@
 .order-card__item-row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 12px;
   color: #2d1a00;
   margin-bottom: 2px;
+  border-bottom: 1px solid #f0d5b0;
 }
 
 .order-card__item-price {

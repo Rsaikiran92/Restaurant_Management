@@ -9,11 +9,13 @@ import ManageMenu from "../pages/ManageMenu/ManageMenu";
 import ManageTables from "../pages/ManageTables/ManageTables";
 import Takeaway from "../pages/Takeaway/Takeaway";
 import OrdersList from "../pages/OrderList/OrderList";
+import KitchenDashboard from "../pages/KitchenDashboard/KitchenDashboard";
 
 function AllRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
+      <Route path="/kitchen" element={<KitchenDashboard/>} />
       <Route element={<PrivateRoute />}>
         <Route element={<MainLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />

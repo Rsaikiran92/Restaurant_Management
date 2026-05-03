@@ -54,7 +54,10 @@ export default function OrderCard({ order, onAdvance }) {
         {order.items.map((item, idx) => (
           <div key={idx} className="order-card__item-row">
             <span>
-              {item.qty}× {item.name}
+              <div>{item.name}</div>
+              <div className="order-card__item-price">
+                Qty: {item.qty} · ₹{item.price} each
+              </div>
             </span>
             <span className="order-card__item-price">
               ₹{item.price * item.qty}
@@ -75,28 +78,27 @@ export default function OrderCard({ order, onAdvance }) {
             </select> */}
           </div>
         ))}
-        {/* Bill summary */}
-      <div className="order-bill">
-        <div className="order-card__item-row">
-          <span>Subtotal</span>
-          <span>₹</span>
-        </div>
-        <div className="order-card__item-row">
-          <span>GST (5%)</span>
-          <span>₹</span>
-        </div>
-        <div className="order-card__item-row">
-          <span>Grand Total</span>
-          <span>₹{total}</span>
-        </div>
-      </div>
-      </div>
-
-      
-      {/* Footer */}
-      <div className="order-card__footer">
         
       </div>
+
+      {/* Bill summary */}
+        <div className="order-bill">
+          <div className="order-card__item-row">
+            <span>Subtotal</span>
+            <span>₹</span>
+          </div>
+          <div className="order-card__item-row">
+            <span>GST (5%)</span>
+            <span>₹</span>
+          </div>
+          <div className="order-card__item-row">
+            <span>Grand Total</span>
+            <span>₹{total}</span>
+          </div>
+        </div>
+
+      {/* Footer */}
+      <div className="order-card__footer"></div>
     </div>
   );
 }
