@@ -8,6 +8,15 @@ const orderSchema = new mongoose.Schema(
     },
     orderNumber: {
       type: Number,
+      required:true
+    },
+    orderDate: {
+      type: String, // YYYY-MM-DD
+      required:true
+    },
+    orderTime:{
+      type:String,
+      required:true
     },
     orderType: {
       type: String,
@@ -15,8 +24,7 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
     tableNumber: {
-      type: Number,
-      required: true,
+      type: Number
     },
     items: [
       {

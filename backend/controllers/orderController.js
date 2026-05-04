@@ -3,30 +3,33 @@ import Order from "../models/orderModel.js";
 // CREATE ORDER (Waiter/front desk)
 const createOrder = async (req, res) => {
   try {
-    const { tableNumber, items, orderType } = req.body;
 
-    if (orderType === "dine-in" && !tableNumber) {
-      return res.status(400).json({ msg: "Table number required" });
-    }
+    // if (orderType === "dine-in" && !tableNumber) {
+    //   return res.status(400).json({ msg: "Table number required" });
+    // }
 
+    const today = new Date()
+    const date=today.toISOString().split("T")[0];
+    const time=today.toLocaleTimeString()
 
     // 🔢 find last order of today
-    const lastOrder = await Order.findOne({ orderDate: today })
-      .sort({ orderNumber: -1 });
-
+    const lastOrder = await Order.findOne({ orderDate: date }).sort({
+      orderNumber: -1,
+    });
     const nextOrderNumber = lastOrder ? lastOrder.orderNumber + 1 : 1;
-
+  
     const order = await Order.create({
+      ...req.body,
       orderNumber: nextOrderNumber,
-      orderType,
-      tableNumber: orderType === "dine-in" ? tableNumber : null,
-      items,
+      orderDate:date,
+      orderTime:time,
       createdBy: req.user.id,
     });
 
-    await Order.sava()
+    const io = req.app.get("io");
+    io.emit("newOrder", order);
+    
     res.status(201).json({ msg: "Order created", order });
-
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -50,9 +53,8 @@ const addItemToOrder = async (req, res) => {
 
     // 🔍 check if item already exists
     const existingItem = order.items.find(
-      (item) => item.menuId.toString() === menuId
+      (item) => item.menuId.toString() === menuId,
     );
-
 
     if (existingItem) {
       existingItem.quantity += quantity;
@@ -62,7 +64,6 @@ const addItemToOrder = async (req, res) => {
 
     await order.save();
     res.json({ msg: "Item added", order });
-
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -87,7 +88,7 @@ const getSingleOrder = async (req, res) => {
     const { id } = req.params;
 
     const order = await Order.findById(id)
-      .populate("items.menuId") 
+      .populate("items.menuId")
       .populate("createdBy", "name role");
 
     if (!order) {
@@ -95,7 +96,6 @@ const getSingleOrder = async (req, res) => {
     }
 
     res.json(order);
-
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -107,11 +107,7 @@ const updateOrderStatus = async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
-    const order = await Order.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true }
-    );
+    const order = await Order.findByIdAndUpdate(id, { status }, { new: true });
 
     res.json(order);
   } catch (err) {
