@@ -5,6 +5,7 @@ import { Accordion } from "@chakra-ui/react";
 import { CATS } from "../../data/constants";
 import { useSelector } from "react-redux";
 import "../OrderPanel/OrderPanel.css";
+import API from "../../utils/api";
 
 const initialstate = {
   cat: "All",
@@ -71,29 +72,23 @@ export default function Takeaway({ onPlace }) {
   const totalQty = cart.reduce((s, c) => s + c.qty, 0);
   const canPlace = cart.length > 0 && val.phone !== "";
 
-  const handlePlace = () => {
-    console.log(val);
+  const handlePlace = async() => {
     const from = {
       customerNumber: val.phone,
-      orderType: "takeaway",
-      tableNumber: null,
+      orderType:"takeaway",
+      tableNumber:null,
       items: cart.map((item) => ({ menuId: item._id, quantity: item.qty })),
       totalAmount: total,
       paymentMethod: null,
-      createdBy: user.data.id,
     };
-    console.log(from);
-    // setName("");
-    // setPhone("");
-    // {
-    //     orderType: "dine-in",
-    //     tableNumber: 5,
-    //     items: [
-    //       { menuId: "661f123abc123abc123abc12", quantity: 2 },
-    //     ],
-    //     totalAmount: 500,
-    //     paymentMethod: "cash",
-    //   }
+    try {
+      const responce=await API.post("/order",from)
+      dispatch({type:"phone",payload:""})
+      setCart([])
+      console.log(responce)
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (

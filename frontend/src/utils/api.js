@@ -1,7 +1,12 @@
 import axios from "axios";
 import { errorMenu, loadingMenu, successMenu } from "../redux/slice/menuSlice";
 import { failed, pending, success } from "../redux/slice/userSlice";
-import { errorTable, loadingTable, successTable } from "../redux/slice/tableSlice";
+import {
+  errorTable,
+  loadingTable,
+  successTable,
+} from "../redux/slice/tableSlice";
+import { errorOrder, loadingOrder, successOrder } from "../redux/slice/orderSlice";
 
 const API = axios.create({
   baseURL: "http://192.168.43.142:5000/api",
@@ -75,6 +80,17 @@ export async function fetchTables(dispatch) {
     dispatch(successTable(responce.data));
   } catch (err) {
     dispatch(errorTable("Failed to get users data. Please try again."));
+  }
+}
+
+// GET ORDERS
+export async function fetchOrders(dispatch) {
+  dispatch(loadingOrder());
+  try {
+    const responce = await API.get("/order");
+    dispatch(successOrder(responce.data));
+  } catch (error) {
+    dispatch(errorOrder(error));
   }
 }
 

@@ -82,6 +82,26 @@
 }
 
 
+.order-box-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 11px;
+  background: #b84c00;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, opacity 0.15s;
+}
 
+.order-box-btn:hover:not(:disabled) { background: #9c3e00; }
+
+.order-box-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
 
 
