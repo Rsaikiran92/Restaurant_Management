@@ -236,6 +236,7 @@
 
 /* cart label */
 .order-panel__cart-label {
+  margin-top: 10px;
   font-weight: 600;
   font-size: 13px;
   color: #2d1a00;
@@ -260,10 +261,11 @@
 /* cart items */
 .order-panel__cart-items {
   display: flex;
-  height: 230px;
+  height: 260px;
   overflow: auto;
   flex-direction: column;
   gap: 6px;
+  margin: 10px 0px;
 }
 
 .order-panel__cart-item {
@@ -360,4 +362,17 @@
   .order-panel__menu {
    
   }
+}
+.out-of-stock{
+  opacity: 0.72;
+  pointer-events:none;
+  filter: grayscale(0.9);
+}
+.out-of-stock-badge{
+   font-size: 12px;
+   font-weight: bold;
+   display: none;
+}
+.out-of-stock-active{
+  display: inline;
 }
