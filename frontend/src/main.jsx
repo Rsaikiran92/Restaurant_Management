@@ -7,6 +7,7 @@ import { Provider as ReduxProvider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import ContextProvider from "./contextAPI/UserContextapi.jsx";
 import { store } from "./redux/store.js";
+import { Toaster } from "./components/ui/toaster.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -14,6 +15,7 @@ createRoot(document.getElementById("root")).render(
       <Provider>
         <ReduxProvider store={store}>
         <ContextProvider>
+          <Toaster/>
           <App />
         </ContextProvider>
         </ReduxProvider>

@@ -1,19 +1,19 @@
-import { ArrowRight } from "lucide-react";
-import "./Dashboard.css";
 import { useNavigate } from "react-router-dom";
-import {  SEED_ORDERS } from "../../data/constants";
+import { ArrowRight } from "lucide-react";
+import {useSelector} from "react-redux"
 import { useState } from "react";
+import "./Dashboard.css";
 
 function Dashboard() {
+  const {orders}=useSelector((state)=>state.order)
   const onNavigate=useNavigate()
-  const [orders,   setOrders]   = useState(SEED_ORDERS);
-
-  const takeawayOrders = orders.filter((o) => o.type === "takeaway");
-  const dineOrders     = orders.filter((o) => o.type === "dine");
+  console.log(orders)
+  const takeawayOrders = orders.filter((item) => item.orderType === "takeaway");
+  const dineOrders     = orders.filter((item) => item.orderType === "dine-in");
   const revenue = orders
-    .filter((o) => o.status === "served")
-    .reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.price * i.qty, 0), 0);
-  const activeOrders = orders.filter((o) => o.status !== "served");
+    .filter((item) => item.status === "served")
+    .reduce((sum, item) => sum + item.items.reduce((s, i) => s + i.price * i.qty, 0), 0);
+  const activeOrders = orders.filter((item) => item.status !== "served");
 
   const stats = [
     { label: "Total Orders",      value: orders.length,           color: "#b84c00", bg: "#fff8f0" },
@@ -23,8 +23,8 @@ function Dashboard() {
   ];
 
   const actions = [
-    { label: "New Takeaway Order", page: "takeaway", color: "#b84c00", bg: "#fff8f0", border: "#b84c0040" },
-    { label: "New Dine-in Order",  page: "dine",     color: "#1565c0", bg: "#e8f0fd", border: "#1565c040" },
+    { label: "New Takeaway Order", page: "/takeaway", color: "#b84c00", bg: "#fff8f0", border: "#b84c0040" },
+    { label: "New Dine-in Order",  page: "/dine",     color: "#1565c0", bg: "#e8f0fd", border: "#1565c040" },
   ];
 
   return (
@@ -73,25 +73,25 @@ function Dashboard() {
         <div className="dashboard__empty">All orders have been served!</div>
       ) : (
         <div className="dashboard__active-list">
-          {activeOrders.map((o) => {
-            const total = o.items.reduce((s, i) => s + i.price * i.qty, 0);
+          {activeOrders.map((item) => {
+            const total = item.items.reduce((s, i) => s + i.menuId.price * i.quantity, 0);
             return (
-              <div key={o.id} className="dashboard__active-row">
+              <div key={item.id} className="dashboard__active-row">
                 <div className="dashboard__active-info">
                   <div className="dashboard__active-info-top">
-                    <span className="dashboard__active-id">{o.id}</span>
+                    <span className="dashboard__active-id">{item.orderNumber}</span>
                     <span
                       className={`dashboard__active-type ${
-                        o.type === "takeaway"
+                        item.orderType === "takeaway"
                           ? "dashboard__active-type--takeaway"
                           : "dashboard__active-type--dine"
                       }`}
                     >
-                      {o.type === "takeaway" ? "Takeaway" : `Table ${o.table}`}
+                      {item.orderType === "takeaway" ? "Takeaway" : `Table ${item.tableNumber}`}
                     </span>
                   </div>
                   <div className="dashboard__active-sub">
-                    {o.customer} · {o.time} · {o.items.length} items
+                    {item.customer} · {item.time} · {item.items.length} items
                   </div>
                 </div>
                 <div className="dashboard__active-right">

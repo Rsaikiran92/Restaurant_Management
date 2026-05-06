@@ -1,6 +1,5 @@
 import {addOrder } from "../../redux/slice/orderSlice";
 import OrderCard from "../../components/OrderCard/OrderCard";
-import { SEED_ORDERS } from "../../data/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import OrderBox from "./OrderBox";

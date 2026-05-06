@@ -1,4 +1,8 @@
-import {loadingMenu, successMenu, errorMenu} from "../../redux/slice/menuSlice";
+import {
+  loadingMenu,
+  successMenu,
+  errorMenu,
+} from "../../redux/slice/menuSlice";
 import { Plus, Search, Pencil, Trash2, X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { toaster } from "../../components/ui/toaster";
@@ -59,8 +63,6 @@ export default function ManageMenu() {
   const [modal, setModal] = useState(null);
   const dispatch = useDispatch();
 
- 
-
   const filtered = menu.filter(
     (m) =>
       (catFilter === "All" || m.category === catFilter) &&
@@ -74,6 +76,14 @@ export default function ManageMenu() {
         const responce = await API.put(`/menu/${modal.item._id}`, form);
         dispatch(successMenu(responce.data.menu));
         setModal(null);
+        toaster.success({
+          title: "Menu added successful",
+          description: "Menu added successfully from the server",
+          closable: false,
+          action: {
+            label: "ok",
+          },
+        });
       } catch (error) {
         console.log(error);
         dispatch(error("Failed to edit item"));
@@ -84,6 +94,14 @@ export default function ManageMenu() {
         const responce = await API.post("/menu", form);
         dispatch(successMenu(responce.data.menu));
         setModal(null);
+        toaster.success({
+          title: "Menu edit successful",
+          description: "Menu edit successfully from the server",
+          closable: false,
+          action: {
+            label: "ok",
+          },
+        });
       } catch (error) {
         console.log(error);
         dispatch(error("Failed to create menu"));
@@ -116,7 +134,7 @@ export default function ManageMenu() {
   };
 
   return (
- 
+    <>
       <div className="admin-page" style={{ height: "90vh" }}>
         <div className="admin-page__header">
           <div className="admin-page__title-block">
@@ -125,7 +143,25 @@ export default function ManageMenu() {
               {menu.length} items {CATS.length - 1} categories
             </div>
           </div>
-          <div style={{ display: "flex", gap: 8 }}>
+
+          <button
+            className="admin-page__add-btn"
+            onClick={() => setModal({ type: "add" })}
+          >
+            <Plus size={15} /> Add Item
+          </button>
+        </div>
+
+        <div className="admin-page__toolbar">
+          <div className="admin-page__search">
+            <Search size={14} color="#a0704a" />
+            <input
+              placeholder="Search menu items…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <div style={{ display: "flex",justifyContent:"space-between", gap: 8,width:"100%" }}>
             <div
               style={{
                 display: "flex",
@@ -155,33 +191,16 @@ export default function ManageMenu() {
                 </button>
               ))}
             </div>
-            <button
-              className="admin-page__add-btn"
-              onClick={() => setModal({ type: "add" })}
+            <select
+              className="admin-page__filter-select"
+              value={catFilter}
+              onChange={(e) => setCatFilter(e.target.value)}
             >
-              <Plus size={15} /> Add Item
-            </button>
+              {CATS.map((c) => (
+                <option key={c}>{c}</option>
+              ))}
+            </select>
           </div>
-        </div>
-
-        <div className="admin-page__toolbar">
-          <div className="admin-page__search">
-            <Search size={14} color="#a0704a" />
-            <input
-              placeholder="Search menu items…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-          <select
-            className="admin-page__filter-select"
-            value={catFilter}
-            onChange={(e) => setCatFilter(e.target.value)}
-          >
-            {CATS.map((c) => (
-              <option key={c}>{c}</option>
-            ))}
-          </select>
         </div>
         {loading ? (
           <Loading />
@@ -370,6 +389,6 @@ export default function ManageMenu() {
           />
         )}
       </div>
-
+    </>
   );
 }

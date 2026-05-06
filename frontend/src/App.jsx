@@ -1,4 +1,4 @@
-import { Theme } from "@chakra-ui/react";
+import { Theme, Toaster } from "@chakra-ui/react";
 import AllRoutes from "./components/AllRoutes";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
@@ -16,6 +16,7 @@ function App() {
 
   return (
     <Theme appearance="light">
+      
       <AllRoutes />
     </Theme>
   );
