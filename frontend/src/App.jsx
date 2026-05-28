@@ -16,7 +16,6 @@ function App() {
 
   return (
     <Theme appearance="light">
-      
       <AllRoutes />
     </Theme>
   );

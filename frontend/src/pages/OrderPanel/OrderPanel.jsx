@@ -1,37 +1,22 @@
+import {cat,phone,query,cart,isMobile,table} from "../../redux/slice/orderPanelSlice"
 import { ShoppingCart, Search, Plus, Minus, X } from "lucide-react";
-import { useContext, useEffect, useReducer, useState } from "react";
-import { UserContext } from "../../contextAPI/UserContextapi";
+import { useEffect, useReducer, useState } from "react";
 import { Accordion } from "@chakra-ui/react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "../OrderPanel/OrderPanel.css";
 import API from "../../utils/api";
+import socket from "../../utils/socket";
+import { updateMenu } from "../../redux/slice/menuSlice";
 
-const initialstate = {
-  cat: "All",
-  phone: "",
-  query: "",
-};
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "phone":
-      return { ...state, phone: action.payload };
-    case "query":
-      return { ...state, query: action.payload };
-    case "cat":
-      return { ...state, cat: action.payload };
-    default:
-      return state;
-  }
-};
 
 export default function OrderPanel({ type, onPlace }) {
+  const {cat, phone, query, table}=useSelector((state)=>state.orderPanel)
   const { loading, menu, error } = useSelector((state) => state.menu);
   const { tables } = useSelector((state) => state.table);
-  const [val, dispatch] = useReducer(reducer, initialstate);
+  const dispatch=useDispatch()
   const [cart, setCart] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
-  const [table, setTable] = useState("");
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 768px)");
@@ -41,10 +26,20 @@ export default function OrderPanel({ type, onPlace }) {
     return () => mediaQuery.removeEventListener("change", handleResize);
   }, []);
 
+  useEffect(() => {
+     socket.on("updateMenu", (menu) => {
+      dispatch(updateMenu(menu))
+    });
+
+    return () => {
+      socket.off("updateMenu");
+    };
+  },[]);
+
   const filteredMenu = menu.filter(
     (m) =>
-      (val.cat === "All" || m.category === val.cat) &&
-      m.name.toLowerCase().includes(val.query.toLowerCase()),
+      (cat === "All" || m.category === cat) &&
+      m.name.toLowerCase().includes(query.toLowerCase()),
   );
   let category = menu.map((item) => item.category);
   category = category.filter((item, index) => category.indexOf(item) === index);
@@ -71,14 +66,14 @@ export default function OrderPanel({ type, onPlace }) {
   const totalQty = cart.reduce((s, c) => s + c.qty, 0);
   let canPlace;
   if (type == "takeaway") {
-    canPlace = cart.length > 0 && val.phone !== "";
+    canPlace = cart.length > 0 && phone !== "";
   } else {
     canPlace = cart.length > 0;
   }
 
   const handlePlace = async () => {
     const from = {
-      customerNumber: val.phone,
+      customerNumber: phone,
       orderType: type === "takeaway" ? "takeaway" : "dine-in",
       tableNumber: type === "takeaway" ? null : table,
       items: cart.map((item) => ({ menuId: item._id, quantity: item.qty })),
@@ -104,9 +99,9 @@ export default function OrderPanel({ type, onPlace }) {
           <input
             className="order-panel__search-input"
             placeholder="Search dishes…"
-            value={val.query}
+            value={query}
             onChange={(e) =>
-              dispatch({ type: "query", payload: e.target.value })
+              dispatch(query(e.target.value))
             }
           />
         </div>
@@ -114,16 +109,16 @@ export default function OrderPanel({ type, onPlace }) {
         {/* Category chips */}
         <div className="order-panel__cats">
           <button
-            className={`order-panel__cat-btn${val.cat === "All" ? " order-panel__cat-btn--active" : ""}`}
-            onClick={() => dispatch({ type: "cat", payload: "All" })}
+            className={`order-panel__cat-btn${cat === "All" ? " order-panel__cat-btn--active" : ""}`}
+            onClick={() => dispatch(cat("All"))}
           >
             All
           </button>
           {category.map((c) => (
             <button
               key={c}
-              className={`order-panel__cat-btn${val.cat === c ? " order-panel__cat-btn--active" : ""}`}
-              onClick={() => dispatch({ type: "cat", payload: c })}
+              className={`order-panel__cat-btn${cat === c ? " order-panel__cat-btn--active" : ""}`}
+              onClick={() => dispatch(cat("All"))}
             >
               {c}
             </button>
@@ -218,9 +213,9 @@ export default function OrderPanel({ type, onPlace }) {
                     <input
                       className="order-panel__input"
                       placeholder="Phone Number"
-                      value={val.phone}
+                      value={phone}
                       onChange={(e) =>
-                        dispatch({ type: "phone", payload: e.target.value })
+                        dispatch(phone( e.target.value))
                       }
                     />
                   ) : (
@@ -231,7 +226,7 @@ export default function OrderPanel({ type, onPlace }) {
                       <div className="form-group">
                         <select
                           value={table}
-                          onChange={(e) => setTable(e.target.value)}
+                          onChange={(e) => dispatch(table(e.target.value))}
                         >
                           <option value="">Please select Table</option>
                           {tables.map((item) => (
@@ -247,9 +242,9 @@ export default function OrderPanel({ type, onPlace }) {
                       <input
                         className="order-panel__input"
                         placeholder="Phone Number"
-                        value={val.phone}
+                        value={phone}
                         onChange={(e) =>
-                          dispatch({ type: "phone", payload: e.target.value })
+                          dispatch(phone(e.target.value ))
                         }
                       />
                     </>

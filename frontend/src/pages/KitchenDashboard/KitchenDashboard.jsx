@@ -1,4 +1,4 @@
-import {addOrder } from "../../redux/slice/orderSlice";
+import {addOrder} from "../../redux/slice/orderSlice";
 import OrderCard from "../../components/OrderCard/OrderCard";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";

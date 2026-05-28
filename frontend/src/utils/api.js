@@ -29,7 +29,7 @@ API.interceptors.response.use(
 export const userLogin = async (state, dispatch, setdata, navigate) => {
   dispatch({ type: "loading", value: true });
   dispatch({ type: "error", value: "" });
-
+  console.log(state)
   try {
     const res = await API.post("/auth/login", {
       email: state.email,

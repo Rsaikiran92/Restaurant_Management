@@ -4,28 +4,31 @@ import {useSelector} from "react-redux"
 import { useState } from "react";
 import "./Dashboard.css";
 
+
+
+
 function Dashboard() {
   const {orders}=useSelector((state)=>state.order)
   const onNavigate=useNavigate()
-  console.log(orders)
+ 
   const takeawayOrders = orders.filter((item) => item.orderType === "takeaway");
   const dineOrders     = orders.filter((item) => item.orderType === "dine-in");
+  const activeOrders = orders.filter((item) => item.status !== "served");
   const revenue = orders
     .filter((item) => item.status === "served")
     .reduce((sum, item) => sum + item.items.reduce((s, i) => s + i.price * i.qty, 0), 0);
-  const activeOrders = orders.filter((item) => item.status !== "served");
 
   const stats = [
     { label: "Total Orders",      value: orders.length,           color: "#b84c00", bg: "#fff8f0" },
     { label: "Takeaway",          value: takeawayOrders.length,   color: "#2e7d32", bg: "#e8f5e9" },
     { label: "Dine-in",           value: dineOrders.length,       color: "#1565c0", bg: "#e3f2fd" },
     { label: "Revenue (Served)",  value: `₹${revenue.toLocaleString("en-IN")}`, color: "#4a148c", bg: "#f3e5f5" },
-  ];
+];
 
-  const actions = [
+const actions = [
     { label: "New Takeaway Order", page: "/takeaway", color: "#b84c00", bg: "#fff8f0", border: "#b84c0040" },
     { label: "New Dine-in Order",  page: "/dine",     color: "#1565c0", bg: "#e8f0fd", border: "#1565c040" },
-  ];
+];
 
   return (
     <div className="dashboard">

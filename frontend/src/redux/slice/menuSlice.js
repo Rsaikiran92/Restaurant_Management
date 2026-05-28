@@ -14,12 +14,15 @@ const menuSlice=createSlice({
         successMenu:(state,action)=>{
             return {...state,loading:false,menu:action.payload}
         },
+        updateMenu:(state,action)=>{
+            return {...state,menu:action.payload}
+        },
         errorMenu:(state,action)=>{
             return {...state,loading:false,error:action.payload}
         }
     }
 })
 
-export const {loadingMenu,successMenu,errorMenu}=menuSlice.actions;
+export const {loadingMenu,successMenu,updateMenu,errorMenu}=menuSlice.actions;
 
 export default menuSlice.reducer;
