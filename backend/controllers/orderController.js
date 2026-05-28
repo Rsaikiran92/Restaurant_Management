@@ -3,32 +3,31 @@ import Order from "../models/orderModel.js";
 // CREATE ORDER (Waiter/front desk)
 const createOrder = async (req, res) => {
   try {
-
     // if (orderType === "dine-in" && !tableNumber) {
     //   return res.status(400).json({ msg: "Table number required" });
     // }
 
-    const today = new Date()
-    const date=today.toISOString().split("T")[0];
-    const time=today.toLocaleTimeString()
+    const today = new Date();
+    const date = today.toISOString().split("T")[0];
+    const time = today.toLocaleTimeString();
 
     // 🔢 find last order of today
     const lastOrder = await Order.findOne({ orderDate: date }).sort({
       orderNumber: -1,
     });
     const nextOrderNumber = lastOrder ? lastOrder.orderNumber + 1 : 1;
-  
+
     const order = await Order.create({
       ...req.body,
       orderNumber: nextOrderNumber,
-      orderDate:date,
-      orderTime:time,
+      orderDate: date,
+      orderTime: time,
       createdBy: req.user.id,
     });
 
     const io = req.app.get("io");
     io.emit("newOrder", order);
-    
+
     res.status(201).json({ msg: "Order created", order });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -72,9 +71,9 @@ const addItemToOrder = async (req, res) => {
 // GET ALL ORDERS (Kitchen + Front Desk)
 const getOrders = async (req, res) => {
   try {
-    const today = new Date()
-    const date=today.toISOString().split("T")[0];
-    const orders = await Order.find({ isPaid: false,orderDate: date })
+    const today = new Date();
+    const date = today.toISOString().split("T")[0];
+    const orders = await Order.find({ isPaid: false, orderDate: date })
       .populate("items.menuId")
       .populate("createdBy", "name");
 
@@ -107,10 +106,25 @@ const getSingleOrder = async (req, res) => {
 const updateOrderStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
-
-    const order = await Order.findByIdAndUpdate(id, { status }, { new: true });
-
+    const { itemId, status } = req.body;
+    const order = await Order.findOneAndUpdate(
+      {
+        _id: id,
+        "items._id": itemId,
+      },
+      {
+        $set: {
+          "items.$.status": status,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    if(status=="ready"){
+      const io = req.app.get("io");
+      io.emit("itemStatus", order);
+    }
     res.json(order);
   } catch (err) {
     res.status(500).json({ error: err.message });
