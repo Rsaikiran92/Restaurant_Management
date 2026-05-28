@@ -1,13 +1,35 @@
 import { Clock, Plus } from "lucide-react";
 import "./OrderBox.css";
 import { ITEM_STATUSES } from "../../data/constants";
+import { useState } from "react";
+import API from "../../utils/api";
+import {toaster} from "../../components/ui/toaster"
 
-export default function OrderBox({order}) {
-  
+export default function OrderBox({ order }) {
+  const [status,setstatus]=useState("")
+
+  const updateItemStatus = async (orderId,itemId,val) => {
+    setstatus(val)
+    try {
+      const responce = await API.put(`/order/${orderId}`, {itemId,status:val});
+      toaster.success({
+        title: "Menu added successful",
+        description: "Menu added successfully from the server",
+        closable: false,
+        action: {
+          label: "ok",
+        },
+      });
+    } catch (error) {
+      console.log(error);
+   
+    }
+  };
+
   return (
     <div className="order-box">
       {/* Header */}
-      
+
       <div className="order-box__header" key={order._id}>
         <div className="order-box__id-group">
           <span className="order-box__id">{order.orderNumber}</span>
@@ -18,7 +40,9 @@ export default function OrderBox({order}) {
                 : "order-box__type-badge--dine"
             }`}
           >
-            {order.orderType === "takeaway" ? "Takeaway" : `Table ${order.orderTable}`}
+            {order.orderType === "takeaway"
+              ? "Takeaway"
+              : `Table ${order.orderTable}`}
           </span>
         </div>
       </div>
@@ -41,10 +65,10 @@ export default function OrderBox({order}) {
               </div>
             </span>
             <select
-            // value={item.status}
-            // onChange={(e) =>
-            //   updateItemStatus(selected.id, item.itemId, e.target.value)
-            // }
+            value={status}
+            onChange={(e) =>
+              updateItemStatus(order._id,item._id, e.target.value)
+            }
             >
               {ITEM_STATUSES.map((s) => (
                 <option key={s} value={s}>
@@ -55,10 +79,9 @@ export default function OrderBox({order}) {
           </div>
         ))}
       </div>
-    <div>
+      <div>
         <button className="order-box-btn">Order Completed</button>
-    </div>
-      
+      </div>
     </div>
   );
 }
