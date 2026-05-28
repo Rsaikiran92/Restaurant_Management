@@ -30,6 +30,8 @@ const updateMenu = async (req, res) => {
       new: true,
     });
     const menu = await Menu.find();
+    const io = req.app.get("io");
+    io.emit("updateMenu", menu);
     res.json({ msg: "Menu item edited", menu });
   } catch (err) {
     res.status(500).json({ error: err.message });

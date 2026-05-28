@@ -72,7 +72,9 @@ const addItemToOrder = async (req, res) => {
 // GET ALL ORDERS (Kitchen + Front Desk)
 const getOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ isPaid: false })
+    const today = new Date()
+    const date=today.toISOString().split("T")[0];
+    const orders = await Order.find({ isPaid: false,orderDate: date })
       .populate("items.menuId")
       .populate("createdBy", "name");
 
