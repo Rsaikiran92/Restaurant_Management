@@ -3,7 +3,9 @@ import { X } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
-const ROLES = ["admin", "desk", "manager", "waiter"];
+const ROLES =  ["admin", "frontdesk", "kitchen", "waiter"];
+
+
 
 function UserModal({ user, onSave, onClose }) {
   const { loading } = useSelector((state) => state.user);

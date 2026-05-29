@@ -20,7 +20,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { pending, success, failed } from "../../redux/slice/userSlice.js";
 import Loading from "../../components/Loading.jsx";
 
-const ROLES = ["admin", "desk", "manager", "waiter"];
+const ROLES = ["admin", "frontdesk", "kitchen", "waiter"];
 
 const STATUS_CFG = {
   active: {
