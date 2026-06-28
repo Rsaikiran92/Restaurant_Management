@@ -9,14 +9,19 @@ const loginUser = async (req, res) => {
 
     // check user exists
     const user = await User.findOne({ email });
+
     if (!user) {
-      return res.status(400).json({ msg: "User not found" });
+      return res.status(400).json({ msg: "No account found with this email address." });
+    }
+
+    if (user.status == "inactive") {
+      return res.status(400).json({ msg: "Access denied. Your account is inactive. Please contact the administrator." });
     }
 
     // compare password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ msg: "Invalid credentials" });
+      return res.status(400).json({ msg: "Incorrect password. Please try again." });
     }
 
     // generate token
@@ -26,7 +31,7 @@ const loginUser = async (req, res) => {
         role: user.role,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "7d" } // 🔥
+      { expiresIn: "7d" }, // 🔥
     );
 
     res.json({
