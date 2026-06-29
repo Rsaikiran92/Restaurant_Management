@@ -1,4 +1,4 @@
-import {cat,phone,query,cart,isMobile,table} from "../../redux/slice/orderPanelSlice"
+import {cat,setphone,query,cart,isMobile,settable} from "../../redux/slice/orderPanelSlice"
 import { ShoppingCart, Search, Plus, Minus, X } from "lucide-react";
 import { useEffect, useReducer, useState } from "react";
 import { Accordion } from "@chakra-ui/react";
@@ -226,7 +226,7 @@ export default function OrderPanel({ type, onPlace }) {
                       <div className="form-group">
                         <select
                           value={table}
-                          onChange={(e) => dispatch(table(e.target.value))}
+                          onChange={(e) => dispatch(settable(e.target.value))}
                         >
                           <option value="">Please select Table</option>
                           {tables.map((item) => (
@@ -244,7 +244,7 @@ export default function OrderPanel({ type, onPlace }) {
                         placeholder="Phone Number"
                         value={phone}
                         onChange={(e) =>
-                          dispatch(phone(e.target.value ))
+                          dispatch(setphone(e.target.value ))
                         }
                       />
                     </>

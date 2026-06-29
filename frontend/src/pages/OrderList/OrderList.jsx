@@ -5,11 +5,11 @@ import "./OrdersList.css";
 import AddItemsModal from "./AddItemsModel";
 
 export default function OrdersList({ type }) {
-    const [modal, setModal] = useState(null); // "add" | "pay" | "print"
+  const [modal, setModal] = useState(null); // "add" | "pay" | "print"
   const { orders } = useSelector((state) => state.order);
 
   const filtered = orders.filter((o) => o.orderType === type);
-  console.log(orders)
+  console.log(orders);
 
   return (
     <div className="orders-list">
@@ -26,7 +26,7 @@ export default function OrdersList({ type }) {
           <div className="orders-list__empty">No orders found</div>
         ) : (
           filtered.map((order) => (
-            <OrderCard key={order.id} order={order}  setModal={setModal}  />
+            <OrderCard key={order.id} order={order} setModal={setModal} />
           ))
         )}
       </div>

@@ -11,7 +11,7 @@ import {
   Mail,
 } from "lucide-react";
 import "./ManageUsers.css";
-import { Table } from "@chakra-ui/react";
+import { Table ,HStack,Avatar,Stack,Text} from "@chakra-ui/react";
 import { Toaster, toaster } from "../../components/ui/toaster.jsx";
 import DeleteUserModal from "./DeleteUserModel";
 import UserModal from "./UserModel";
@@ -133,7 +133,7 @@ function ManageUsers() {
   };
 
   return (
-    <div className="admin-page">
+    <div className="admin-page" style={{ height: "90vh" }}>
       {/* Header */}
       <div className="admin-page__header">
         <div className="admin-page__title-block">
@@ -161,7 +161,14 @@ function ManageUsers() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <div style={{ width: "100%", display: "flex", justifyContent: "end" ,gap:"10px"}}>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "end",
+            gap: "10px",
+          }}
+        >
           <div
             style={{
               display: "flex",
@@ -216,9 +223,25 @@ function ManageUsers() {
             const cfg = STATUS_CFG[t.status];
             return (
               <div className={`table-card ${cfg.card}`} key={t._id}>
-                <div className="table-card__header">
+                {/* <div className="table-card__header">
                   <span className="table-card__id">{t.name}</span>
-                </div>
+                </div> */}
+                <HStack  justifyContent={"space-between"} alignItems={"start"}>
+                  <HStack gap={3}>
+                  <Avatar.Root>
+                    <Avatar.Fallback name={t.name} />
+                  </Avatar.Root>
+                  <Stack gap="0">
+                    <Text fontWeight="semibold" textStyle="sm">
+                      {t.name}
+                    </Text>
+                    <Text color="fg.muted" textStyle="sm">
+                      {t.email}
+                    </Text>
+                  </Stack>
+                  </HStack>
+                  <span className={`admin-pill ${cfg.pill}`}>{t.status}</span>
+                </HStack>
                 <div>
                   <span
                     className="admin-pill"
@@ -228,12 +251,12 @@ function ManageUsers() {
                     {t.role !== "admin" && <User size={10} />}
                     {t.role.charAt(0).toUpperCase() + t.role.slice(1)}
                   </span>
-                  <span className={`admin-pill ${cfg.pill}`}>{t.status}</span>
+                  {/* <span className={`admin-pill ${cfg.pill}`}>{t.status}</span> */}
                 </div>
-                <div className="table-card__seats">
+                {/* <div className="table-card__seats">
                   <Mail size={14} />
                   <span> {t.email}</span>
-                </div>
+                </div> */}
                 <div className="table-card__actions">
                   <button
                     className="admin-table__btn admin-table__btn--edit"

@@ -30,7 +30,8 @@ export default function Sidebar() {
   const location = useLocation();
   const [sideOpen, setSideOpen] = useState(!isMobile());
   const {data}=useContext(UserContext)
-  console.log(data)
+  const role=localStorage.getItem("role")
+
 
   useEffect(() => {
     if (isMobile()) setSideOpen(false);
@@ -51,14 +52,14 @@ export default function Sidebar() {
 const visibleGroups = NAV_GROUPS.map((group) => ({
     ...group,
     items: group.items.filter((nav) =>
-      nav.roles.includes(data.role)                    // ← role check here
+      nav.roles.includes(role)                    // ← role check here
     ),
   })).filter((group) => group.items.length > 0);   
-  console.log(visibleGroups)
+ 
   return (
     <aside className={cls}>
       <nav className="sidebar__nav">
-        {visibleGroups.map((group) => (
+        {NAV_GROUPS.map((group) => (
           <div key={group.key} className="sidebar__group">
             {sideOpen && (
               <div className="sidebar__group-label">{group.label}</div>

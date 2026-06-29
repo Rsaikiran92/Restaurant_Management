@@ -14,7 +14,7 @@ const orderPanelSlice = createSlice({
     cat:(state,action)=>{
         return {...state,cat:action.payload}
     },
-    phone:(state,action)=>{
+    setphone:(state,action)=>{
         return {...state,phone:action.payload}
     },
     query:(state,action)=>{
@@ -26,12 +26,12 @@ const orderPanelSlice = createSlice({
     isMobile:(state,action)=>{
         return {...state,isMobile:action.payload}
     },
-    table:(state,action)=>{
+    settable:(state,action)=>{
         return {...state,table:action.payload}
     }
   },
 });
 
-export const { cat,phone,query,cart,isMobile,table } =orderPanelSlice.actions;
+export const { cat,setphone,query,cart,isMobile,settable } =orderPanelSlice.actions;
 
 export default orderPanelSlice.reducer;

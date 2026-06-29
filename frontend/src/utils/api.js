@@ -21,10 +21,10 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-API.interceptors.response.use(
-  (res) => res,
-  (err) => Promise.reject(err.error),
-);
+// API.interceptors.response.use(
+//   (res) => res,
+//   (err) => Promise.reject(err.error),
+// );
 // user login
 export const userLogin = async (state, dispatch, setdata, navigate) => {
   dispatch({ type: "loading", value: true });
@@ -41,11 +41,11 @@ export const userLogin = async (state, dispatch, setdata, navigate) => {
     localStorage.setItem("role", user.role);
     navigate("/dashboard");
   } catch (err) {
-    console.log(err);
+    console.log( err.response?.data?.msg,"login message");
     dispatch({ type: "loading", value: false });
     dispatch({
       type: "error",
-      value: "Invalid credentials or role mismatch. Please try again.",
+      value: err.response?.data?.msg,
     });
   }
 };
