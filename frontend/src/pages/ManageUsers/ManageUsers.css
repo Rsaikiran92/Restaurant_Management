@@ -35,7 +35,44 @@
 
 .users-table tbody tr:hover { background: #fffbf6; }
 
-.tables-grid {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* .tables-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 12px; 
@@ -44,7 +81,7 @@
 .table-card {
   border-radius: 14px;
   border: 2px solid;
-  padding: 16px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -81,4 +118,4 @@
   display: flex;
   gap: 6px;
   margin-top: auto;
-}
+} */

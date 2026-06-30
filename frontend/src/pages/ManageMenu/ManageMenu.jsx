@@ -3,10 +3,20 @@ import {
   successMenu,
   errorMenu,
 } from "../../redux/slice/menuSlice";
+import { CgUnavailable } from "react-icons/cg";
+import { MdEventAvailable } from "react-icons/md";
+import {
+  Table,
+  HStack,
+  Avatar,
+  Stack,
+  Text,
+  Button,
+  Toaster,
+} from "@chakra-ui/react";
 import { Plus, Search, Pencil, Trash2, X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { toaster } from "../../components/ui/toaster";
-import { Table, Toaster } from "@chakra-ui/react";
 import API, { fetchMenu } from "../../utils/api";
 import Loading from "../../components/Loading";
 import { useEffect, useState } from "react";
@@ -46,7 +56,18 @@ function DeleteModal({ item, onConfirm, onClose }) {
     </div>
   );
 }
-
+const STATUS_CFG = {
+  active: {
+    label: "Available",
+    pill: "admin-pill--available",
+    card: "table-card--available",
+  },
+  inactive: {
+    label: "Occupied",
+    pill: "admin-pill--occupied",
+    card: "table-card--occupied",
+  },
+};
 const CAT_COLORS = {
   Starters: { bg: "#fdecea", color: "#c62828" },
   Mains: { bg: "#fff3e0", color: "#e65100" },
@@ -55,6 +76,12 @@ const CAT_COLORS = {
   Desserts: { bg: "#f3e5f5", color: "#6a1b9a" },
 };
 
+const ROLE_COLORS = {
+  admin: { bg: "#f3e5f5", color: "#6a1b9a" },
+  desk: { bg: "#e3f2fd", color: "#1565c0" },
+  manager: { bg: "#fff3e0", color: "#e65100" },
+  waiter: { bg: "#e8f5e9", color: "#2e7d32" },
+};
 export default function ManageMenu() {
   const { loading, menu, error } = useSelector((state) => state.menu);
   const [catFilter, setCatFilter] = useState("All");
@@ -161,7 +188,14 @@ export default function ManageMenu() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div style={{ display: "flex",justifyContent:"space-between", gap: 8,width:"100%" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: 8,
+              width: "100%",
+            }}
+          >
             <div
               style={{
                 display: "flex",
@@ -207,44 +241,89 @@ export default function ManageMenu() {
         ) : view === "grid" ? (
           <div className="tables-grid">
             {filtered.map((t) => {
-              // const rc = ROLE_COLORS[t.role] || {};
-              // const cfg = STATUS_CFG[t.status];
+              const cfg = STATUS_CFG[t.status];
+              const cc = CAT_COLORS[t.category] || {};
               return (
-                <div className={`table-card `} key={t._id}>
-                  <div className="table-card__header">
-                    <span className="table-card__id">{t.name}</span>
-                  </div>
-                  <div>
-                    {/* <span
-                    className="admin-pill"
-                    // style={{ background: rc.bg, color: rc.color }}
-                  >
-                    {t.role === "admin" && <ShieldCheck size={10} />}
-                    {t.role !== "admin" && <User size={10} />}
-                    {t.role.charAt(0).toUpperCase() + t.role.slice(1)}
-                  </span> */}
-                    <span className={`admin-pill `}>
-                      {t.available ? "Available" : "Unavailable"}
+                <div
+                  className={`table-card ${t.isAvailable ? "table-card--available" : "table-card--occupied"}`}
+                  key={t._id}
+                >
+                  <HStack justifyContent={"space-between"} alignItems={"start"}>
+                    <HStack gap={3}> 
+                      <Stack gap="0" style={{ width: "180px" }}>
+                        <Text
+                          fontWeight="semibold"
+                          textStyle="sm"
+                          style={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          {t.name}
+                        </Text>
+                        <Text
+                          color="fg.muted"
+                          textStyle="sm"
+                          style={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          {t.description}
+                        </Text>
+                        <Text
+                          color="fg.muted"
+                          textStyle="sm"
+                          style={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          ₹ {t.price}
+                        </Text>
+                      </Stack>
+                    </HStack>
+                    <span
+                      className="admin-pill"
+                      style={{ background: cc.bg, color: cc.color }}
+                    >
+                      {t.category}
+                    </span>
+                  </HStack>
+                   <div>
+                    <span
+                      className={`admin-pill ${t.isAvailable ? "admin-pill--active" : "admin-pill--inactive"}`}
+                   
+                    >
+                       {t.isAvailable && (<MdEventAvailable size={10} />)}
+                       {!t.isAvailable && (<CgUnavailable size={10} /> )}
+                      {t.isAvailable ? "Available" : "Unavailable"}
                     </span>
                   </div>
-                  <div className="table-card__seats">
-                    <span> </span>
-                  </div>
                   <div className="table-card__actions">
-                    <button
-                      className="admin-table__btn admin-table__btn--edit"
-                      title="Edit"
+                    <Button
+                      variant="subtle"
+                      colorPalette="blue"
+                      flex="1"
+                      borderRadius={"6px"}
                       onClick={() => setModal({ type: "edit", user: t })}
                     >
-                      <Pencil size={13} />
-                    </button>
-                    <button
-                      className="admin-table__btn admin-table__btn--delete"
-                      title="Delete"
+                      <Pencil size={5} />
+                      Edit
+                    </Button>
+                    <Button
+                      variant="subtle"
+                      colorPalette="red"
+                      flex="1"
+                      borderRadius={"6px"}
                       onClick={() => setModal({ type: "delete", user: t })}
                     >
-                      <Trash2 size={13} />
-                    </button>
+                      <Trash2 />
+                      Delete
+                    </Button>
                   </div>
                 </div>
               );

@@ -1,8 +1,9 @@
+import { fetchMenu, fetchOrders, fetchTables, fetchUsers } from "./utils/api";
 import { Theme, Toaster } from "@chakra-ui/react";
 import AllRoutes from "./components/AllRoutes";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { fetchMenu, fetchOrders, fetchTables, fetchUsers } from "./utils/api";
+import "./App.css"
 
 function App() {
   const dispatch = useDispatch();

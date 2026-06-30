@@ -11,7 +11,7 @@ import {
   Mail,
 } from "lucide-react";
 import "./ManageUsers.css";
-import { Table ,HStack,Avatar,Stack,Text} from "@chakra-ui/react";
+import { Table, HStack, Avatar, Stack, Text, Button } from "@chakra-ui/react";
 import { Toaster, toaster } from "../../components/ui/toaster.jsx";
 import DeleteUserModal from "./DeleteUserModel";
 import UserModal from "./UserModel";
@@ -19,6 +19,7 @@ import API from "../../utils/api";
 import { useSelector, useDispatch } from "react-redux";
 import { pending, success, failed } from "../../redux/slice/userSlice.js";
 import Loading from "../../components/Loading.jsx";
+import { MdOutlineAccountCircle, MdOutlineNoAccounts } from "react-icons/md";
 
 const ROLES = ["admin", "frontdesk", "kitchen", "waiter"];
 
@@ -142,7 +143,7 @@ function ManageUsers() {
             {users.length} staff accounts
           </div>
         </div>
-
+        
         <button
           className="admin-page__add-btn"
           onClick={() => setModal({ type: "add" })}
@@ -155,11 +156,7 @@ function ManageUsers() {
       <div className="admin-page__toolbar">
         <div className="admin-page__search">
           <Search size={14} color="#a0704a" />
-          <input
-            placeholder="Search by name or email…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <input placeholder="Search by name or email…"  value={search}  onChange={(e) => setSearch(e.target.value)}  />
         </div>
         <div
           style={{
@@ -172,44 +169,53 @@ function ManageUsers() {
           <div
             style={{
               display: "flex",
-              background: "#fff",
-              border: "1px solid #e8c9a0",
-              borderRadius: 9,
-              overflow: "hidden",
+              justifyContent: "space-between",
+              gap: 8,
+              width: "100%",
             }}
           >
-            {["grid", "list"].map((v) => (
-              <button
-                key={v}
-                onClick={() => setView(v)}
-                style={{
-                  padding: "7px 14px",
-                  border: "none",
-                  cursor: "pointer",
-                  fontFamily: "inherit",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  transition: "background 0.12s",
-                  background: view === v ? "#b84c00" : "transparent",
-                  color: view === v ? "#fff" : "#6b3d1e",
-                }}
-              >
-                {v.charAt(0).toUpperCase() + v.slice(1)}
-              </button>
-            ))}
+            <div
+              style={{
+                display: "flex",
+                background: "#fff",
+                border: "1px solid #e8c9a0",
+                borderRadius: 9,
+                overflow: "hidden",
+              }}
+            >
+              {["grid", "list"].map((v) => (
+                <button
+                  key={v}
+                  onClick={() => setView(v)}
+                  style={{
+                    padding: "7px 14px",
+                    border: "none",
+                    cursor: "pointer",
+                    fontFamily: "inherit",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    transition: "background 0.12s",
+                    background: view === v ? "#b84c00" : "transparent",
+                    color: view === v ? "#fff" : "#6b3d1e",
+                  }}
+                >
+                  {v.charAt(0).toUpperCase() + v.slice(1)}
+                </button>
+              ))}
+            </div>
+            <select
+              className="admin-page__filter-select"
+              value={roleFilter}
+              onChange={(e) => setRoleFilter(e.target.value)}
+            >
+              <option value="all">All Roles</option>
+              {ROLES.map((r) => (
+                <option key={r} value={r}>
+                  {r.charAt(0).toUpperCase() + r.slice(1)}
+                </option>
+              ))}
+            </select>
           </div>
-          <select
-            className="admin-page__filter-select"
-            value={roleFilter}
-            onChange={(e) => setRoleFilter(e.target.value)}
-          >
-            <option value="all">All Roles</option>
-            {ROLES.map((r) => (
-              <option key={r} value={r}>
-                {r.charAt(0).toUpperCase() + r.slice(1)}
-              </option>
-            ))}
-          </select>
         </div>
       </div>
 
@@ -223,24 +229,45 @@ function ManageUsers() {
             const cfg = STATUS_CFG[t.status];
             return (
               <div className={`table-card ${cfg.card}`} key={t._id}>
-                {/* <div className="table-card__header">
-                  <span className="table-card__id">{t.name}</span>
-                </div> */}
-                <HStack  justifyContent={"space-between"} alignItems={"start"}>
+                <HStack justifyContent={"space-between"} alignItems={"start"}>
                   <HStack gap={3}>
-                  <Avatar.Root>
-                    <Avatar.Fallback name={t.name} />
-                  </Avatar.Root>
-                  <Stack gap="0">
-                    <Text fontWeight="semibold" textStyle="sm">
-                      {t.name}
-                    </Text>
-                    <Text color="fg.muted" textStyle="sm">
-                      {t.email}
-                    </Text>
-                  </Stack>
+                    <Avatar.Root>
+                      <Avatar.Fallback name={t.name} />
+                    </Avatar.Root>
+                    <Stack gap="0" style={{ width: "120px" }}>
+                      <Text
+                        fontWeight="semibold"
+                        textStyle="sm"
+                        style={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        {t.name}
+                      </Text>
+                      <Text
+                        color="fg.muted"
+                        textStyle="sm"
+                        style={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        {t.email}
+                      </Text>
+                    </Stack>
                   </HStack>
-                  <span className={`admin-pill ${cfg.pill}`}>{t.status}</span>
+                  <span className={`admin-pill ${cfg.pill}`}>
+                    {t.status === "active" && (
+                      <MdOutlineAccountCircle size={10} />
+                    )}
+                    {t.status === "inactive" && (
+                      <MdOutlineNoAccounts size={10} />
+                    )}
+                    {t.status.charAt(0).toUpperCase() + t.status.slice(1)}
+                  </span>
                 </HStack>
                 <div>
                   <span
@@ -251,27 +278,28 @@ function ManageUsers() {
                     {t.role !== "admin" && <User size={10} />}
                     {t.role.charAt(0).toUpperCase() + t.role.slice(1)}
                   </span>
-                  {/* <span className={`admin-pill ${cfg.pill}`}>{t.status}</span> */}
                 </div>
-                {/* <div className="table-card__seats">
-                  <Mail size={14} />
-                  <span> {t.email}</span>
-                </div> */}
                 <div className="table-card__actions">
-                  <button
-                    className="admin-table__btn admin-table__btn--edit"
-                    title="Edit"
+                  <Button
+                    variant="subtle"
+                    colorPalette="blue"
+                    flex="1"
+                    borderRadius={"6px"}
                     onClick={() => setModal({ type: "edit", user: t })}
                   >
-                    <Pencil size={13} />
-                  </button>
-                  <button
-                    className="admin-table__btn admin-table__btn--delete"
-                    title="Delete"
+                    <Pencil size={5} />
+                    Edit
+                  </Button>
+                  <Button
+                    variant="subtle"
+                    colorPalette="red"
+                    flex="1"
+                    borderRadius={"6px"}
                     onClick={() => setModal({ type: "delete", user: t })}
                   >
-                    <Trash2 size={13} />
-                  </button>
+                    <Trash2 />
+                    Delete
+                  </Button>
                 </div>
               </div>
             );
@@ -364,6 +392,8 @@ function ManageUsers() {
                       </Table.Cell>
                       <Table.Cell>
                         <span className={`admin-pill admin-pill--${u.status}`}>
+                          {u.status === "active" && (<MdOutlineAccountCircle size={10} />)}
+                          {u.status === "inactive" && (<MdOutlineNoAccounts size={10} /> )}
                           {u.status.charAt(0).toUpperCase() + u.status.slice(1)}
                         </span>
                       </Table.Cell>

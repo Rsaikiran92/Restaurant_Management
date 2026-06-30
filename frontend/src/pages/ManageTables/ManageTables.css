@@ -4,6 +4,8 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
   margin-bottom: 20px;
+  width: 100%;
+  overflow-x: scroll;
 }
 
 .tables-summary__card {
@@ -11,6 +13,7 @@
   border-radius: 12px;
   padding: 14px 18px;
   text-align: center;
+  
 }
 
 .tables-summary__value {
@@ -25,7 +28,7 @@
 }
 
 /* ── Grid view ── */
-.tables-grid {
+/* .tables-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 12px;
@@ -71,4 +74,4 @@
   display: flex;
   gap: 6px;
   margin-top: auto;
-}
+} */
