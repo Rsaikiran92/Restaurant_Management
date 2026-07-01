@@ -10,8 +10,11 @@ import {
 import "./Navbar.css";
 import { Avatar, Menu, Portal } from "@chakra-ui/react";
 import { Button, Card, HStack, Stack, Strong, Text } from "@chakra-ui/react";
-
+import { useContext } from "react";
+import { UserContext } from "../../contextAPI/UserContextapi"
 function Navbar({ pendingCount }) {
+    const {data}=useContext(UserContext)
+    console.log(data)
   return (
     <header className="navbar">
       <div className="navbar__inner">

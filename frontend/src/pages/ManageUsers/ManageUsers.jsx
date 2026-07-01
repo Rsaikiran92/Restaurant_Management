@@ -1,45 +1,23 @@
-import { useEffect, useState } from "react";
-import {
-  Plus,
-  Search,
-  Pencil,
-  Trash2,
-  X,
-  ShieldCheck,
-  User,
-  Users,
-  Mail,
-} from "lucide-react";
-import "./ManageUsers.css";
+import {Plus, Search, Pencil, Trash2, X, ShieldCheck, User, Users, Mail} from "lucide-react";
 import { Table, HStack, Avatar, Stack, Text, Button } from "@chakra-ui/react";
+import { MdOutlineAccountCircle, MdOutlineNoAccounts } from "react-icons/md";
+import { pending, success, failed } from "../../redux/slice/userSlice.js";
 import { Toaster, toaster } from "../../components/ui/toaster.jsx";
+import { useSelector, useDispatch } from "react-redux";
+import Loading from "../../components/Loading.jsx";
 import DeleteUserModal from "./DeleteUserModel";
+import { useEffect, useState } from "react";
 import UserModal from "./UserModel";
 import API from "../../utils/api";
-import { useSelector, useDispatch } from "react-redux";
-import { pending, success, failed } from "../../redux/slice/userSlice.js";
-import Loading from "../../components/Loading.jsx";
-import { MdOutlineAccountCircle, MdOutlineNoAccounts } from "react-icons/md";
+import "./ManageUsers.css";
 
 const ROLES = ["admin", "frontdesk", "kitchen", "waiter"];
 
-const STATUS_CFG = {
-  active: {
-    label: "Available",
-    pill: "admin-pill--available",
-    card: "table-card--available",
-  },
-  inactive: {
-    label: "Occupied",
-    pill: "admin-pill--occupied",
-    card: "table-card--occupied",
-  },
-};
 
 const ROLE_COLORS = {
   admin: { bg: "#f3e5f5", color: "#6a1b9a" },
-  desk: { bg: "#e3f2fd", color: "#1565c0" },
-  manager: { bg: "#fff3e0", color: "#e65100" },
+  kitchen: { bg: "#e3f2fd", color: "#1565c0" },
+  frontdesk: { bg: "#fff3e0", color: "#e65100" },
   waiter: { bg: "#e8f5e9", color: "#2e7d32" },
 };
 
@@ -226,9 +204,8 @@ function ManageUsers() {
         <div className="tables-grid">
           {filtered.map((t) => {
             const rc = ROLE_COLORS[t.role] || {};
-            const cfg = STATUS_CFG[t.status];
             return (
-              <div className={`table-card ${cfg.card}`} key={t._id}>
+              <div className={`table-card ${t.status=="active" ? "table-card--available" : "table-card--occupied"}`} key={t._id}>
                 <HStack justifyContent={"space-between"} alignItems={"start"}>
                   <HStack gap={3}>
                     <Avatar.Root>
@@ -259,7 +236,7 @@ function ManageUsers() {
                       </Text>
                     </Stack>
                   </HStack>
-                  <span className={`admin-pill ${cfg.pill}`}>
+                  <span className={`admin-pill ${t.status=="active" ? "admin-pill--available" : "admin-pill--occupied"}`}>
                     {t.status === "active" && (
                       <MdOutlineAccountCircle size={10} />
                     )}

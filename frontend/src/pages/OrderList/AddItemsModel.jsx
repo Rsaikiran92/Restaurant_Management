@@ -1,7 +1,7 @@
 import { Minus, Plus, Search, X } from "lucide-react";
-import { useState } from "react";
 import { useSelector } from "react-redux";
-import { CATS } from "../../data/constants";
+import { useState } from "react";
+
 
 function AddItemsModal({ onAdd, onClose }) {
   const [search,  setSearch]  = useState("");
@@ -11,6 +11,8 @@ function AddItemsModal({ onAdd, onClose }) {
   const filtered = menu.filter(
     (m) => (cat === "All" || m.category === cat) && m.name.toLowerCase().includes(search.toLowerCase())
   );
+  let category = menu.map((item) => item.category);
+  category = category.filter((item, index) => category.indexOf(item) === index);
 
   const setQty = (id, val) => setPicked((prev) => {
     const n = Math.max(0, (prev[id] || 0) + val);
@@ -44,34 +46,41 @@ function AddItemsModal({ onAdd, onClose }) {
             <input placeholder="Search dishes…" value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
           {/* category chips */}
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-            {CATS.map((c) => (
-              <button key={c} onClick={() => setCat(c)}
-                style={{ padding: "4px 12px", borderRadius: 20, border: "1px solid", fontFamily: "inherit",
-                  borderColor: cat === c ? "#b84c00" : "#e8c9a0",
-                  background: cat === c ? "#b84c00" : "#fff",
-                  color: cat === c ? "#fff" : "#6b3d1e", fontSize: 11, fontWeight: 600, cursor: "pointer" }}>
-                {c}
-              </button>
-            ))}
-          </div>
+          <div className="order-panel__cats">
+          <button
+            className={`order-panel__cat-btn${cat === "All" ? " order-panel__cat-btn--active" : ""}`}
+            onClick={() => setCat("All")}
+          >
+            All
+          </button>
+          {category.map((c) => (
+            <button
+              key={c}
+              className={`order-panel__cat-btn${cat === c ? " order-panel__cat-btn--active" : ""}`}
+              onClick={() => setCat("All")}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+         
           {/* items */}
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {filtered.map((item) => {
-              const qty = picked[item.id] || 0;
+              const qty = picked[item._id] || 0;
               return (
-                <div key={item.id} className="menu-item-pick">
+                <div key={item._id} className="menu-item-pick">
                   <div className="menu-item-pick__emoji">{item.emoji}</div>
                   <div className="menu-item-pick__info">
                     <div className="menu-item-pick__name">{item.name}</div>
                     <div className="menu-item-pick__price">₹{item.price}</div>
                   </div>
                   <div className="menu-item-pick__qty">
-                    <button className="qty-btn" onClick={() => setQty(item.id, -1)} disabled={qty === 0}>
+                    <button className="qty-btn" onClick={() => setQty(item._id, -1)} disabled={qty === 0}>
                       <Minus size={12} />
                     </button>
                     <span className="qty-num">{qty}</span>
-                    <button className="qty-btn" onClick={() => setQty(item.id, 1)}>
+                    <button className="qty-btn" onClick={() => setQty(item._id, 1)}>
                       <Plus size={12} />
                     </button>
                   </div>

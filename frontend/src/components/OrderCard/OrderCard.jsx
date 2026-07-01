@@ -99,10 +99,10 @@ export default function OrderCard({ order,setModal}) {
 
       {/* Footer */}
       <div className="order-card__footer">
-        <button className="btn-action btn-action--add" onClick={() => setModal("add")}>
+        <button className="btn-action btn-action--add" onClick={() => setModal({type:"add"})}>
           <Plus size={14} /> Add Items
         </button>
-        <button className="btn-action btn-action--pay">
+        <button className="btn-action btn-action--pay" onClick={() => setModal({type:"pay",data:order})}>
           <CreditCard size={14} />
           Mark as Paid
         </button>

@@ -1,12 +1,12 @@
 import {cat,setphone,query,cart,isMobile,settable} from "../../redux/slice/orderPanelSlice"
 import { ShoppingCart, Search, Plus, Minus, X } from "lucide-react";
+import { updateMenu } from "../../redux/slice/menuSlice";
 import { useEffect, useReducer, useState } from "react";
-import { Accordion } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
+import { Accordion } from "@chakra-ui/react";
+import socket from "../../utils/socket";
 import "../OrderPanel/OrderPanel.css";
 import API from "../../utils/api";
-import socket from "../../utils/socket";
-import { updateMenu } from "../../redux/slice/menuSlice";
 
 
 
@@ -215,7 +215,7 @@ export default function OrderPanel({ type, onPlace }) {
                       placeholder="Phone Number"
                       value={phone}
                       onChange={(e) =>
-                        dispatch(phone( e.target.value))
+                        dispatch(setphone( e.target.value))
                       }
                     />
                   ) : (

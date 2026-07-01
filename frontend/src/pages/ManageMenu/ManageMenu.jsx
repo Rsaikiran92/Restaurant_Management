@@ -56,18 +56,19 @@ function DeleteModal({ item, onConfirm, onClose }) {
     </div>
   );
 }
-const STATUS_CFG = {
-  active: {
-    label: "Available",
-    pill: "admin-pill--available",
-    card: "table-card--available",
-  },
-  inactive: {
-    label: "Occupied",
-    pill: "admin-pill--occupied",
-    card: "table-card--occupied",
-  },
-};
+// const STATUS_CFG = {
+//   active: {
+//     label: "Available",
+//     pill: "admin-pill--available",
+//     card: "table-card--available",
+//   },
+//   inactive: {
+//     label: "Occupied",
+//     pill: "admin-pill--occupied",
+//     card: "table-card--occupied",
+//   },
+// };
+
 const CAT_COLORS = {
   Starters: { bg: "#fdecea", color: "#c62828" },
   Mains: { bg: "#fff3e0", color: "#e65100" },
@@ -241,7 +242,7 @@ export default function ManageMenu() {
         ) : view === "grid" ? (
           <div className="tables-grid">
             {filtered.map((t) => {
-              const cfg = STATUS_CFG[t.status];
+              // const cfg = STATUS_CFG[t.status];
               const cc = CAT_COLORS[t.category] || {};
               return (
                 <div

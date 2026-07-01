@@ -1,11 +1,12 @@
 import OrderCard from "../../components/OrderCard/OrderCard";
+import AddItemsModal from "./AddItemsModel";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import "./OrdersList.css";
-import AddItemsModal from "./AddItemsModel";
+import PayModal from "./PayModel";
 
 export default function OrdersList({ type }) {
-  const [modal, setModal] = useState(null); // "add" | "pay" | "print"
+  const [modal, setModal] = useState({}); // "add" | "pay" | "print"
   const { orders } = useSelector((state) => state.order);
 
   const filtered = orders.filter((o) => o.orderType === type);
@@ -30,7 +31,12 @@ export default function OrdersList({ type }) {
           ))
         )}
       </div>
-      {/* {modal === "add"   && <AddItemsModal onAdd={handleAddItems} onClose={() => setModal(null)} />} */}
+      {modal.type === "add"   && <AddItemsModal  onClose={() => setModal({})} />}
+      {modal.type === "pay"   && <PayModal order={modal.data}
+      //  onPay={handlePay} 
+      onClose={() => setModal({})} />}
     </div>
   );
 }
+
+//onAdd={handleAddItems}

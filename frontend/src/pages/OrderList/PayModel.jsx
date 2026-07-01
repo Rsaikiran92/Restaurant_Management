@@ -1,3 +1,8 @@
+import { CheckCircle, X } from "lucide-react";
+import { useState } from "react";
+
+const orderTotal = (order) => order.items.reduce((s, i) => s + i.price * i.qty, 0);
+
 function PayModal({ order, onPay, onClose }) {
   const [method, setMethod] = useState(null);
   const subtotal = orderTotal(order);
@@ -48,3 +53,5 @@ function PayModal({ order, onPay, onClose }) {
     </div>
   );
 }
+
+export default PayModal
