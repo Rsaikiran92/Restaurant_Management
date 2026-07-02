@@ -25,6 +25,16 @@ const createOrder = async (req, res) => {
       createdBy: req.user.id,
     });
 
+    await order.populate([
+      {
+        path: "items.menuId",
+      },
+      {
+        path: "createdBy",
+        select: "name",
+      },
+    ]);
+
     const io = req.app.get("io");
     io.emit("newOrder", order);
 
@@ -119,9 +129,9 @@ const updateOrderStatus = async (req, res) => {
       },
       {
         new: true,
-      }
+      },
     );
-    if(status=="ready"){
+    if (status == "ready") {
       const io = req.app.get("io");
       io.emit("itemStatus", order);
     }
