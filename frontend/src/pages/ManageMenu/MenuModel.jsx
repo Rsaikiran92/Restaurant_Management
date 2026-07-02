@@ -3,6 +3,7 @@ import { useState } from "react";
 import { CATS } from "../../data/constants";
 
 function MenuModal({ item, onSave, onClose }) {
+  const role=localStorage.getItem("role")
   const [form, setForm] = useState(
     item || {
       name: "",
@@ -31,6 +32,7 @@ function MenuModal({ item, onSave, onClose }) {
               <label>Item Name *</label>
               <input
                 value={form.name}
+                disabled={role=="frontdesk"}
                 onChange={(e) => set("name", e.target.value)}
                 placeholder="e.g. Butter Chicken"
               />
@@ -38,6 +40,7 @@ function MenuModal({ item, onSave, onClose }) {
             <div className="form-group">
               <label>Category *</label>
               <select
+              disabled={role=="frontdesk"}
                 value={form.category}
                 onChange={(e) => set("category", e.target.value)}
               >
@@ -53,6 +56,7 @@ function MenuModal({ item, onSave, onClose }) {
               <input
                 type="number"
                 min="0"
+                disabled={role=="frontdesk"}
                 value={form.price}
                 onChange={(e) => set("price", e.target.value)}
                 placeholder="e.g. 220"
@@ -73,6 +77,7 @@ function MenuModal({ item, onSave, onClose }) {
             <label>Description</label>
             <textarea
               rows={2}
+              disabled={role=="frontdesk"}
               value={form.description}
               onChange={(e) => set("description", e.target.value)}
               placeholder="Short description of the dish…"

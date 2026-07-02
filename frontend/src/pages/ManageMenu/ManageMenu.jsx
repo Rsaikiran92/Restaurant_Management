@@ -56,18 +56,7 @@ function DeleteModal({ item, onConfirm, onClose }) {
     </div>
   );
 }
-// const STATUS_CFG = {
-//   active: {
-//     label: "Available",
-//     pill: "admin-pill--available",
-//     card: "table-card--available",
-//   },
-//   inactive: {
-//     label: "Occupied",
-//     pill: "admin-pill--occupied",
-//     card: "table-card--occupied",
-//   },
-// };
+
 
 const CAT_COLORS = {
   Starters: { bg: "#fdecea", color: "#c62828" },
@@ -90,7 +79,9 @@ export default function ManageMenu() {
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState(null);
   const dispatch = useDispatch();
-
+  const role=localStorage.getItem("role")
+  
+  console.log(role,"menu")
   const filtered = menu.filter(
     (m) =>
       (catFilter === "All" || m.category === catFilter) &&
@@ -242,7 +233,6 @@ export default function ManageMenu() {
         ) : view === "grid" ? (
           <div className="tables-grid">
             {filtered.map((t) => {
-              // const cfg = STATUS_CFG[t.status];
               const cc = CAT_COLORS[t.category] || {};
               return (
                 <div
@@ -315,7 +305,7 @@ export default function ManageMenu() {
                       <Pencil size={5} />
                       Edit
                     </Button>
-                    <Button
+                    {role==="admin"&&(<Button
                       variant="subtle"
                       colorPalette="red"
                       flex="1"
@@ -324,7 +314,7 @@ export default function ManageMenu() {
                     >
                       <Trash2 />
                       Delete
-                    </Button>
+                    </Button>)}
                   </div>
                 </div>
               );
@@ -434,6 +424,7 @@ export default function ManageMenu() {
                             >
                               <Pencil size={13} />
                             </button>
+                            {role==="admin"&&
                             <button
                               className="admin-table__btn admin-table__btn--delete"
                               onClick={() =>
@@ -442,7 +433,7 @@ export default function ManageMenu() {
                               title="Delete"
                             >
                               <Trash2 size={13} />
-                            </button>
+                            </button>}
                           </div>
                         </Table.Cell>
                       </Table.Row>

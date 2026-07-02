@@ -7,6 +7,7 @@ import { Accordion } from "@chakra-ui/react";
 import socket from "../../utils/socket";
 import "../OrderPanel/OrderPanel.css";
 import API from "../../utils/api";
+import { successTable } from "../../redux/slice/tableSlice";
 
 
 
@@ -80,9 +81,13 @@ export default function OrderPanel({ type, onPlace }) {
       totalAmount: total,
       paymentMethod: null,
     };
+    const table_id=tables.filter((item)=>item.name===table)[0]._id
     try {
       const responce = await API.post("/order", from);
-      dispatch({ type: "phone", payload: "" });
+      const response = await API.put(`/table/${table_id}`, {status: "occupied"});
+      dispatch(successTable(response.data.table));
+      dispatch(setphone(""))
+      dispatch(settable(""))
       setCart([]);
     } catch (error) {
       console.log(error);

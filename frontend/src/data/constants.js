@@ -18,22 +18,22 @@ export const NAV_GROUPS = [
   {
     key: "overview",
     label: "Overview",
-    items: [{ id: "dashboard", label: "Dashboard", icon: "LayoutDashboard" , roles: ["admin"]}],
+    items: [{ id: "dashboard", label: "Dashboard", icon: "LayoutDashboard" , roles: ["frontdesk","admin","waiter"]}],
   },
   {
     key: "Manage",
     label: "Manage",
     items: [
       { id: "manageusers", label: "Manage users", icon: "Users" ,roles: ["admin"] },
-      { id: "managemenu", label: "Manage Menu", icon: "Menu" ,roles: ["admin"] },
-      { id: "managetable", label: "Manage Table", icon: "Menu" ,roles: ["admin"] },
+      { id: "managemenu", label: "Manage Menu", icon: "Menu" ,roles: ["frontdesk","admin"] },
+      { id: "managetable", label: "Manage Table", icon: "Menu" ,roles: ["frontdesk","admin"] },
     ],
   },
   {
     key: "place",
     label: "Place Orders",
     items: [
-      { id: "takeaway", label: "Takeaway Order", icon: "Package",  cartKey: "tk"  ,roles: ["waiter"] },
+      { id: "takeaway", label: "Takeaway Order", icon: "Package",  cartKey: "tk"  ,roles: ["frontdesk"] },
       { id: "dine",     label: "Dine-in Order",  icon: "Utensils", cartKey: "dine" ,roles: ["waiter"]},
     ],
   },
@@ -41,8 +41,8 @@ export const NAV_GROUPS = [
     key: "view",
     label: "View Orders",
     items: [
-      { id: "tkList",   label: "Takeaway Orders", icon: "ClipboardList",roles: ["admin"] },
-      { id: "dineList", label: "Dine-in Orders",  icon: "Users"    ,roles: ["admin"]     },
+      { id: "tkList",   label: "Takeaway Orders", icon: "ClipboardList",roles: ["frontdesk","admin"] },
+      { id: "dineList", label: "Dine-in Orders",  icon: "Users"    ,roles: ["frontdesk","admin","waiter"]     },
     ],
   },
 ];

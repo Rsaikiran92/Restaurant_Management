@@ -51,3 +51,12 @@
 
 /* ── Grid view ── */
 
+input:disabled{
+  cursor: not-allowed;
+}
+section:disabled{
+  cursor: not-allowed;
+}
+textarea:disabled{
+  cursor: not-allowed;
+}

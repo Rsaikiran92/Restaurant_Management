@@ -14,7 +14,7 @@ import { useContext } from "react";
 import { UserContext } from "../../contextAPI/UserContextapi"
 function Navbar({ pendingCount }) {
     const {data}=useContext(UserContext)
-    console.log(data)
+    console.log(data,"navbar")
   return (
     <header className="navbar">
       <div className="navbar__inner">
@@ -49,7 +49,7 @@ function Navbar({ pendingCount }) {
                   color:"white"
                 }}
               >
-                <Avatar.Fallback name="Segun Adebayo" />
+                <Avatar.Fallback name={data.name} />
               </Avatar.Root>
             </Menu.Trigger>
             <Portal>
@@ -66,15 +66,15 @@ function Navbar({ pendingCount }) {
                   >
                     <HStack mb="6" gap="3">
                       <Avatar.Root>
-                        <Avatar.Image src="https://images.unsplash.com/photo-1511806754518-53bada35f930" />
-                        <Avatar.Fallback name="Nate Foss" />
+                        {/* <Avatar.Image src="https://images.unsplash.com/photo-1511806754518-53bada35f930" /> */}
+                        <Avatar.Fallback name={data.name} />
                       </Avatar.Root>
                       <Stack gap="0">
                         <Text fontWeight="semibold" textStyle="sm">
-                          Sai Kiran
+                          {data.name}
                         </Text>
                         <Text color="fg.muted" textStyle="sm">
-                          saikiran@gmail.com
+                          {data.email}
                         </Text>
                       </Stack>
                     </HStack>
