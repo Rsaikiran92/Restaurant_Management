@@ -9,7 +9,7 @@ import socket from "../../utils/socket";
 const KitchenDashboard = () => {
   const dispatch = useDispatch();
   const {orders}=useSelector((state)=>state.order)
-
+  console.log(orders)
   useEffect(() => {
      socket.on("newOrder", (order) => {
       dispatch(addOrder(order))

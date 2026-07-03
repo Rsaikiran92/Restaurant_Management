@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import {useSelector} from "react-redux"
-import { useState } from "react";
+import {useDispatch, useSelector} from "react-redux"
+import { useEffect, useState } from "react";
 import "./Dashboard.css";
+import { fetchMenu, fetchOrders, fetchTables, fetchUsers } from "../../utils/api";
 
 
 
@@ -10,13 +11,22 @@ import "./Dashboard.css";
 function Dashboard() {
   const {orders}=useSelector((state)=>state.order)
   const onNavigate=useNavigate()
- 
+  const dispatch = useDispatch();
+  
   const takeawayOrders = orders.filter((item) => item.orderType === "takeaway");
   const dineOrders     = orders.filter((item) => item.orderType === "dine-in");
   const activeOrders = orders.filter((item) => item.status !== "served");
   const revenue = orders
     .filter((item) => item.status === "served")
     .reduce((sum, item) => sum + item.items.reduce((s, i) => s + i.price * i.qty, 0), 0);
+
+  useEffect(() => {
+    console.log("Dashboard")
+    fetchMenu(dispatch);
+    fetchUsers(dispatch)
+    fetchTables(dispatch)
+    fetchOrders(dispatch);
+  }, []);
 
   const stats = [
     { label: "Total Orders",      value: orders.length,           color: "#b84c00", bg: "#fff8f0" },

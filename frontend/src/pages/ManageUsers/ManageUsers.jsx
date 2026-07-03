@@ -1,5 +1,5 @@
 import {Plus, Search, Pencil, Trash2, X, ShieldCheck, User, Users, Mail} from "lucide-react";
-import { Table, HStack, Avatar, Stack, Text, Button } from "@chakra-ui/react";
+import { Table, HStack, Avatar, Stack, Text, Button,SegmentGroup  } from "@chakra-ui/react";
 import { MdOutlineAccountCircle, MdOutlineNoAccounts } from "react-icons/md";
 import { pending, success, failed } from "../../redux/slice/userSlice.js";
 import { Toaster, toaster } from "../../components/ui/toaster.jsx";
@@ -25,10 +25,11 @@ function ManageUsers() {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [modal, setModal] = useState(null); // null | { type: "add"|"edit"|"delete", user? }
-  const [view, setView] = useState("list");
+  const [view, setView] = useState("List");
   const { users, loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-
+  
+  console.log("usermodel",loading,users)
   const filtered = users.filter(
     (u) =>
       (roleFilter === "all" || u.role === roleFilter) &&
@@ -111,8 +112,12 @@ function ManageUsers() {
     }
   };
 
+  const handleview=(e)=>{
+    setView(e.value)
+    console.log(e.value)
+  }
   return (
-    <div className="admin-page" style={{ height: "90vh" }}>
+    <div className="admin-page" >
       {/* Header */}
       <div className="admin-page__header">
         <div className="admin-page__title-block">
@@ -132,55 +137,21 @@ function ManageUsers() {
 
       {/* Toolbar */}
       <div className="admin-page__toolbar">
+        {/* Search */}
         <div className="admin-page__search">
           <Search size={14} color="#a0704a" />
-          <input placeholder="Search by name or email…"  value={search}  onChange={(e) => setSearch(e.target.value)}  />
-        </div>
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "end",
-            gap: "10px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              gap: 8,
-              width: "100%",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
+          <input placeholder="Search by name or email…"  value={search}  onChange={(e) =>setSearch(e.target.value)}  />
+        </div>      
+          {/* Filter */}
+        <div className="admin-page_content_view">
+             <SegmentGroup.Root value={view} size={"sm"}  onValueChange={(e) =>handleview(e)} style={{
                 background: "#fff",
                 border: "1px solid #e8c9a0",
                 borderRadius: 9,
-                overflow: "hidden",
-              }}
-            >
-              {["grid", "list"].map((v) => (
-                <button
-                  key={v}
-                  onClick={() => setView(v)}
-                  style={{
-                    padding: "7px 14px",
-                    border: "none",
-                    cursor: "pointer",
-                    fontFamily: "inherit",
-                    fontSize: 12,
-                    fontWeight: 600,
-                    transition: "background 0.12s",
-                    background: view === v ? "#b84c00" : "transparent",
-                    color: view === v ? "#fff" : "#6b3d1e",
-                  }}
-                >
-                  {v.charAt(0).toUpperCase() + v.slice(1)}
-                </button>
-              ))}
-            </div>
+              }} >
+              <SegmentGroup.Indicator />
+              <SegmentGroup.Items items={["Grid", "List"]} _checked={{ color: "white",height:"35px", fontWeight: "medium",backgroundColor:"#b84c00" }} />
+            </SegmentGroup.Root>
             <select
               className="admin-page__filter-select"
               value={roleFilter}
@@ -193,14 +164,13 @@ function ManageUsers() {
                 </option>
               ))}
             </select>
-          </div>
         </div>
       </div>
 
-      {/* Table */}
+      {/* DATA */}
       {loading ? (
         <Loading />
-      ) : view === "grid" ? (
+      ) : view === "Grid" ? (
         <div className="tables-grid">
           {filtered.map((t) => {
             const rc = ROLE_COLORS[t.role] || {};

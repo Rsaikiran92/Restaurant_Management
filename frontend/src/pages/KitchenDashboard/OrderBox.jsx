@@ -4,7 +4,21 @@ import { ITEM_STATUSES } from "../../data/constants";
 import { useState } from "react";
 import API from "../../utils/api";
 import {toaster} from "../../components/ui/toaster"
-
+import { Button, ButtonGroup, Steps } from "@chakra-ui/react"
+const steps = [
+  {
+    title: "Step 1",
+    description: "Step 1 description",
+  },
+  {
+    title: "Step 2",
+    description: "Step 2 description",
+  },
+  {
+    title: "Step 3",
+    description: "Step 3 description",
+  },
+]
 export default function OrderBox({ order }) {
   const [status,setstatus]=useState("")
 
@@ -59,12 +73,12 @@ export default function OrderBox({ order }) {
         {order.items.map((item, idx) => (
           <div key={idx} className="order-box__item-row">
             <span>
-              <div>{item.menuId.name}</div>
-              <div className="order-box__item-price">
+              <div>{item.quantity} X {item.menuId.name}</div>
+              {/* <div className="order-box__item-price">
                 Qty: {item.quantity} · ₹{item.menuId.price} each
-              </div>
+              </div> */}
             </span>
-            <select
+            {/* <select
             value={status}
             onChange={(e) =>
               updateItemStatus(order._id,item._id, e.target.value)
@@ -75,7 +89,31 @@ export default function OrderBox({ order }) {
                   {s.charAt(0).toUpperCase() + s.slice(1)}
                 </option>
               ))}
-            </select>
+            </select> */}
+            <Steps.Root defaultStep={1} count={steps.length}>
+      <Steps.List>
+        {steps.map((step, index) => (
+          <Steps.Item key={index} index={index} title={step.title} >
+            <Steps.Indicator />
+            
+            <Steps.Separator />
+          </Steps.Item>
+          
+        ))}
+      </Steps.List>
+
+      
+      <Steps.CompletedContent>All steps are complete!</Steps.CompletedContent>
+
+      {/* <ButtonGroup size="sm" variant="outline">
+        <Steps.PrevTrigger asChild>
+          <Button>Prev</Button>
+        </Steps.PrevTrigger>
+        <Steps.NextTrigger asChild>
+          <Button>Next</Button>
+        </Steps.NextTrigger>
+      </ButtonGroup> */}
+    </Steps.Root>
           </div>
         ))}
       </div>

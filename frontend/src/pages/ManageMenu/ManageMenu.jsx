@@ -154,7 +154,7 @@ export default function ManageMenu() {
 
   return (
     <>
-      <div className="admin-page" style={{ height: "90vh" }}>
+      <div className="admin-page">
         <div className="admin-page__header">
           <div className="admin-page__title-block">
             <div className="admin-page__title">Manage Menu</div>

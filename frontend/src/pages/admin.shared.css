@@ -5,6 +5,7 @@
 
 /* ── Page Shell ── */
 .admin-page {
+  height: 90vh;
   padding: 15px;
   overflow-y: auto;
   flex: 1;
@@ -84,6 +85,13 @@
   width: 100%;
   color: #2d1a00;
   font-family: inherit;
+}
+
+.admin-page_content_view{
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  gap: 8
 }
 
 .admin-page__filter-select {
