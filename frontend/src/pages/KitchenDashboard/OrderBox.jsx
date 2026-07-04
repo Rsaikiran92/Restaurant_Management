@@ -5,18 +5,21 @@ import { useState } from "react";
 import API from "../../utils/api";
 import {toaster} from "../../components/ui/toaster"
 import { Button, ButtonGroup, Steps } from "@chakra-ui/react"
+import { LuCheck, LuCookingPot } from "react-icons/lu";
+import { IoIosHourglass } from "react-icons/io";
+import { IoMdDoneAll } from "react-icons/io";
 const steps = [
   {
-    title: "Step 1",
-    description: "Step 1 description",
+    icon: <IoIosHourglass />,
+    description: "Waiting",
   },
   {
-    title: "Step 2",
-    description: "Step 2 description",
+    icon: <LuCookingPot />,
+    description: "Preparing",
   },
   {
-    title: "Step 3",
-    description: "Step 3 description",
+    icon: <IoMdDoneAll />,
+    description: "Book an Appointment",
   },
 ]
 export default function OrderBox({ order }) {
@@ -72,12 +75,12 @@ export default function OrderBox({ order }) {
       <div className="order-box__items">
         {order.items.map((item, idx) => (
           <div key={idx} className="order-box__item-row">
-            <span>
+            
               <div>{item.quantity} X {item.menuId.name}</div>
               {/* <div className="order-box__item-price">
                 Qty: {item.quantity} · ₹{item.menuId.price} each
               </div> */}
-            </span>
+            
             {/* <select
             value={status}
             onChange={(e) =>
@@ -90,30 +93,38 @@ export default function OrderBox({ order }) {
                 </option>
               ))}
             </select> */}
-            <Steps.Root defaultStep={1} count={steps.length}>
+            <div>
+            <Steps.Root defaultStep={1} count={steps.length}  colorPalette={"green"} size="sm">
       <Steps.List>
         {steps.map((step, index) => (
-          <Steps.Item key={index} index={index} title={step.title} >
-            <Steps.Indicator />
-            
+          <Steps.Item key={index} index={index}>
+            <Steps.Indicator color={"white"}>
+              <Steps.Status incomplete={step.icon}  complete={step.icon} />
+            </Steps.Indicator>
             <Steps.Separator />
           </Steps.Item>
           
         ))}
       </Steps.List>
+   <div style={{display:"flex",justifyContent:"space-between"}}>
+      {steps.map((step, index) => (
+        <Steps.Content key={index} index={index} >
+          {step.description}
+        </Steps.Content>
+      ))}
+      <Steps.CompletedContent >All steps are complete!</Steps.CompletedContent>
 
-      
-      <Steps.CompletedContent>All steps are complete!</Steps.CompletedContent>
-
-      {/* <ButtonGroup size="sm" variant="outline">
-        <Steps.PrevTrigger asChild>
+      <ButtonGroup size="xs" variant="outline" >
+        {/* <Steps.PrevTrigger asChild>
           <Button>Prev</Button>
-        </Steps.PrevTrigger>
+        </Steps.PrevTrigger> */}
         <Steps.NextTrigger asChild>
           <Button>Next</Button>
         </Steps.NextTrigger>
-      </ButtonGroup> */}
+      </ButtonGroup>
+      </div>
     </Steps.Root>
+    </div>
           </div>
         ))}
       </div>

@@ -72,11 +72,17 @@
   color: #2d1a00;
   padding: 10px;
   border-bottom: 1px solid #f0d5b0;
+  
 }
 .order-box__item-row:last-child{
     border-bottom: none;
 }
-
+.order-box__item-row>div:first-child{
+  width: 30%;
+}
+.order-box__item-row>div:last-child{
+  width: 70%;
+}
 .order-box__item-price {
   color: #a0704a;
 }
