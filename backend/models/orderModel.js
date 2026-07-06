@@ -38,8 +38,8 @@ const orderSchema = new mongoose.Schema(
         },
         status: {
           type: String,
-          enum: ["pending", "preparing", "ready", "served"],
-          default: "pending",
+          enum: ["waiting", "preparing", "ready", "served"],
+          default: "waiting",
         },
       },
     ],
