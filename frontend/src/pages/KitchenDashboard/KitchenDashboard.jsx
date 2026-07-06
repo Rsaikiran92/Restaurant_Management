@@ -3,13 +3,18 @@ import OrderCard from "../../components/OrderCard/OrderCard";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import OrderBox from "./OrderBox";
-import API from "../../utils/api";
+import API, { fetchOrders } from "../../utils/api";
 import socket from "../../utils/socket";
 
 const KitchenDashboard = () => {
   const dispatch = useDispatch();
   const {orders}=useSelector((state)=>state.order)
   console.log(orders)
+
+  useEffect(()=>{
+    fetchOrders(dispatch);
+  },[])
+  
   useEffect(() => {
      socket.on("newOrder", (order) => {
       dispatch(addOrder(order))

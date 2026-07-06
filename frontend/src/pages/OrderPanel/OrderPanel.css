@@ -8,6 +8,7 @@
 .order-panel__menu {
   flex: 1;
   padding: 20px;
+  height: 90vh;
   overflow-y: auto;
   border-right: 1px solid #f0d5b0;
 }
@@ -163,6 +164,7 @@
   flex-direction: column;
   gap: 12px;
   overflow-y: auto;
+  
 }
 
 .order-panel__cart-title {
@@ -261,7 +263,7 @@
 /* cart items */
 .order-panel__cart-items {
   display: flex;
-  height: 260px;
+  
   overflow: auto;
   flex-direction: column;
   gap: 6px;

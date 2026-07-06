@@ -1,14 +1,17 @@
 import { Clock, CreditCard, Plus, Printer } from "lucide-react";
-import {ITEM_STATUSES,} from "../../data/constants";
-// import Badge from "../Badge/Badge";
+import { ITEM_STATUSES } from "../../data/constants";
+import { Badge } from "@chakra-ui/react"
 import "./OrderCard.css";
 
-export default function OrderCard({ order,setModal}) {
-  const total = order.items.reduce((sum, i) => sum + i.menuId.price * i.quantity, 0);
-
+export default function OrderCard({ order, setModal }) {
+  const total = order.items.reduce(
+    (sum, i) => sum + i.menuId.price * i.quantity,
+    0,
+  );
+  const role = localStorage.getItem("role");
+  console.log(role);
   return (
     <div className="order-card">
-
       {/* Header */}
       <div className="order-card__header">
         <div className="order-card__id-group">
@@ -21,12 +24,16 @@ export default function OrderCard({ order,setModal}) {
                   : "order-card__type-badge--dine"
               }`}
             >
-              {order.orderType === "takeaway" ? "Takeaway" : `Table ${order.tableNumber}`}
+              {order.orderType === "takeaway"
+                ? "Takeaway"
+                : `Table ${order.tableNumber}`}
             </span>
           </div>
-          <button className="btn-action btn-action--print">
-            <Printer size={14} /> Print Bill
-          </button>
+          {role != "waiter" && (
+            <button className="btn-action btn-action--print">
+              <Printer size={14} /> Print Bill
+            </button>
+          )}
         </div>
         {/* <Badge status={order.status} /> */}
       </div>
@@ -63,27 +70,17 @@ export default function OrderCard({ order,setModal}) {
             <span className="order-card__item-price">
               ₹{item.menuId.price * item.quantity}
             </span>
-            {/* <select
-            // value={item.status}
-            // disabled={selected.paid}
-            // className={`item-status-select item-status-select--${item.status}`}
-            // onChange={(e) =>
-            //   updateItemStatus(selected.id, item.itemId, e.target.value)
-            // }
-            >
-              {ITEM_STATUSES.map((s) => (
-                <option key={s} value={s}>
-                  {s.charAt(0).toUpperCase() + s.slice(1)}
-                </option>
-              ))}
-            </select> */}
+
+            <Badge variant="solid" colorPalette={item.status=="waiting"?"red":item.status=="preparing"?"orange":"green"}>
+              {item.status}
+            </Badge>
           </div>
         ))}
       </div>
 
       {/* Bill summary */}
-        <div className="order-bill">
-          {/* <div className="order-card__item-row">
+      <div className="order-bill">
+        {/* <div className="order-card__item-row">
             <span>Subtotal</span>
             <span>₹</span>
           </div>
@@ -91,21 +88,29 @@ export default function OrderCard({ order,setModal}) {
             <span>GST (5%)</span>
             <span>₹</span>
           </div> */}
-          <div className="order-card__item-row">
-            <span>Grand Total</span>
-            <span>₹{total}</span>
-          </div>
-        </div>
+       {role != "waiter" && <div className="order-card__item-row">
+          <span>Grand Total</span>
+          <span>₹{total}</span>
+        </div>}
+      </div>
 
       {/* Footer */}
       <div className="order-card__footer">
-        <button className="btn-action btn-action--add" onClick={() => setModal({type:"add"})}>
+        <button
+          className="btn-action btn-action--add"
+          onClick={() => setModal({ type: "add" })}
+        >
           <Plus size={14} /> Add Items
         </button>
-        <button className="btn-action btn-action--pay" onClick={() => setModal({type:"pay",data:order})}>
-          <CreditCard size={14} />
-          Mark as Paid
-        </button>
+        {role != "waiter" && (
+          <button
+            className="btn-action btn-action--pay"
+            onClick={() => setModal({ type: "pay", data: order })}
+          >
+            <CreditCard size={14} />
+            Mark as Paid
+          </button>
+        )}
       </div>
     </div>
   );

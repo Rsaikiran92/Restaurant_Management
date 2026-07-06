@@ -1,14 +1,14 @@
 import { CheckCircle, X } from "lucide-react";
 import { useState } from "react";
 
-const orderTotal = (order) => order.items.reduce((s, i) => s + i.price * i.qty, 0);
+const orderTotal = (order) => order.items.reduce((s, i) => s + i.menuId.price * i.quantity, 0);
 
 function PayModal({ order, onPay, onClose }) {
   const [method, setMethod] = useState(null);
   const subtotal = orderTotal(order);
   const gst      = Math.round(subtotal * 0.05);
   const total    = subtotal + gst;
-
+  console.log(order,"pay")
   const methods = [
     { id: "cash", label: "Cash", icon: "💵" },
     { id: "card", label: "Card", icon: "💳" },
@@ -25,8 +25,8 @@ function PayModal({ order, onPay, onClose }) {
         <div className="modal__body">
           {/* Bill preview */}
           <div className="pay-bill-preview">
-            <div className="pay-bill-row"><span>Order</span><span style={{ fontWeight: 700 }}>{order.id}</span></div>
-            <div className="pay-bill-row"><span>Customer</span><span>{order.customer}</span></div>
+            <div className="pay-bill-row"><span>Order</span><span style={{ fontWeight: 700 }}>{order.orderNumber}</span></div>
+            <div className="pay-bill-row"><span>Customer</span><span>{order.customerNumber}</span></div>
             <div className="pay-bill-row"><span>Subtotal</span><span>₹{subtotal}</span></div>
             <div className="pay-bill-row"><span>GST (5%)</span><span>₹{gst}</span></div>
             <div className="pay-bill-row pay-bill-row--total"><span>Total Amount</span><span>₹{total}</span></div>

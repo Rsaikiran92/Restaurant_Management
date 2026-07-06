@@ -8,6 +8,8 @@ import socket from "../../utils/socket";
 import "../OrderPanel/OrderPanel.css";
 import API from "../../utils/api";
 import { successTable } from "../../redux/slice/tableSlice";
+import { Box } from "@chakra-ui/react"
+
 
 
 
@@ -95,7 +97,7 @@ export default function OrderPanel({ type, onPlace }) {
   };
 
   return (
-    <div className="order-panel">
+    <div className="order-panel" >
       {/* ── Menu ── */}
       <div className="order-panel__menu">
         {/* Search */}
@@ -269,7 +271,7 @@ export default function OrderPanel({ type, onPlace }) {
                 {/* Empty state */}
                 {cart.length === 0 ? (
                   <div className="order-panel__empty">
-                    <ShoppingCart size={26} color="#d4a87a" />
+                    <ShoppingCart size={26} color="#d4a87a"  />
                     <span className="order-panel__empty-text">
                       Add items from the menu
                     </span>
@@ -277,7 +279,7 @@ export default function OrderPanel({ type, onPlace }) {
                 ) : (
                   <>
                     {/* Cart items */}
-                    <div className="order-panel__cart-items">
+                    <Box className="order-panel__cart-items" h={type=="takeaway"?"260px":"190px"}>
                       {cart.map((item) => (
                         <div key={item.id} className="order-panel__cart-item">
                           <div className="order-panel__cart-item-info">
@@ -314,10 +316,10 @@ export default function OrderPanel({ type, onPlace }) {
                           </button>
                         </div>
                       ))}
-                    </div>
+                    </Box>
 
                     {/* Summary */}
-                    <div className="order-panel__summary">
+                    <div className="order-panel__summary" >
                       <div className="order-panel__summary-row">
                         <span>Subtotal</span>
                         <span>₹{subtotal}</span>
