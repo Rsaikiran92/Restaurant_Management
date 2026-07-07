@@ -47,8 +47,8 @@ const createOrder = async (req, res) => {
 // ADD ITEM TO ORDER (Waiter/front desk)
 const addItemToOrder = async (req, res) => {
   try {
-    const { id } = req.params; // orderId
-    const { menuId, quantity } = req.body;
+    const { id } = req.params;
+    const items  = req.body;
 
     const order = await Order.findById(id);
 
@@ -60,30 +60,62 @@ const addItemToOrder = async (req, res) => {
       return res.status(400).json({ msg: "Cannot modify paid order" });
     }
 
-    // 🔍 check if item already exists
-    const existingItem = order.items.find(
-      (item) => item.menuId.toString() === menuId,
-    );
+    for (const newItem of items) {
+      const existingItem = order.items.find(
+        (item) => item.menuId.toString() === newItem.menuId
+      );
 
-    if (existingItem) {
-      existingItem.quantity += quantity;
-    } else {
-      order.items.push({ menuId, quantity });
+      if (existingItem && existingItem.status=="waiting") {
+        existingItem.quantity += newItem.quantity;
+      } else {
+        order.items.push({
+          menuId: newItem.menuId,
+          quantity: newItem.quantity,
+        });
+      }
     }
 
     await order.save();
-    res.json({ msg: "Item added", order });
+
+    const today = new Date();
+    const date = today.toISOString().split("T")[0];
+     const query = {
+      isPaid: false,
+      orderDate: date,
+    };
+
+    // Waiters can only see their own orders
+    if (req.user.role === "waiter") {
+      query.createdBy = req.user.id;
+    }
+    const orders = await Order.find(query)
+      .populate("items.menuId")
+      .populate("createdBy", "name");
+
+    res.json({
+      msg: "Items added successfully",
+      order: orders,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-};
+}
 
 // GET ALL ORDERS (Kitchen + Front Desk)
 const getOrders = async (req, res) => {
   try {
     const today = new Date();
     const date = today.toISOString().split("T")[0];
-    const orders = await Order.find({ isPaid: false, orderDate: date })
+     const query = {
+      isPaid: false,
+      orderDate: date,
+    };
+
+    // Waiters can only see their own orders
+    if (req.user.role === "waiter") {
+      query.createdBy = req.user.id;
+    }
+    const orders = await Order.find(query)
       .populate("items.menuId")
       .populate("createdBy", "name");
 
@@ -117,7 +149,7 @@ const updateOrderStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { itemId, status } = req.body;
-    const order = await Order.findOneAndUpdate(
+    const order=await Order.findOneAndUpdate(
       {
         _id: id,
         "items._id": itemId,
@@ -126,16 +158,28 @@ const updateOrderStatus = async (req, res) => {
         $set: {
           "items.$.status": status,
         },
-      },
-      {
-        new: true,
-      },
+      }
     );
-    if (status == "ready") {
-      const io = req.app.get("io");
-      io.emit("itemStatus", order);
+  
+   const today = new Date();
+    const date = today.toISOString().split("T")[0];
+     const query = {
+      isPaid: false,
+      orderDate: date,
+    };
+
+    // Waiters can only see their own orders
+    if (req.user.role === "waiter") {
+      query.createdBy = req.user.id;
     }
-    res.json(order);
+    
+    const orders = await Order.find(query)
+      .populate("items.menuId")
+      .populate("createdBy", "name");
+    const io = req.app.get("io");
+    io.emit("itemStatus", orders);
+  
+    res.json(orders);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
