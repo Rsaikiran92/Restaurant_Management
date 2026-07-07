@@ -40,7 +40,7 @@ export default function OrderBox({ order }) {
     }else{
       val="served"
     }
-    console.log(val,"a")
+  
     try {
       const responce = await API.put(`/order/${orderId}`, {
         itemId,
@@ -60,7 +60,7 @@ export default function OrderBox({ order }) {
   };
 
   return (
-    <div className="order-box">
+    <div className="order-box" key={order._id}>
       {/* Header */}
 
       <div className="order-box__header" key={order._id}>

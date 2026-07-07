@@ -59,7 +59,7 @@ const visibleGroups = NAV_GROUPS.map((group) => ({
   return (
     <aside className={cls}>
       <nav className="sidebar__nav">
-        {NAV_GROUPS.map((group) => (
+        {visibleGroups.map((group) => (
           <div key={group.key} className="sidebar__group">
             {sideOpen && (
               <div className="sidebar__group-label">{group.label}</div>

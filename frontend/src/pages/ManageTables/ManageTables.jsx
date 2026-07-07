@@ -9,7 +9,7 @@ import { toaster } from "../../components/ui/toaster";
 import { useEffect, useState } from "react";
 import DeleteTableModal from "./DeleteTableModel";
 import TableModal from "./TableModel";
-import API from "../../utils/api";
+import API, { fetchTables } from "../../utils/api";
 import "../admin.shared.css";
 import "./ManageTables.css";
 import { Toaster } from "@chakra-ui/react";
@@ -39,7 +39,9 @@ export default function ManageTables() {
   const dispatch = useDispatch();
   const { loading, tables, error } = useSelector((state) => state.table);
 
- 
+ useEffect(()=>{
+      fetchTables(dispatch)
+ },[])
 
   const handleSave = async (form) => {
     if (modal.type == "edit") {

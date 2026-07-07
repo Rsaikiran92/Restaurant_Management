@@ -8,7 +8,7 @@ import Loading from "../../components/Loading.jsx";
 import DeleteUserModal from "./DeleteUserModel";
 import { useEffect, useState } from "react";
 import UserModal from "./UserModel";
-import API from "../../utils/api";
+import API, { fetchUsers } from "../../utils/api";
 import "./ManageUsers.css";
 
 const ROLES = ["admin", "frontdesk", "kitchen", "waiter"];
@@ -28,8 +28,10 @@ function ManageUsers() {
   const [view, setView] = useState("List");
   const { users, loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  
-  console.log("usermodel",loading,users)
+   
+  useEffect(()=>{
+    fetchUsers(dispatch)
+  },[])
   const filtered = users.filter(
     (u) =>
       (roleFilter === "all" || u.role === roleFilter) &&

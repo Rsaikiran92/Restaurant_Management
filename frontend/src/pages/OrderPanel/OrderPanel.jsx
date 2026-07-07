@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Accordion } from "@chakra-ui/react";
 import socket from "../../utils/socket";
 import "../OrderPanel/OrderPanel.css";
-import API from "../../utils/api";
+import API, { fetchMenu, fetchTables } from "../../utils/api";
 import { successTable } from "../../redux/slice/tableSlice";
 import { Box } from "@chakra-ui/react"
 
@@ -29,7 +29,11 @@ export default function OrderPanel({ type, onPlace }) {
     return () => mediaQuery.removeEventListener("change", handleResize);
   }, []);
 
+
+
   useEffect(() => {
+    fetchTables(dispatch)
+    fetchMenu(dispatch);
      socket.on("updateMenu", (menu) => {
       dispatch(updateMenu(menu))
     });
@@ -83,11 +87,14 @@ export default function OrderPanel({ type, onPlace }) {
       totalAmount: total,
       paymentMethod: null,
     };
-    const table_id=tables.filter((item)=>item.name===table)[0]._id
+
     try {
       const responce = await API.post("/order", from);
-      const response = await API.put(`/table/${table_id}`, {status: "occupied"});
-      dispatch(successTable(response.data.table));
+      if(type=="dine-in"){
+        const table_id=tables.filter((item)=>item.name===table)[0]._id
+        const response = await API.put(`/table/${table_id}`, {status: "occupied"});
+        dispatch(successTable(response.data.table));
+      }
       dispatch(setphone(""))
       dispatch(settable(""))
       setCart([]);
@@ -281,7 +288,7 @@ export default function OrderPanel({ type, onPlace }) {
                     {/* Cart items */}
                     <Box className="order-panel__cart-items" h={type=="takeaway"?"260px":"190px"}>
                       {cart.map((item) => (
-                        <div key={item.id} className="order-panel__cart-item">
+                        <div key={item.id} className={`order-panel__cart-item ${!item.isAvailable && "out-of-stock"}`}>
                           <div className="order-panel__cart-item-info">
                             <div className="order-panel__cart-item-name">
                               {item.name}

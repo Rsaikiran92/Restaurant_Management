@@ -21,10 +21,6 @@ function Dashboard() {
     .reduce((sum, item) => sum + item.items.reduce((s, i) => s + i.price * i.qty, 0), 0);
 
   useEffect(() => {
-    console.log("Dashboard")
-    fetchMenu(dispatch);
-    fetchUsers(dispatch)
-    fetchTables(dispatch)
     fetchOrders(dispatch);
   }, []);
 

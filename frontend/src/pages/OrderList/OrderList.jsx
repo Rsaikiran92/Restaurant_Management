@@ -5,25 +5,33 @@ import { useEffect, useState } from "react";
 import "./OrdersList.css";
 import PayModal from "./PayModel";
 import socket from "../../utils/socket";
-import { addOrder } from "../../redux/slice/orderSlice";
+import { addOrder, successOrder } from "../../redux/slice/orderSlice";
+import { fetchOrders } from "../../utils/api";
+
 
 export default function OrdersList({ type }) {
   const [modal, setModal] = useState({}); // "add" | "pay" | "print"
   const { orders } = useSelector((state) => state.order);
   const dispatch = useDispatch();
-
-  const filtered = orders.filter((o) => o.orderType === type);
  
+  const filtered = orders.filter((o) => o.orderType === type);
+  
   useEffect(() => {
-     socket.on("newOrder", (order) => {
-      console.log(order,"userffect")
-      dispatch(addOrder(order))
-    });
+    fetchOrders(dispatch);
+  }, []);
 
+  useEffect(() => {
+    socket.on("newOrder", (order) => {
+      dispatch(addOrder(order));
+    });
+    socket.on("itemStatus", () => {
+      fetchOrders(dispatch);
+    });
     return () => {
       socket.off("newOrder");
+      socket.off("itemStatus");
     };
-  },[]);
+  }, []);
   return (
     <div className="orders-list">
       {/* Header */}
@@ -43,10 +51,14 @@ export default function OrdersList({ type }) {
           ))
         )}
       </div>
-      {modal.type === "add"   && <AddItemsModal  onClose={() => setModal({})} />}
-      {modal.type === "pay"   && <PayModal order={modal.data}
-      //  onPay={handlePay} 
-      onClose={() => setModal({})} />}
+      {modal.type === "add" && <AddItemsModal id={modal.id} onClose={() => setModal({})} />}
+      {modal.type === "pay" && (
+        <PayModal
+          order={modal.data}
+          //  onPay={handlePay}
+          onClose={() => setModal({})}
+        />
+      )}
     </div>
   );
 }

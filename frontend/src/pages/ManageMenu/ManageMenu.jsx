@@ -80,6 +80,10 @@ export default function ManageMenu() {
   const [modal, setModal] = useState(null);
   const dispatch = useDispatch();
   const role=localStorage.getItem("role")
+
+  useEffect(()=>{
+    fetchMenu(dispatch);
+  },[])
   
   console.log(role,"menu")
   const filtered = menu.filter(

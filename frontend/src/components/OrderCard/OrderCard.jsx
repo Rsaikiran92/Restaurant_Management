@@ -9,7 +9,7 @@ export default function OrderCard({ order, setModal }) {
     0,
   );
   const role = localStorage.getItem("role");
-  console.log(role);
+
   return (
     <div className="order-card">
       {/* Header */}
@@ -98,7 +98,7 @@ export default function OrderCard({ order, setModal }) {
       <div className="order-card__footer">
         <button
           className="btn-action btn-action--add"
-          onClick={() => setModal({ type: "add" })}
+          onClick={() => setModal({ type: "add",id:order._id })}
         >
           <Plus size={14} /> Add Items
         </button>

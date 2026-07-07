@@ -10,6 +10,10 @@ const KitchenDashboard = () => {
   const dispatch = useDispatch();
   const {orders}=useSelector((state)=>state.order)
   console.log(orders)
+  const filter=orders.filter(order =>
+  order.items.every(item => item.status !== "served")
+  )
+  console.log(filter,"kitchen")
 
   useEffect(()=>{
     fetchOrders(dispatch);
@@ -35,7 +39,7 @@ const KitchenDashboard = () => {
           gridTemplateColumns: "repeat(4,1fr)",
         }}
       >
-        {orders.map((order) => (
+        {filter.map((order) => (
           <OrderBox key={order._id}  order={order} />
         ))}
       </div>
