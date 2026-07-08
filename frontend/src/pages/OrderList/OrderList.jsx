@@ -6,29 +6,34 @@ import "./OrdersList.css";
 import PayModal from "./PayModel";
 import socket from "../../utils/socket";
 import { addOrder, successOrder } from "../../redux/slice/orderSlice";
-import { fetchOrders } from "../../utils/api";
+import { fetchMenu, fetchOrders } from "../../utils/api";
 
 
 export default function OrdersList({ type }) {
   const [modal, setModal] = useState({}); // "add" | "pay" | "print"
   const { orders } = useSelector((state) => state.order);
   const dispatch = useDispatch();
- 
+  console.log(orders)
   const filtered = orders.filter((o) => o.orderType === type);
   
   useEffect(() => {
     fetchOrders(dispatch);
+    fetchMenu(dispatch);
   }, []);
 
   useEffect(() => {
     socket.on("newOrder", (order) => {
       dispatch(addOrder(order));
     });
+    socket.on("addItems",(order)=>{
+      dispatch(successOrder(order))
+    })
     socket.on("itemStatus", () => {
       fetchOrders(dispatch);
     });
     return () => {
       socket.off("newOrder");
+      socket.off("addItems")
       socket.off("itemStatus");
     };
   }, []);

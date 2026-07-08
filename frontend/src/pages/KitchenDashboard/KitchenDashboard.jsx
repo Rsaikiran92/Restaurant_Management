@@ -1,4 +1,4 @@
-import {addOrder} from "../../redux/slice/orderSlice";
+import {addOrder, successOrder} from "../../redux/slice/orderSlice";
 import OrderCard from "../../components/OrderCard/OrderCard";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -9,11 +9,11 @@ import socket from "../../utils/socket";
 const KitchenDashboard = () => {
   const dispatch = useDispatch();
   const {orders}=useSelector((state)=>state.order)
-  console.log(orders)
+
   const filter=orders.filter(order =>
   order.items.every(item => item.status !== "served")
   )
-  console.log(filter,"kitchen")
+ 
 
   useEffect(()=>{
     fetchOrders(dispatch);
@@ -23,9 +23,13 @@ const KitchenDashboard = () => {
      socket.on("newOrder", (order) => {
       dispatch(addOrder(order))
     });
-
+    socket.on("addItems",(order)=>{
+      console.log(order,"kitch")
+      dispatch(successOrder(order))
+    })
     return () => {
       socket.off("newOrder");
+      socket.off("addItems")
     };
   },[]);
 
@@ -39,7 +43,7 @@ const KitchenDashboard = () => {
           gridTemplateColumns: "repeat(4,1fr)",
         }}
       >
-        {filter.map((order) => (
+        {orders.map((order) => (
           <OrderBox key={order._id}  order={order} />
         ))}
       </div>

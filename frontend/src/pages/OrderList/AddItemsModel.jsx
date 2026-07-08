@@ -35,12 +35,12 @@ function AddItemsModal({ onAdd, onClose, id }) {
     const toAdd = Object.entries(picked).map(([id, qty]) => {
       return { menuId: id, quantity: qty };
     });
-    console.log(id,toAdd)
+    
     try {
       dispatch(loadingOrder());
       const response = await API.put(`/order/${id}/add-item`, toAdd);
-      dispatch(successOrder(response.data.order));
-      console.log(response.data.order)
+      // dispatch(successOrder(response.data.order));
+      // console.log(response.data.order)
       // toaster.success({
       //   title: "Update successful",
       //   description: "Update data successfully to the server",

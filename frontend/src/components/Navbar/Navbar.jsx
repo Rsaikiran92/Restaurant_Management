@@ -11,10 +11,19 @@ import "./Navbar.css";
 import { Avatar, Menu, Portal } from "@chakra-ui/react";
 import { Button, Card, HStack, Stack, Strong, Text } from "@chakra-ui/react";
 import { useContext } from "react";
-import { UserContext } from "../../contextAPI/UserContextapi"
+import { UserContext } from "../../contextAPI/UserContextapi";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 function Navbar({ pendingCount }) {
-    const {data}=useContext(UserContext)
-    console.log(data,"navbar")
+  const { data } = useContext(UserContext);
+  const navigate = useNavigate();
+  
+  function handlelogout(){
+    console.log("ok")
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    navigate("/")    
+  }
   return (
     <header className="navbar">
       <div className="navbar__inner">
@@ -43,10 +52,10 @@ function Navbar({ pendingCount }) {
               <Avatar.Root
                 size="sm"
                 css={{
-                  border:"1.5px solid rgba(255, 255, 255, 0.35)",
-                  fontWeight:"700",
-                  backgroundColor:"rgba(255, 255, 255, 0.2)",
-                  color:"white"
+                  border: "1.5px solid rgba(255, 255, 255, 0.35)",
+                  fontWeight: "700",
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  color: "white",
                 }}
               >
                 <Avatar.Fallback name={data.name} />
@@ -79,7 +88,7 @@ function Navbar({ pendingCount }) {
                       </Stack>
                     </HStack>
 
-                    <button className="admin-page__add-btn">Sign out</button>
+                    <button className="admin-page__add-btn" onClick={handlelogout}>Sign out</button>
                   </div>
                 </Menu.Content>
               </Menu.Positioner>

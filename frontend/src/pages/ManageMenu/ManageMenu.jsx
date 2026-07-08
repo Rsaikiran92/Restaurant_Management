@@ -85,7 +85,7 @@ export default function ManageMenu() {
     fetchMenu(dispatch);
   },[])
   
-  console.log(role,"menu")
+
   const filtered = menu.filter(
     (m) =>
       (catFilter === "All" || m.category === catFilter) &&
@@ -109,7 +109,7 @@ export default function ManageMenu() {
         });
       } catch (error) {
         console.log(error);
-        dispatch(error("Failed to edit item"));
+        // dispatch(error("Failed to edit item"));
       }
     } else {
       try {
@@ -127,7 +127,7 @@ export default function ManageMenu() {
         });
       } catch (error) {
         console.log(error);
-        dispatch(error("Failed to create menu"));
+        // dispatch(error("Failed to create menu"));
       }
     }
   };

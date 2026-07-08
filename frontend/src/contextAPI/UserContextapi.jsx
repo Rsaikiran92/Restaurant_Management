@@ -1,12 +1,31 @@
+import { useEffect } from "react";
 import { createContext, useState } from "react";
+import API from "../utils/api";
 
-
-export const UserContext=createContext();
-
-function ContextProvider({children}){
-    const [data,setdata]=useState({})
-
-    return<UserContext.Provider value={{data,setdata}}>{children}</UserContext.Provider>
+async function getprofile(setdata) {
+  try {
+    const res = await API.get("/users/profile");
+    setdata(res.data.user);
+  } catch {
+   
+  }
 }
 
-export default ContextProvider
+export const UserContext = createContext();
+
+function ContextProvider({ children }) {
+  const [data, setdata] = useState({});
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+        getprofile(setdata) 
+    }
+  }, []);
+  return (
+    <UserContext.Provider value={{ data, setdata }}>
+      {children}
+    </UserContext.Provider>
+  );
+}
+
+export default ContextProvider;

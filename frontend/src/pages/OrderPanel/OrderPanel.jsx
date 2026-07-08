@@ -36,6 +36,12 @@ export default function OrderPanel({ type, onPlace }) {
     fetchMenu(dispatch);
      socket.on("updateMenu", (menu) => {
       dispatch(updateMenu(menu))
+      menu.map((item)=>{
+        if(!item.isAvailable){
+          console.log(item.isAvailable)
+          updateQty(item._id, 0)
+        }
+      })
     });
 
     return () => {
