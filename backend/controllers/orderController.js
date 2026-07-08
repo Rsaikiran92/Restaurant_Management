@@ -91,7 +91,9 @@ const addItemToOrder = async (req, res) => {
     const orders = await Order.find(query)
       .populate("items.menuId")
       .populate("createdBy", "name");
-
+    
+    const io = req.app.get("io");
+    io.emit("addItems", orders);
     res.json({
       msg: "Items added successfully",
       order: orders,

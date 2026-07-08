@@ -36,6 +36,17 @@ const getUsers = async (req, res) => {
   }
 };
 
+const getProfile = async (req, res) => {
+  try {
+    res.json({
+    message: "Profile data fetched successfully",
+    user: req.user,
+  })
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 // UPDATE USER
 const updateUser = async (req, res) => {
   try {
@@ -63,4 +74,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-export { createUser, getUsers, updateUser, deleteUser };
+export { createUser, getUsers, updateUser, deleteUser ,getProfile};
