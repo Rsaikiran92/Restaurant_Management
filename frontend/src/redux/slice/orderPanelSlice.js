@@ -11,7 +11,7 @@ const orderPanelSlice = createSlice({
     table:""
   },
   reducers: {
-    cat:(state,action)=>{
+    setcategory:(state,action)=>{
         return {...state,cat:action.payload}
     },
     setphone:(state,action)=>{
@@ -32,6 +32,6 @@ const orderPanelSlice = createSlice({
   },
 });
 
-export const { cat,setphone,query,cart,isMobile,settable } =orderPanelSlice.actions;
+export const { setcategory,setphone,query,cart,isMobile,settable } =orderPanelSlice.actions;
 
 export default orderPanelSlice.reducer;

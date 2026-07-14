@@ -361,6 +361,9 @@
     flex-direction: column;
     height: 90vh;
   }
+  .order-panel__cart{
+    width: 100%;
+  }
   .order-panel__menu {
    
   }

@@ -1,4 +1,11 @@
-import {cat,setphone,query,cart,isMobile,settable} from "../../redux/slice/orderPanelSlice"
+import {
+  setphone,
+  query,
+  cart,
+  isMobile,
+  settable,
+  setcategory,
+} from "../../redux/slice/orderPanelSlice";
 import { ShoppingCart, Search, Plus, Minus, X } from "lucide-react";
 import { updateMenu } from "../../redux/slice/menuSlice";
 import { useEffect, useReducer, useState } from "react";
@@ -8,16 +15,14 @@ import socket from "../../utils/socket";
 import "../OrderPanel/OrderPanel.css";
 import API, { fetchMenu, fetchTables } from "../../utils/api";
 import { successTable } from "../../redux/slice/tableSlice";
-import { Box } from "@chakra-ui/react"
-
-
-
+import { Box } from "@chakra-ui/react";
+import { toaster } from "../../components/ui/toaster";
 
 export default function OrderPanel({ type, onPlace }) {
-  const {cat, phone, query, table}=useSelector((state)=>state.orderPanel)
+  const { cat, phone, query, table } = useSelector((state) => state.orderPanel);
   const { loading, menu, error } = useSelector((state) => state.menu);
   const { tables } = useSelector((state) => state.table);
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
   const [cart, setCart] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -29,25 +34,22 @@ export default function OrderPanel({ type, onPlace }) {
     return () => mediaQuery.removeEventListener("change", handleResize);
   }, []);
 
-
-
   useEffect(() => {
-    fetchTables(dispatch)
+    fetchTables(dispatch);
     fetchMenu(dispatch);
-     socket.on("updateMenu", (menu) => {
-      dispatch(updateMenu(menu))
-      menu.map((item)=>{
-        if(!item.isAvailable){
-          console.log(item.isAvailable)
-          updateQty(item._id, 0)
+    socket.on("updateMenu", (menu) => {
+      dispatch(updateMenu(menu));
+      menu.map((item) => {
+        if (!item.isAvailable) {
+          updateQty(item._id, 0);
         }
-      })
+      });
     });
 
     return () => {
       socket.off("updateMenu");
     };
-  },[]);
+  }, []);
 
   const filteredMenu = menu.filter(
     (m) =>
@@ -66,12 +68,16 @@ export default function OrderPanel({ type, onPlace }) {
     });
   };
 
-  const updateQty = (id, delta) =>
-    setCart((prev) =>
-      prev
+  const updateQty = (id, delta) => {
+    setCart((prev) => {
+      if (delta == 0) {
+        delta = -(prev.find((i) => i._id === id)?.qty || 0);
+      }
+      return prev
         .map((c) => (c._id === id ? { ...c, qty: c.qty + delta } : c))
-        .filter((c) => c.qty > 0),
-    );
+        .filter((c) => c.qty > 0);
+    });
+  };
 
   const subtotal = cart.reduce((s, c) => s + c.price * c.qty, 0);
   const gst = Math.round(subtotal * 0.05);
@@ -96,13 +102,26 @@ export default function OrderPanel({ type, onPlace }) {
 
     try {
       const responce = await API.post("/order", from);
-      if(type=="dine-in"){
-        const table_id=tables.filter((item)=>item.name===table)[0]._id
-        const response = await API.put(`/table/${table_id}`, {status: "occupied"});
+      if (type == "dine") {
+        const table_id = tables.filter((item) => item.name === table)[0]._id;
+        const response = await API.put(`/table/${table_id}`, {
+          status: "occupied",
+        });
+        toaster.promise(response, {
+          success: {
+            title: "Successfully uploaded!",
+            description: "Looks great",
+          },
+          error: {
+            title: "Upload failed",
+            description: "Something wrong with the upload",
+          },
+          loading: { title: "Uploading...", description: "Please wait" },
+        });
         dispatch(successTable(response.data.table));
       }
-      dispatch(setphone(""))
-      dispatch(settable(""))
+      dispatch(setphone(""));
+      dispatch(settable(""));
       setCart([]);
     } catch (error) {
       console.log(error);
@@ -110,7 +129,7 @@ export default function OrderPanel({ type, onPlace }) {
   };
 
   return (
-    <div className="order-panel" >
+    <div className="order-panel">
       {/* ── Menu ── */}
       <div className="order-panel__menu">
         {/* Search */}
@@ -120,9 +139,7 @@ export default function OrderPanel({ type, onPlace }) {
             className="order-panel__search-input"
             placeholder="Search dishes…"
             value={query}
-            onChange={(e) =>
-              dispatch(query(e.target.value))
-            }
+            onChange={(e) => dispatch(query(e.target.value))}
           />
         </div>
 
@@ -130,7 +147,7 @@ export default function OrderPanel({ type, onPlace }) {
         <div className="order-panel__cats">
           <button
             className={`order-panel__cat-btn${cat === "All" ? " order-panel__cat-btn--active" : ""}`}
-            onClick={() => dispatch(cat("All"))}
+            onClick={() => dispatch(setcategory("All"))}
           >
             All
           </button>
@@ -138,7 +155,7 @@ export default function OrderPanel({ type, onPlace }) {
             <button
               key={c}
               className={`order-panel__cat-btn${cat === c ? " order-panel__cat-btn--active" : ""}`}
-              onClick={() => dispatch(cat("All"))}
+              onClick={() => dispatch(setcategory(c))}
             >
               {c}
             </button>
@@ -234,9 +251,7 @@ export default function OrderPanel({ type, onPlace }) {
                       className="order-panel__input"
                       placeholder="Phone Number"
                       value={phone}
-                      onChange={(e) =>
-                        dispatch(setphone( e.target.value))
-                      }
+                      onChange={(e) => dispatch(setphone(e.target.value))}
                     />
                   ) : (
                     <>
@@ -263,9 +278,7 @@ export default function OrderPanel({ type, onPlace }) {
                         className="order-panel__input"
                         placeholder="Phone Number"
                         value={phone}
-                        onChange={(e) =>
-                          dispatch(setphone(e.target.value ))
-                        }
+                        onChange={(e) => dispatch(setphone(e.target.value))}
                       />
                     </>
                   )}
@@ -284,7 +297,7 @@ export default function OrderPanel({ type, onPlace }) {
                 {/* Empty state */}
                 {cart.length === 0 ? (
                   <div className="order-panel__empty">
-                    <ShoppingCart size={26} color="#d4a87a"  />
+                    <ShoppingCart size={26} color="#d4a87a" />
                     <span className="order-panel__empty-text">
                       Add items from the menu
                     </span>
@@ -292,9 +305,15 @@ export default function OrderPanel({ type, onPlace }) {
                 ) : (
                   <>
                     {/* Cart items */}
-                    <Box className="order-panel__cart-items" h={type=="takeaway"?"260px":"190px"}>
+                    <Box
+                      className="order-panel__cart-items"
+                      h={type == "takeaway" ? "260px" : "190px"}
+                    >
                       {cart.map((item) => (
-                        <div key={item.id} className={`order-panel__cart-item ${!item.isAvailable && "out-of-stock"}`}>
+                        <div
+                          key={item._id}
+                          className={`order-panel__cart-item ${!item.isAvailable && "out-of-stock"}`}
+                        >
                           <div className="order-panel__cart-item-info">
                             <div className="order-panel__cart-item-name">
                               {item.name}
@@ -332,7 +351,7 @@ export default function OrderPanel({ type, onPlace }) {
                     </Box>
 
                     {/* Summary */}
-                    <div className="order-panel__summary" >
+                    <div className="order-panel__summary">
                       <div className="order-panel__summary-row">
                         <span>Subtotal</span>
                         <span>₹{subtotal}</span>

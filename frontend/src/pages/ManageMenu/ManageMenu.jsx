@@ -57,7 +57,6 @@ function DeleteModal({ item, onConfirm, onClose }) {
   );
 }
 
-
 const CAT_COLORS = {
   Starters: { bg: "#fdecea", color: "#c62828" },
   Mains: { bg: "#fff3e0", color: "#e65100" },
@@ -79,12 +78,11 @@ export default function ManageMenu() {
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState(null);
   const dispatch = useDispatch();
-  const role=localStorage.getItem("role")
+  const role = localStorage.getItem("role");
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchMenu(dispatch);
-  },[])
-  
+  }, []);
 
   const filtered = menu.filter(
     (m) =>
@@ -93,15 +91,18 @@ export default function ManageMenu() {
   );
 
   const handleSave = async (form) => {
+    const id = "login-error-toast"
     if (modal.item) {
       try {
+        toaster.loading({id, title: "Uploading...", description: "Please wait" })
         dispatch(loadingMenu());
         const responce = await API.put(`/menu/${modal.item._id}`, form);
         dispatch(successMenu(responce.data.menu));
         setModal(null);
-        toaster.success({
+        toaster.update(id,{
           title: "Menu added successful",
           description: "Menu added successfully from the server",
+          type: "success",
           closable: false,
           action: {
             label: "ok",
@@ -166,13 +167,13 @@ export default function ManageMenu() {
               {menu.length} items {CATS.length - 1} categories
             </div>
           </div>
-
-          <button
+           
+          {role=="admin"&&(<button
             className="admin-page__add-btn"
             onClick={() => setModal({ type: "add" })}
           >
             <Plus size={15} /> Add Item
-          </button>
+          </button>)}
         </div>
 
         <div className="admin-page__toolbar">
@@ -244,7 +245,7 @@ export default function ManageMenu() {
                   key={t._id}
                 >
                   <HStack justifyContent={"space-between"} alignItems={"start"}>
-                    <HStack gap={3}> 
+                    <HStack gap={3}>
                       <Stack gap="0" style={{ width: "180px" }}>
                         <Text
                           fontWeight="semibold"
@@ -288,13 +289,12 @@ export default function ManageMenu() {
                       {t.category}
                     </span>
                   </HStack>
-                   <div>
+                  <div>
                     <span
                       className={`admin-pill ${t.isAvailable ? "admin-pill--active" : "admin-pill--inactive"}`}
-                   
                     >
-                       {t.isAvailable && (<MdEventAvailable size={10} />)}
-                       {!t.isAvailable && (<CgUnavailable size={10} /> )}
+                      {t.isAvailable && <MdEventAvailable size={10} />}
+                      {!t.isAvailable && <CgUnavailable size={10} />}
                       {t.isAvailable ? "Available" : "Unavailable"}
                     </span>
                   </div>
@@ -309,16 +309,18 @@ export default function ManageMenu() {
                       <Pencil size={5} />
                       Edit
                     </Button>
-                    {role==="admin"&&(<Button
-                      variant="subtle"
-                      colorPalette="red"
-                      flex="1"
-                      borderRadius={"6px"}
-                      onClick={() => setModal({ type: "delete", user: t })}
-                    >
-                      <Trash2 />
-                      Delete
-                    </Button>)}
+                    {role === "admin" && (
+                      <Button
+                        variant="subtle"
+                        colorPalette="red"
+                        flex="1"
+                        borderRadius={"6px"}
+                        onClick={() => setModal({ type: "delete", user: t })}
+                      >
+                        <Trash2 />
+                        Delete
+                      </Button>
+                    )}
                   </div>
                 </div>
               );
@@ -428,16 +430,17 @@ export default function ManageMenu() {
                             >
                               <Pencil size={13} />
                             </button>
-                            {role==="admin"&&
-                            <button
-                              className="admin-table__btn admin-table__btn--delete"
-                              onClick={() =>
-                                setModal({ type: "delete", item: m })
-                              }
-                              title="Delete"
-                            >
-                              <Trash2 size={13} />
-                            </button>}
+                            {role === "admin" && (
+                              <button
+                                className="admin-table__btn admin-table__btn--delete"
+                                onClick={() =>
+                                  setModal({ type: "delete", item: m })
+                                }
+                                title="Delete"
+                              >
+                                <Trash2 size={13} />
+                              </button>
+                            )}
                           </div>
                         </Table.Cell>
                       </Table.Row>

@@ -9,7 +9,7 @@ import {
 import { errorOrder, loadingOrder, successOrder } from "../redux/slice/orderSlice";
 
 const API = axios.create({
-  baseURL: "http://192.168.43.142:5000/api",
+  baseURL: "http://192.168.0.6:5000/api",
 });
 
 // attach token

@@ -105,13 +105,14 @@ function AddItemsModal({ onAdd, onClose, id }) {
             {filtered.map((item) => {
               const qty = picked[item._id] || 0;
               return (
-                <div key={item._id} className="menu-item-pick" key={item._id}>
+                <div key={item._id} className={`menu-item-pick ${!item.isAvailable && "out-of-stock"}`} key={item._id}>
                   <div className="menu-item-pick__emoji">{item.emoji}</div>
                   <div className="menu-item-pick__info">
                     <div className="menu-item-pick__name">{item.name}</div>
                     <div className="menu-item-pick__price">₹{item.price}</div>
+                    
                   </div>
-                  <div className="menu-item-pick__qty">
+                  <div className="menu-item-pick__qty" >
                     <button
                       className="qty-btn"
                       onClick={() => setQty(item._id, -1)}

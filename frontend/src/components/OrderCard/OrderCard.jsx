@@ -30,7 +30,7 @@ export default function OrderCard({ order, setModal }) {
             </span>
           </div>
           {role != "waiter" && (
-            <button className="btn-action btn-action--print">
+            <button className="btn-action btn-action--print" onClick={()=>print()}>
               <Printer size={14} /> Print Bill
             </button>
           )}
@@ -96,12 +96,12 @@ export default function OrderCard({ order, setModal }) {
 
       {/* Footer */}
       <div className="order-card__footer">
-        <button
+        {(order.orderType == "takeaway" || role == "waiter") && (<button
           className="btn-action btn-action--add"
           onClick={() => setModal({ type: "add",id:order._id })}
         >
           <Plus size={14} /> Add Items
-        </button>
+        </button>)}
         {role != "waiter" && (
           <button
             className="btn-action btn-action--pay"

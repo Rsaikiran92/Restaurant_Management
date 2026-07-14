@@ -7,6 +7,7 @@ function TableModal({ table, onSave, onClose }) {
   const [form, setForm] = useState(
     table || { name: "", capacity: 4, status: "available" }
   );
+   const role=localStorage.getItem("role")
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
   return (
@@ -26,7 +27,7 @@ function TableModal({ table, onSave, onClose }) {
             <div className="form-group">
               <label>Capacity (seats) *</label>
               <input type="number" min="1" max="20" value={form.capacity}
-                onChange={(e) => set("capacity", Number(e.target.value))} />
+                onChange={(e) => set("capacity", Number(e.target.value))} disabled={role=="frontdesk"} />
             </div>
           </div>
           <div className="form-group">

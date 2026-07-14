@@ -12,7 +12,7 @@ import TableModal from "./TableModel";
 import API, { fetchTables } from "../../utils/api";
 import "../admin.shared.css";
 import "./ManageTables.css";
-import { Toaster } from "@chakra-ui/react";
+import { Toaster,Button } from "@chakra-ui/react";
 import Loading from "../../components/Loading";
 
 const STATUS_CFG = {
@@ -38,6 +38,7 @@ export default function ManageTables() {
   const [view, setView] = useState("grid");
   const dispatch = useDispatch();
   const { loading, tables, error } = useSelector((state) => state.table);
+   const role=localStorage.getItem("role")
 
  useEffect(()=>{
       fetchTables(dispatch)
@@ -167,12 +168,12 @@ export default function ManageTables() {
               </button>
             ))}
           </div>
-          <button
+          {role=="admin"&&(<button
             className="admin-page__add-btn"
             onClick={() => setModal({ type: "add" })}
           >
             <Plus size={15} /> Add Table
-          </button>
+          </button>)}
         </div>
       </div>
 
@@ -235,20 +236,29 @@ export default function ManageTables() {
                   <span>{t.capacity} seats</span>
                 </div>
                 <div className="table-card__actions">
-                  <button
-                    className="admin-table__btn admin-table__btn--edit"
+                  <Button
+
+                    variant="subtle"
+                      colorPalette="blue"
+                      flex="1"
+                      borderRadius={"6px"}
                     onClick={() => setModal({ type: "edit", table: t })}
                     title="Edit"
                   >
                     <Pencil size={13} />
-                  </button>
-                  <button
-                    className="admin-table__btn admin-table__btn--delete"
+                    Edit
+                  </Button>
+                  {role==="admin"&&(<Button
+                    variant="subtle"
+                      colorPalette="red"
+                      flex="1"
+                      borderRadius={"6px"}
                     onClick={() => setModal({ type: "delete", table: t })}
                     title="Delete"
                   >
                     <Trash2 size={13} />
-                  </button>
+                    Delete
+                  </Button>)}
                 </div>
               </div>
             );
@@ -297,12 +307,12 @@ export default function ManageTables() {
                         >
                           <Pencil size={13} />
                         </button>
-                        <button
+                        {role==="admin"&&(<button
                           className="admin-table__btn admin-table__btn--delete"
                           onClick={() => setModal({ type: "delete", table: t })}
                         >
                           <Trash2 size={13} />
-                        </button>
+                        </button>)}
                       </div>
                     </td>
                   </tr>

@@ -141,9 +141,9 @@ export default function OrderBox({ order }) {
           </div>
         ))}
       </div>
-      <div>
+      {/* <div>
         <button className="order-box-btn">Order Completed</button>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -85,7 +85,7 @@ const actions = [
           {activeOrders.map((item) => {
             const total = item.items.reduce((s, i) => s + i.menuId.price * i.quantity, 0);
             return (
-              <div key={item.id} className="dashboard__active-row">
+              <div key={item._id} className="dashboard__active-row">
                 <div className="dashboard__active-info">
                   <div className="dashboard__active-info-top">
                     <span className="dashboard__active-id">{item.orderNumber}</span>

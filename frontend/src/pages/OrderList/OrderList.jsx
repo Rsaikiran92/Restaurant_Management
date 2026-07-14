@@ -13,7 +13,6 @@ export default function OrdersList({ type }) {
   const [modal, setModal] = useState({}); // "add" | "pay" | "print"
   const { orders } = useSelector((state) => state.order);
   const dispatch = useDispatch();
-  console.log(orders)
   const filtered = orders.filter((o) => o.orderType === type);
   
   useEffect(() => {
@@ -26,7 +25,7 @@ export default function OrdersList({ type }) {
       dispatch(addOrder(order));
     });
     socket.on("addItems",(order)=>{
-      dispatch(successOrder(order))
+      fetchOrders(dispatch);
     })
     socket.on("itemStatus", () => {
       fetchOrders(dispatch);
@@ -37,6 +36,8 @@ export default function OrdersList({ type }) {
       socket.off("itemStatus");
     };
   }, []);
+  
+ 
   return (
     <div className="orders-list">
       {/* Header */}
@@ -52,17 +53,12 @@ export default function OrdersList({ type }) {
           <div className="orders-list__empty">No orders found</div>
         ) : (
           filtered.map((order) => (
-            <OrderCard key={order.id} order={order} setModal={setModal} />
+            <OrderCard key={order.id} order={order} setModal={setModal} key={order._id} />
           ))
         )}
       </div>
       {modal.type === "add" && <AddItemsModal id={modal.id} onClose={() => setModal({})} />}
-      {modal.type === "pay" && (
-        <PayModal
-          order={modal.data}
-          //  onPay={handlePay}
-          onClose={() => setModal({})}
-        />
+      {modal.type === "pay" && (<PayModal order={modal.data}  onClose={() => setModal({})}/>
       )}
     </div>
   );

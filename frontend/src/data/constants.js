@@ -18,14 +18,14 @@ export const NAV_GROUPS = [
   {
     key: "overview",
     label: "Overview",
-    items: [{ id: "dashboard", label: "Dashboard", icon: "LayoutDashboard" , roles: ["frontdesk","admin","waiter"]}],
+    items: [{ id: "dashboard", label: "Dashboard", icon: "LayoutDashboard" , roles: ["frontdesk","admin","waiter","kitchen"]}],
   },
   {
     key: "Manage",
     label: "Manage",
     items: [
       { id: "manageusers", label: "Manage users", icon: "Users" ,roles: ["admin"] },
-      { id: "managemenu", label: "Manage Menu", icon: "Menu" ,roles: ["frontdesk","admin"] },
+      { id: "managemenu", label: "Manage Menu", icon: "Menu" ,roles: ["frontdesk","admin","kitchen"] },
       { id: "managetable", label: "Manage Table", icon: "Menu" ,roles: ["frontdesk","admin"] },
     ],
   },
