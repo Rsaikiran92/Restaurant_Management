@@ -9,7 +9,7 @@ const loginUser = async (req, res) => {
 
     // check user exists
     const user = await User.findOne({ email });
-
+  
     if (!user) {
       return res.status(400).json({ msg: "No account found with this email address." });
     }
@@ -33,7 +33,7 @@ const loginUser = async (req, res) => {
         email: user.email
       },
       process.env.JWT_SECRET,
-      { expiresIn: "7d" }, // 🔥
+      { expiresIn: "24h" }, // 🔥
     );
 
     res.json({

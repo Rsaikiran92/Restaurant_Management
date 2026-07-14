@@ -7,7 +7,7 @@ const menuRouter = express.Router();
 // Admin Only
 menuRouter
 .post("/", auth, isAdmin, createMenu)
-.put("/:id", auth, isAdmin, updateMenu)
+.put("/:id", auth, updateMenu)
 .delete("/:id", auth, isAdmin, deleteMenu)
 
 // Logged-in users

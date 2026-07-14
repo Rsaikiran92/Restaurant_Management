@@ -1,5 +1,5 @@
 import express from "express";
-import {createOrder,addItemToOrder,    getOrders,getSingleOrder,  updateOrderStatus} from "../controllers/orderController.js";
+import {createOrder,addItemToOrder,    getOrders,getSingleOrder,  updateOrderStatus, updatePaymentStatus} from "../controllers/orderController.js";
 import { auth } from "../middleware/authMiddleware.js";
 
 const orderRouter = express.Router();
@@ -18,6 +18,9 @@ orderRouter
 .get("/", auth, getSingleOrder)
 
 // Kitchen updates
-.put("/:id", auth, updateOrderStatus);
+.put("/:id", auth, updateOrderStatus)
+
+// Payment updates
+.put("/payment/:id", updatePaymentStatus);
 
 export default orderRouter

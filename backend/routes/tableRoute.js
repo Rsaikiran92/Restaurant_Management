@@ -7,7 +7,7 @@ const tableRouter = express.Router();
 
 tableRouter
 .post("/", auth, isAdmin, createTable)
-.put("/:id", auth, isAdmin, updateTable)
+.put("/:id", auth,  updateTable)
 .delete("/:id", auth, isAdmin, deleteTable)
 .get("/", auth, getTables);
 

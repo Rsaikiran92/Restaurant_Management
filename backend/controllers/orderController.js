@@ -187,10 +187,46 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
+
+const updatePaymentStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { isPaid, paymentMethod } = req.body;
+    const order = await Order.findById(id);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    order.isPaid = isPaid;
+
+    // Save payment method only if paid
+    order.paymentMethod = isPaid ? paymentMethod : undefined;
+
+    await order.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Payment updated successfully",
+      data: order,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
 export {
   createOrder,
   addItemToOrder,
   getOrders,
   getSingleOrder,
   updateOrderStatus,
+  updatePaymentStatus
 };
