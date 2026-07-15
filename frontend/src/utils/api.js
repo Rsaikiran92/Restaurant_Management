@@ -9,7 +9,7 @@ import {
 import { errorOrder, loadingOrder, successOrder } from "../redux/slice/orderSlice";
 
 const API = axios.create({
-  baseURL: "http://192.168.0.6:5000/api",
+  baseURL: "http://192.168.0.8:5000/api",
 });
 
 // attach token
@@ -52,8 +52,8 @@ export const userLogin = async (state, dispatch, setdata, navigate) => {
 
 // GET MENU
 export async function fetchMenu(dispatch) {
+  dispatch(loadingMenu());
   try {
-    dispatch(loadingMenu());
     const responce = await API.get("/menu");
     dispatch(successMenu(responce.data));
   } catch (err) {

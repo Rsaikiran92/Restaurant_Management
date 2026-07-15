@@ -1,8 +1,11 @@
 import { X } from "lucide-react";
 import { useState } from "react";
 import { CATS } from "../../data/constants";
+import { useSelector } from "react-redux";
+import { Button } from "@chakra-ui/react";
 
 function MenuModal({ item, onSave, onClose }) {
+  const { loading } = useSelector((state) => state.menu);
   const role=localStorage.getItem("role")
   const [form, setForm] = useState(
     item || {
@@ -22,7 +25,7 @@ function MenuModal({ item, onSave, onClose }) {
           <span className="modal__title">
             {item ? "Edit Menu Item" : "Add Menu Item"}
           </span>
-          <button className="modal__close" onClick={onClose}>
+          <button className="modal__close" disabled={loading} onClick={onClose}>
             <X size={14} />
           </button>
         </div>
@@ -86,17 +89,18 @@ function MenuModal({ item, onSave, onClose }) {
           </div>
         </div>
         <div className="modal__footer">
-          <button className="btn-cancel" onClick={onClose}>
+          <button className="btn-cancel" disabled={loading} onClick={onClose}>
             Cancel
           </button>
-          <button
+          <Button
+            loading={loading}
             className="btn-save"
             onClick={() => {
               if (form.name && form.price) onSave(form);
             }}
           >
             {item ? "Save Changes" : "Add Item"}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

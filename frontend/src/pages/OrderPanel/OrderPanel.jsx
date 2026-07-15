@@ -5,21 +5,23 @@ import {
   isMobile,
   settable,
   setcategory,
+  setLoading,
 } from "../../redux/slice/orderPanelSlice";
 import { ShoppingCart, Search, Plus, Minus, X } from "lucide-react";
 import { updateMenu } from "../../redux/slice/menuSlice";
 import { useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Accordion } from "@chakra-ui/react";
+import { Accordion, Button, Center, Spinner, Text } from "@chakra-ui/react";
 import socket from "../../utils/socket";
 import "../OrderPanel/OrderPanel.css";
 import API, { fetchMenu, fetchTables } from "../../utils/api";
 import { successTable } from "../../redux/slice/tableSlice";
 import { Box } from "@chakra-ui/react";
 import { toaster } from "../../components/ui/toaster";
+import { loadingOrder } from "../../redux/slice/orderSlice";
 
 export default function OrderPanel({ type, onPlace }) {
-  const { cat, phone, query, table } = useSelector((state) => state.orderPanel);
+  const { cat, phone, query, table,orderPanelLoading } = useSelector((state) => state.orderPanel);
   const { loading, menu, error } = useSelector((state) => state.menu);
   const { tables } = useSelector((state) => state.table);
   const dispatch = useDispatch();
@@ -89,7 +91,7 @@ export default function OrderPanel({ type, onPlace }) {
   } else {
     canPlace = cart.length > 0;
   }
-
+  
   const handlePlace = async () => {
     const from = {
       customerNumber: phone,
@@ -99,7 +101,7 @@ export default function OrderPanel({ type, onPlace }) {
       totalAmount: total,
       paymentMethod: null,
     };
-
+    dispatch(setLoading(true))
     try {
       const responce = await API.post("/order", from);
       if (type == "dine") {
@@ -107,30 +109,35 @@ export default function OrderPanel({ type, onPlace }) {
         const response = await API.put(`/table/${table_id}`, {
           status: "occupied",
         });
-        toaster.promise(response, {
-          success: {
-            title: "Successfully uploaded!",
-            description: "Looks great",
-          },
-          error: {
-            title: "Upload failed",
-            description: "Something wrong with the upload",
-          },
-          loading: { title: "Uploading...", description: "Please wait" },
-        });
         dispatch(successTable(response.data.table));
       }
       dispatch(setphone(""));
       dispatch(settable(""));
       setCart([]);
+      dispatch(setLoading(false))
+      toaster.success({
+          title: "Order placed",
+          description: "Order Created successfully",
+          closable: false,
+          action: {
+            label: "ok",
+          },
+        });
     } catch (error) {
+      dispatch(setLoading(false))
       console.log(error);
     }
   };
 
   return (
-    <div className="order-panel">
+    <div className="order-panel" style={{border:"1px solid green"}} disable>
       {/* ── Menu ── */}
+      {orderPanelLoading && <Box pos="absolute" inset="0" bg="bg/20">
+        <Center h="full">
+          <Spinner size="xl" borderWidth="4px" color="#b84c00"
+    css={{ "--spinner-track-color": "colors.gray.400" }} />
+        </Center>
+      </Box>}
       <div className="order-panel__menu">
         {/* Search */}
         <div className="order-panel__search-bar">
@@ -364,13 +371,14 @@ export default function OrderPanel({ type, onPlace }) {
                         <span>Total</span>
                         <span>₹{total}</span>
                       </div>
-                      <button
+                      <Button
+                        loading={orderPanelLoading}
                         className="order-panel__place-btn"
                         onClick={handlePlace}
                         disabled={!canPlace}
                       >
                         Place Takeaway Order
-                      </button>
+                      </Button>
                     </div>
                   </>
                 )}

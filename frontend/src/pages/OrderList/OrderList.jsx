@@ -24,16 +24,20 @@ export default function OrdersList({ type }) {
     socket.on("newOrder", (order) => {
       dispatch(addOrder(order));
     });
-    socket.on("addItems",(order)=>{
+    socket.on("addItems",()=>{
       fetchOrders(dispatch);
     })
     socket.on("itemStatus", () => {
       fetchOrders(dispatch);
     });
+    socket.on("orderPayment",()=>{
+      fetchOrders(dispatch)
+    })
     return () => {
       socket.off("newOrder");
-      socket.off("addItems")
+      socket.off("addItems");
       socket.off("itemStatus");
+      socket.off("orderPayment");
     };
   }, []);
   

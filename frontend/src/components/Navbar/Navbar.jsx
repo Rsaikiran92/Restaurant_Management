@@ -14,10 +14,13 @@ import { useContext } from "react";
 import { UserContext } from "../../contextAPI/UserContextapi";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 function Navbar({ pendingCount }) {
   const { data } = useContext(UserContext);
   const navigate = useNavigate();
-  
+  const {orders}=useSelector((state)=>state.order)
+
   function handlelogout(){
     console.log("ok")
     localStorage.removeItem("token");
@@ -40,10 +43,10 @@ function Navbar({ pendingCount }) {
 
         {/* Right */}
         <div className="navbar__right">
-          {pendingCount > 0 && (
+          {orders.length > 0 && (
             <div className="navbar__pending-pill">
               <Bell size={12} />
-              {pendingCount} pending
+              {orders.length} pending
             </div>
           )}
           {/* <div className="navbar__avatar">FD</div> */}

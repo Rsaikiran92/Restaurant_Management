@@ -8,7 +8,8 @@ const orderPanelSlice = createSlice({
     query: "",
     cart:[],
     isMobile:false,
-    table:""
+    table:"",
+    orderPanelLoading:false
   },
   reducers: {
     setcategory:(state,action)=>{
@@ -28,10 +29,14 @@ const orderPanelSlice = createSlice({
     },
     settable:(state,action)=>{
         return {...state,table:action.payload}
+    },
+    setLoading:(state,action)=>{
+        console.log("redux",action.payload)
+        return {...state,orderPanelLoading:action.payload}
     }
   },
 });
 
-export const { setcategory,setphone,query,cart,isMobile,settable } =orderPanelSlice.actions;
+export const { setcategory,setphone,query,cart,isMobile,settable,setLoading } =orderPanelSlice.actions;
 
 export default orderPanelSlice.reducer;

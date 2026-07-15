@@ -12,6 +12,7 @@ function Dashboard() {
   const {orders}=useSelector((state)=>state.order)
   const onNavigate=useNavigate()
   const dispatch = useDispatch();
+  const role=localStorage.getItem("role")
   
   const takeawayOrders = orders.filter((item) => item.orderType === "takeaway");
   const dineOrders     = orders.filter((item) => item.orderType === "dine-in");
@@ -31,10 +32,7 @@ function Dashboard() {
     { label: "Revenue (Served)",  value: `₹${revenue.toLocaleString("en-IN")}`, color: "#4a148c", bg: "#f3e5f5" },
 ];
 
-const actions = [
-    { label: "New Takeaway Order", page: "/takeaway", color: "#b84c00", bg: "#fff8f0", border: "#b84c0040" },
-    { label: "New Dine-in Order",  page: "/dine",     color: "#1565c0", bg: "#e8f0fd", border: "#1565c040" },
-];
+
 
   return (
     <div className="dashboard">
@@ -58,19 +56,26 @@ const actions = [
       {/* Quick Actions */}
       <div className="dashboard__actions-title">Quick Actions</div>
       <div className="dashboard__actions-grid">
-        {actions.map((a) => (
-          <button
-            key={a.page}
+        {role=="frontdesk"&& <button
             className="dashboard__action-btn"
-            onClick={() => onNavigate(a.page)}
-            style={{ background: a.bg, borderColor: a.border, color: a.color }}
+            onClick={() => onNavigate("/takeaway")}
+            style={{ background: "#fff8f0", borderColor: "#b84c0040", color:"#b84c00" }}
           >
             <div className="dashboard__action-btn-left">
-              <span className="dashboard__action-btn-label">{a.label}</span>
+              <span className="dashboard__action-btn-label">New Takeaway Order</span>
             </div>
             <ArrowRight size={15} />
-          </button>
-        ))}
+          </button>}
+           {role=="waiter"&&<button
+            className="dashboard__action-btn"
+            onClick={() => onNavigate("/dine")}
+            style={{ background: "#e8f0fd", borderColor: "#1565c040", color:"#1565c0" }}
+          >
+            <div className="dashboard__action-btn-left">
+              <span className="dashboard__action-btn-label">New Dine-in Order</span>
+            </div>
+            <ArrowRight size={15} />
+          </button>}
       </div>
 
       {/* Active orders */}

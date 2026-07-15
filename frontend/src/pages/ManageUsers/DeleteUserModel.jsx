@@ -1,12 +1,15 @@
+import { Button } from "@chakra-ui/react";
 import { Trash2, X } from "lucide-react";
+import { useSelector } from "react-redux";
 
 function DeleteUserModal({ user, onConfirm, onClose }) {
+    const { loading } = useSelector((state) => state.user);
   return (
     <div className="modal-overlay">
       <div className="modal modal--confirm" style={{ maxWidth: 380 }}>
         <div className="modal__header">
           <span className="modal__title">Delete User</span>
-          <button className="modal__close" onClick={onClose}>
+          <button className="modal__close" disabled={loading} onClick={onClose}>
             <X size={14} />
           </button>
         </div>
@@ -21,12 +24,12 @@ function DeleteUserModal({ user, onConfirm, onClose }) {
           </div>
         </div>
         <div className="modal__footer">
-          <button className="btn-cancel" onClick={onClose}>
+          <button className="btn-cancel" disabled={loading} onClick={onClose}>
             Cancel
           </button>
-          <button className="btn-delete" onClick={onConfirm}>
+          <Button className="btn-delete" loading={loading} onClick={onConfirm}>
             Delete User
-          </button>
+          </Button>
         </div>
       </div>
     </div>

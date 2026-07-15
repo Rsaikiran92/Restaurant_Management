@@ -1,9 +1,12 @@
+import { Button } from "@chakra-ui/react";
 import { X } from "lucide-react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const STATUSES = ["available", "occupied", "reserved"];
 
 function TableModal({ table, onSave, onClose }) {
+   const { loading } = useSelector((state) => state.table);
   const [form, setForm] = useState(
     table || { name: "", capacity: 4, status: "available" }
   );
@@ -15,7 +18,7 @@ function TableModal({ table, onSave, onClose }) {
       <div className="modal">
         <div className="modal__header">
           <span className="modal__title">{table ? "Edit Table" : "Add New Table"}</span>
-          <button className="modal__close" onClick={onClose}><X size={14} /></button>
+          <button className="modal__close" disabled={loading} onClick={onClose}><X size={14} /></button>
         </div>
         <div className="modal__body">
           <div className="form-row">
@@ -40,11 +43,11 @@ function TableModal({ table, onSave, onClose }) {
           </div>
         </div>
         <div className="modal__footer">
-          <button className="btn-cancel" onClick={onClose}>Cancel</button>
-          <button className="btn-save"
+          <button className="btn-cancel" onClick={onClose} disabled={loading}>Cancel</button>
+          <Button className="btn-save" loading={loading}
             onClick={() => { if (form.name && form.capacity) onSave(form); }}>
             {table ? "Save Changes" : "Add Table"}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

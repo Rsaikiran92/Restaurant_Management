@@ -45,15 +45,18 @@ export default function ManageTables() {
  },[])
 
   const handleSave = async (form) => {
+    const id="table-updates-toast"
+    toaster.loading({id, title: "Updateing...", description: "Please wait" })
     if (modal.type == "edit") {
       // edit user acount
       try {
         dispatch(loadingTable());
         const response = await API.put(`/table/${modal.table._id}`, form);
         dispatch(successTable(response.data.table));
-        toaster.success({
-          title: "Update successful",
-          description: "Update data successfully to the server",
+        toaster.update(id,{
+          title: "Table update",
+          description: "Table updated successfully",
+          type: "success",
           closable: false,
           action: {
             label: "ok",
@@ -62,10 +65,14 @@ export default function ManageTables() {
         setModal(null);
       } catch (err) {
         console.log(err);
-        toaster.create({
-          title: "Update failed",
-          description: err,
-          type: error,
+        toaster.update(id,{
+          title: "Table update",
+          description: "Table updated Failed",
+          type: "error",
+          closable: false,
+          action: {
+            label: "ok",
+          },
         });
         dispatch(
           errorTable("Failed to edit user informasion. Please try again."),
@@ -77,9 +84,10 @@ export default function ManageTables() {
         dispatch(loadingTable());
         const responce = await API.post("/table", form);
         dispatch(successTable(responce.data.table));
-        toaster.success({
-          title: "Created successful",
-          description: "created acount successfully",
+        toaster.update(id,{
+          title: "Table create",
+          description: "Table created successfully",
+          type: "success",
           closable: false,
           action: {
             label: "ok",
@@ -87,10 +95,14 @@ export default function ManageTables() {
         });
         setModal(null);
       } catch (err) {
-        toaster.create({
-          title: "Created Acount failed. Please try again.",
-          description: err,
+        toaster.update(id,{
+          title: "Table create",
+          description: "Table created Failed",
           type: "error",
+          closable: false,
+          action: {
+            label: "ok",
+          },
         });
         dispatch(errorTable("Failed to create user acount. Please try again."));
       }
@@ -98,25 +110,32 @@ export default function ManageTables() {
   };
 
   const handleDelete = async () => {
+    const id="table-delete-toast"
+        toaster.loading({id, title: "Deleteing...", description: "Please wait" })
     try {
       dispatch(loadingTable());
       const responce = await API.delete(`/table/${modal.table._id}`);
       dispatch(successTable(responce.data.table));
-      toaster.success({
-        title: "Acount deleted successful",
-        description: "Acount deleted successfully from the server",
-        closable: false,
-        action: {
-          label: "ok",
-        },
-      });
+      toaster.update(id,{
+          title: "Table Delete",
+          description: "Table Deleted successfully",
+          type: "success",
+          closable: false,
+          action: {
+            label: "ok",
+          },
+        });
       setModal(null);
     } catch (err) {
-      toaster.create({
-        title: "Acount deleted failed. Please try again.",
-        description: err,
-        type: error,
-      });
+      toaster.update(id,{
+          title: "Table Delete",
+          description: "Table deleted Failed",
+          type: "error",
+          closable: false,
+          action: {
+            label: "ok",
+          },
+        });
       dispatch(errorTable("Failed to delete user acount. Please try again."));
     }
   };
@@ -237,7 +256,7 @@ export default function ManageTables() {
                 </div>
                 <div className="table-card__actions">
                   <Button
-
+                    className="admin-table__btn admin-table__btn--edit"
                     variant="subtle"
                       colorPalette="blue"
                       flex="1"
@@ -249,6 +268,7 @@ export default function ManageTables() {
                     Edit
                   </Button>
                   {role==="admin"&&(<Button
+                  className="admin-table__btn admin-table__btn--delete"
                     variant="subtle"
                       colorPalette="red"
                       flex="1"

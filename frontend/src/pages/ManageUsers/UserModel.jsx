@@ -28,7 +28,7 @@ function UserModal({ user, onSave, onClose }) {
           <span className="modal__title">
             {isEdit ? "Edit User" : "Add New User"}
           </span>
-          <button className="modal__close" onClick={onClose}>
+          <button className="modal__close" disabled={loading} onClick={onClose}>
             <X size={14} />
           </button>
         </div>
@@ -88,23 +88,19 @@ function UserModal({ user, onSave, onClose }) {
           </div>
         </div>
         <div className="modal__footer">
-          <button className="btn-cancel" onClick={onClose}>
+          <button className="btn-cancel" disabled={loading} onClick={onClose}>
             Cancel
           </button>
-          {loading ? (
-            <Button className="btn-save" loading loadingText="Saving...">
-              Click me
-            </Button>
-          ) : (
-            <button
+          
+            <Button
+            loading={loading}
               className="btn-save"
               onClick={() => {
                 if (form.name && form.email) onSave(form);
               }}
             >
               {isEdit ? "Save Changes" : "Add User"}
-            </button>
-          )}
+            </Button>
         </div>
       </div>
     </div>

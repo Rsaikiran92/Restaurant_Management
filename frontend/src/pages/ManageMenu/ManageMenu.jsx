@@ -25,12 +25,13 @@ import MenuModal from "./MenuModel";
 import "../admin.shared.css";
 
 function DeleteModal({ item, onConfirm, onClose }) {
+  const { loading } = useSelector((state) => state.menu);
   return (
     <div className="modal-overlay">
       <div className="modal modal--confirm" style={{ maxWidth: 380 }}>
         <div className="modal__header">
           <span className="modal__title">Remove Menu Item</span>
-          <button className="modal__close" onClick={onClose}>
+          <button className="modal__close" onClick={onClose} disabled={loading} >
             <X size={14} />
           </button>
         </div>
@@ -45,12 +46,12 @@ function DeleteModal({ item, onConfirm, onClose }) {
           </div>
         </div>
         <div className="modal__footer">
-          <button className="btn-cancel" onClick={onClose}>
+          <button className="btn-cancel" disabled={loading} onClick={onClose}>
             Cancel
           </button>
-          <button className="btn-delete" onClick={onConfirm}>
+          <Button className="btn-delete" loading={loading} onClick={onConfirm}>
             Remove Item
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -82,6 +83,7 @@ export default function ManageMenu() {
 
   useEffect(() => {
     fetchMenu(dispatch);
+    console.log(loading,"sai")
   }, []);
 
   const filtered = menu.filter(
@@ -91,17 +93,44 @@ export default function ManageMenu() {
   );
 
   const handleSave = async (form) => {
-    const id = "login-error-toast"
+    const id = "item-updates-toast"
     if (modal.item) {
       try {
-        toaster.loading({id, title: "Uploading...", description: "Please wait" })
+        toaster.loading({id, title: "Updateing...", description: "Please wait" })
         dispatch(loadingMenu());
         const responce = await API.put(`/menu/${modal.item._id}`, form);
         dispatch(successMenu(responce.data.menu));
         setModal(null);
         toaster.update(id,{
-          title: "Menu added successful",
-          description: "Menu added successfully from the server",
+          title: "Item update",
+          description: "Item updated successfully",
+          type: "success",
+          closable: false,
+          action: {
+            label: "ok",
+          },
+        });
+      } catch (error) {
+        toaster.update(id,{
+          title: "Item update",
+          description: "Item updated Failed",
+          type: "error",
+          closable: false,
+          action: {
+            label: "ok",
+          },
+        });
+      }
+    } else {
+      try {
+        toaster.loading({id, title: "Uploading...", description: "Please wait" })
+        dispatch(loadingMenu());
+        const responce = await API.post("/menu", form);
+        dispatch(successMenu(responce.data.menu));
+        setModal(null);
+        toaster.update(id,{
+          title: "Item added",
+          description: "Item added successfully",
           type: "success",
           closable: false,
           action: {
@@ -110,49 +139,47 @@ export default function ManageMenu() {
         });
       } catch (error) {
         console.log(error);
-        // dispatch(error("Failed to edit item"));
-      }
-    } else {
-      try {
-        dispatch(loadingMenu());
-        const responce = await API.post("/menu", form);
-        dispatch(successMenu(responce.data.menu));
-        setModal(null);
-        toaster.success({
-          title: "Menu edit successful",
-          description: "Menu edit successfully from the server",
+        toaster.update(id,{
+          title: "Item added",
+          description: "Item updated Failed",
+          type: "error",
           closable: false,
           action: {
             label: "ok",
           },
         });
-      } catch (error) {
-        console.log(error);
         // dispatch(error("Failed to create menu"));
       }
     }
   };
 
   const handleDelete = async () => {
+    const id="item-delete-toast"
     try {
+      toaster.loading({id, title: "Deleteing...", description: "Please wait" })
       dispatch(loadingMenu());
       const responce = await API.delete(`/menu/${modal.item._id}`);
       dispatch(successMenu(responce.data.menu));
-      toaster.success({
-        title: "Acount deleted successful",
-        description: "Acount deleted successfully from the server",
-        closable: false,
-        action: {
-          label: "ok",
-        },
-      });
+      toaster.update(id,{
+          title: "Item delete",
+          description: "Item deleted successfully",
+          type: "success",
+          closable: false,
+          action: {
+            label: "ok",
+          },
+        });
       setModal(null);
     } catch (err) {
-      toaster.create({
-        title: "Acount deleted failed. Please try again.",
-        description: err,
-        type: error,
-      });
+      toaster.update(id,{
+          title: "Item delete",
+          description: "Item deleted Failed. Please try again.",
+          type: "error",
+          closable: false,
+          action: {
+            label: "ok",
+          },
+        });
       dispatch(errorMenu("Failed to delete user acount. Please try again."));
     }
   };
@@ -300,22 +327,25 @@ export default function ManageMenu() {
                   </div>
                   <div className="table-card__actions">
                     <Button
+                    className="admin-table__btn admin-table__btn--edit"
                       variant="subtle"
                       colorPalette="blue"
                       flex="1"
                       borderRadius={"6px"}
-                      onClick={() => setModal({ type: "edit", user: t })}
+                      onClick={() => setModal({ type: "edit", item: t })}
                     >
-                      <Pencil size={5} />
+              
+                        <Pencil />
                       Edit
                     </Button>
                     {role === "admin" && (
                       <Button
+                       className="admin-table__btn admin-table__btn--delete"
                         variant="subtle"
                         colorPalette="red"
                         flex="1"
                         borderRadius={"6px"}
-                        onClick={() => setModal({ type: "delete", user: t })}
+                        onClick={() => setModal({ type: "delete", item: t })}
                       >
                         <Trash2 />
                         Delete

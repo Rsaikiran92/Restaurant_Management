@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const menuSlice=createSlice({
     name:"menu",
     initialState:{
-        loading:false,
+        loading:true,
         menu:[],
         error:""
     },

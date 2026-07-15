@@ -93,7 +93,7 @@ function AddItemsModal({ onAdd, onClose, id }) {
               <button
                 key={c}
                 className={`order-panel__cat-btn${cat === c ? " order-panel__cat-btn--active" : ""}`}
-                onClick={() => setCat("All")}
+                onClick={() => setCat(c)}
               >
                 {c}
               </button>
