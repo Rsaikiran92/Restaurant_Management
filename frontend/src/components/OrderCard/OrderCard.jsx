@@ -2,8 +2,17 @@ import { Clock, CreditCard, Plus, Printer } from "lucide-react";
 import { ITEM_STATUSES } from "../../data/constants";
 import { Badge } from "@chakra-ui/react"
 import "./OrderCard.css";
+import { useRef } from "react";
+import { useReactToPrint } from "react-to-print";
+import Bill from "../../pages/OrderList/Bill";
 
 export default function OrderCard({ order, setModal }) {
+   const printRef = useRef(null);
+
+    const handlePrint = useReactToPrint({
+        contentRef: printRef,
+    });
+
   const total = order.items.reduce(
     (sum, i) => sum + i.menuId.price * i.quantity,
     0,
@@ -13,6 +22,7 @@ export default function OrderCard({ order, setModal }) {
   return (
     <div className="order-card">
       {/* Header */}
+      
       <div className="order-card__header">
         <div className="order-card__id-group">
           <div>
@@ -30,14 +40,16 @@ export default function OrderCard({ order, setModal }) {
             </span>
           </div>
           {role != "waiter" && (
-            <button className="btn-action btn-action--print" onClick={()=>print()}>
+            <button className="btn-action btn-action--print" onClick={handlePrint}>
               <Printer size={14} /> Print Bill
             </button>
           )}
         </div>
         {/* <Badge status={order.status} /> */}
       </div>
-
+      <div style={{ display: "none",width:"80mm",fontFamily:"monospace",fontSize:"12px" }}>
+        <Bill  ref={printRef} order={order} />
+      </div>
       <div className="order-card__meta">
         <span>
           <b>Customer:</b> {order.customerNumber}

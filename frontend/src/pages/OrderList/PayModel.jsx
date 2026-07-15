@@ -1,8 +1,9 @@
 import { CheckCircle, X } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import API, { fetchOrders } from "../../utils/api";
 import { useDispatch, useSelector } from "react-redux";
 import { successTable } from "../../redux/slice/tableSlice";
+import { useReactToPrint } from "react-to-print";
 
 const orderTotal = (order) =>
   order.items.reduce((s, i) => s + i.menuId.price * i.quantity, 0);
@@ -10,7 +11,14 @@ const orderTotal = (order) =>
 function PayModal({ order, onClose }) {
   const { tables } = useSelector((state) => state.table);
   const [method, setMethod] = useState(null);
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
+   const componentRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: `Bill-${order.orderNumber}`,
+  });
+
   const subtotal = orderTotal(order);
   const gst = Math.round(subtotal * 0.05);
   const total = subtotal + gst;
