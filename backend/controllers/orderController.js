@@ -207,7 +207,8 @@ const updatePaymentStatus = async (req, res) => {
     order.paymentMethod = isPaid ? paymentMethod : undefined;
 
     await order.save();
-
+    const io = req.app.get("io");
+    io.emit("orderPayment");
     res.status(200).json({
       success: true,
       message: "Payment updated successfully",
