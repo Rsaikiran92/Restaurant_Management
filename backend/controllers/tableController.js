@@ -32,6 +32,8 @@ const updateTable = async (req, res) => {
       new: true,
     });
     const table = await Table.find();
+    const io = req.app.get("io");
+    io.emit("updateTable",table);
     res.json({ msg: "Table item edited", table });
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -162,26 +162,11 @@ const updateOrderStatus = async (req, res) => {
         },
       }
     );
-  
-   const today = new Date();
-    const date = today.toISOString().split("T")[0];
-     const query = {
-      isPaid: false,
-      orderDate: date,
-    };
-
-    // Waiters can only see their own orders
-    if (req.user.role === "waiter") {
-      query.createdBy = req.user.id;
-    }
     
-    const orders = await Order.find(query)
-      .populate("items.menuId")
-      .populate("createdBy", "name");
     const io = req.app.get("io");
-    io.emit("itemStatus", orders);
+    io.emit("itemStatus", {order,status});
   
-    res.json(orders);
+    res.json(order);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
