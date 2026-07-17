@@ -14,6 +14,7 @@ import "../admin.shared.css";
 import "./ManageTables.css";
 import { Toaster,Button } from "@chakra-ui/react";
 import Loading from "../../components/Loading";
+import socket from "../../utils/socket";
 
 const STATUS_CFG = {
   available: {
@@ -41,7 +42,13 @@ export default function ManageTables() {
    const role=localStorage.getItem("role")
 
  useEffect(()=>{
-      fetchTables(dispatch)
+    fetchTables(dispatch)
+    socket.on("updateTable", (table) => {
+      dispatch(successTable(table));
+    });
+     return () => {
+      socket.off("updateTable");
+    };
  },[])
 
   const handleSave = async (form) => {
@@ -300,7 +307,7 @@ export default function ManageTables() {
               {tables.map((t) => {
                 const cfg = STATUS_CFG[t.status];
                 return (
-                  <tr key={t.id}>
+                  <tr key={t._id}>
                     <td style={{ fontWeight: 700 }}>{t.name}</td>
                     <td>
                       <div

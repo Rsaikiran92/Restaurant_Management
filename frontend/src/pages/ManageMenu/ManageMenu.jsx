@@ -83,7 +83,6 @@ export default function ManageMenu() {
 
   useEffect(() => {
     fetchMenu(dispatch);
-    console.log(loading,"sai")
   }, []);
 
   const filtered = menu.filter(

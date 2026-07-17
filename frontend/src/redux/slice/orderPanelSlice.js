@@ -31,7 +31,6 @@ const orderPanelSlice = createSlice({
         return {...state,table:action.payload}
     },
     setLoading:(state,action)=>{
-        console.log("redux",action.payload)
         return {...state,orderPanelLoading:action.payload}
     }
   },

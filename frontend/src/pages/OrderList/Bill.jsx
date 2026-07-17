@@ -1,7 +1,12 @@
 import React from "react";
 
+const orderTotal = (order) =>
+  order.items.reduce((s, i) => s + i.menuId.price * i.quantity, 0);
+
 const Bill = React.forwardRef(({ order, restaurantName = "Spice Garden" }, ref) => {
-    console.log(order)
+  const subtotal = orderTotal(order);
+  const gst = Math.round(subtotal * 0.05);
+  const total = subtotal + gst;
   return (
     <div
       ref={ref}
@@ -104,7 +109,7 @@ const Bill = React.forwardRef(({ order, restaurantName = "Spice Garden" }, ref) 
             Subtotal
           </span>
           <span >
-            ₹{order.totalAmount}
+            ₹{subtotal}
           </span>
         </div>
         <div
@@ -120,7 +125,7 @@ const Bill = React.forwardRef(({ order, restaurantName = "Spice Garden" }, ref) 
             GST (5%)
           </span>
           <span >
-            ₹{order.totalAmount}
+            ₹{gst}
           </span>
         </div>
         {/* Total */}
@@ -140,7 +145,7 @@ const Bill = React.forwardRef(({ order, restaurantName = "Spice Garden" }, ref) 
             TOTAL
           </span>
           <span style={{ fontSize: "16px", fontWeight: 700 }}>
-            ₹{order.totalAmount}
+            ₹{total}
           </span>
         </div>
  

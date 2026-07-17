@@ -7,9 +7,10 @@ import {
   successTable,
 } from "../redux/slice/tableSlice";
 import { errorOrder, loadingOrder, successOrder } from "../redux/slice/orderSlice";
+import { toaster } from "../components/ui/toaster";
 
 const API = axios.create({
-  baseURL: "http://192.168.0.8:5000/api",
+  baseURL: "https://restaurant-management-z2s6.onrender.com/api",
 });
 
 // attach token
@@ -21,10 +22,13 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-// API.interceptors.response.use(
-//   (res) => res,
-//   (err) => Promise.reject(err.error),
-// );
+API.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    toaster.error(error.response?.data?.msg || error.message);
+    return Promise.reject(error);
+  }
+);
 // user login
 export const userLogin = async (state, dispatch, setdata, navigate) => {
   dispatch({ type: "loading", value: true });
@@ -90,7 +94,8 @@ export async function fetchOrders(dispatch) {
     const responce = await API.get("/order");
     dispatch(successOrder(responce.data));
   } catch (error) {
-    dispatch(errorOrder(error));
+    // console.log(error.message,error.msg,"orders")
+    // toaster.error(error.response?.data?.msg || "Something went wrong");
   }
 }
 

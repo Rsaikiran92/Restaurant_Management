@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
 
-const socket = io("http://192.168.0.8:5000");
+const socket = io("https://restaurant-management-z2s6.onrender.com/");
 
 export default socket;

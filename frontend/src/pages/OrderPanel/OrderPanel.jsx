@@ -47,7 +47,12 @@ export default function OrderPanel({ type, onPlace }) {
         }
       });
     });
-
+    socket.on("updateTable", (table) => {
+      dispatch(successTable(table));
+    });
+    return () => {
+      socket.off("updateTable");
+    };
     return () => {
       socket.off("updateMenu");
     };
@@ -130,7 +135,7 @@ export default function OrderPanel({ type, onPlace }) {
   };
 
   return (
-    <div className="order-panel" style={{border:"1px solid green"}} disable>
+    <div className="order-panel" >
       {/* ── Menu ── */}
       {orderPanelLoading && <Box pos="absolute" inset="0" bg="bg/20">
         <Center h="full">

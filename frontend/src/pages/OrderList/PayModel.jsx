@@ -3,21 +3,17 @@ import { useRef, useState } from "react";
 import API, { fetchOrders } from "../../utils/api";
 import { useDispatch, useSelector } from "react-redux";
 import { successTable } from "../../redux/slice/tableSlice";
-import { useReactToPrint } from "react-to-print";
+import { Button } from "@chakra-ui/react";
+import { toaster } from "../../components/ui/toaster";
 
 const orderTotal = (order) =>
   order.items.reduce((s, i) => s + i.menuId.price * i.quantity, 0);
 
-function PayModal({ order, onClose }) {
+function PayModal({ order, onClose ,type}) {
   const { tables } = useSelector((state) => state.table);
   const [method, setMethod] = useState(null);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-   const componentRef = useRef();
-
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-    documentTitle: `Bill-${order.orderNumber}`,
-  });
 
   const subtotal = orderTotal(order);
   const gst = Math.round(subtotal * 0.05);
@@ -30,34 +26,41 @@ function PayModal({ order, onClose }) {
   ];
 
   const handlePay = async () => {
+    setLoading(true);
     try {
       await API.put(`/order/payment/${order._id}`, {
         isPaid: true,
         paymentMethod: method,
       });
+      
+      if(!type=="takeaway"){
+        const table_id=tables.filter((item)=>item.name===order.tableNumber)[0]._id
+        console.log(table_id,"table")
+        const response = await API.put(`/table/${table_id}`, {status: "available"});
+        dispatch(successTable(response.data.table));
+      }
       fetchOrders(dispatch);
-      const table_id=tables.filter((item)=>item.name===order.tableNumber)[0]._id
-      console.log(table_id,"table")
-      const response = await API.put(`/table/${table_id}`, {status: "available"});
-      dispatch(successTable(response.data.table));
-
-      // toaster.success({
-      //   title: "Payment successful",
-      //   description: "Update data successfully to the server",
-      //   closable: false,
-      //   action: {
-      //     label: "ok",
-      //   },
-      // });
+      setLoading(false)
       onClose();
+      toaster.success({
+        title: "Payment successful",
+        description: "Update data successfully to the server",
+        closable: false,
+        action: {
+          label: "ok",
+        },
+      });
+      
     } catch (err) {
       console.log(err);
-      // toaster.create({
-      //   title: "Update failed",
-      //   description: err,
-      //   type: error,
-      // });
-      // dispatch(failed("Failed to edit user informasion. Please try again."));
+      toaster.error({
+        title: "Update failed",
+        description: err,
+        closable: false,
+        action: {
+          label: "ok",
+        },
+      });
     }
   };
 
@@ -66,7 +69,7 @@ function PayModal({ order, onClose }) {
       <div className="modal pay-modal">
         <div className="modal__header">
           <span className="modal__title">Collect Payment</span>
-          <button className="modal__close" onClick={onClose}>
+          <button className="modal__close" onClick={onClose} disabled={loading}>
             <X size={14} />
           </button>
         </div>
@@ -112,7 +115,8 @@ function PayModal({ order, onClose }) {
             ))}
           </div>
 
-          <button
+          <Button
+            loading={loading}
             className="pay-confirm-btn"
             disabled={!method}
             onClick={handlePay}
@@ -121,7 +125,7 @@ function PayModal({ order, onClose }) {
             {method
               ? `Confirm Payment via ${method.toUpperCase()}`
               : "Select a payment method"}
-          </button>
+          </Button>
         </div>
       </div>
     </div>
