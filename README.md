@@ -13,6 +13,8 @@ Real-time restaurant operations powered by **React**, **Node.js**, **Express**, 
 ![Redux](https://img.shields.io/badge/Redux-Toolkit-764ABC?style=for-the-badge&logo=redux)
 ![JWT](https://img.shields.io/badge/JWT-Authentication-000000?style=for-the-badge)
 
+🚀 **Live Demo:**  https://restaurant-management-system-mbmj.onrender.com/
+
 </div>
 
 ---
@@ -24,6 +26,23 @@ Restaurant Management System is a full-stack web application that digitizes rest
 The application simplifies restaurant workflows by managing orders, tables, menus, billing, payments, users, and revenue analytics from a centralized platform.
 
 ---
+
+# 🌐 Live Demo
+
+Experience the application live:
+
+🔗 **Application:**  https://restaurant-management-system-mbmj.onrender.com/
+
+> **Demo Credentials**
+>
+> Use the credentials below to explore different user roles.
+>
+> | Role | Email | Password |
+> |------|-------|----------|
+> | Admin | admin@example.com | ******** |
+> | Waiter | waiter@example.com | ******** |
+> | Kitchen | kitchen@example.com | ******** |
+> | Front Desk | frontdesk@example.com | ******** |
 
 # ✨ Features
 
