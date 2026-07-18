@@ -16,6 +16,68 @@ Orders placed by waiters are pushed instantly to the kitchen using **Socket.IO**
 - **Secure authentication** — JWT-based auth with password hashing via Bcrypt.js
 - **Menu management** — admins can manage menu items and categories
 ---
+### 👨‍💼 Admin
+- Secure Admin Login
+- Dashboard Overview
+- Create, Update & Delete Users
+- Manage Waiters
+- Manage Kitchen Staff
+- Manage Front Desk Staff
+- Manage Menu Items
+- Category-wise Menu Management
+- JWT Authentication
+- Protected Routes
+
+### 🧑‍🍳 Waiter
+- Login Authentication
+- Create New Orders
+- Select Dining Tables
+- Add Menu Items
+- Update Existing Orders
+- Increase/Decrease Item Quantity
+- Add More Items to Existing Orders
+- Send Orders to Kitchen
+- Real-time Order Status
+
+### 🍳 Kitchen
+- View Incoming Orders
+- Real-time Order Updates
+- Order Preparation Status
+- Mark Orders as Completed
+- Track Pending Orders
+
+### 💳 Front Desk
+- View All Active Tables
+- View Order Details
+- Generate Customer Bill
+- Print Bills
+- Update Payment Status
+- Handle Takeaway Orders
+- Manage Customer Checkout
+- 🍴 Menu Management
+- Veg Items
+- Non-Veg Items
+- Starter (Veg)
+- Starter (Non-Veg)
+- Desserts
+- Drinks
+- Item Images
+- Price Management
+- Availability Status
+
+### 🪑 Table Management
+- Create Tables
+- Table Availability
+- Occupied Tables
+- Table-wise Orders
+- Table Status Tracking
+
+### 💰 Billing System
+- Automatic Bill Calculation
+- Quantity-based Pricing
+- GST/Tax Ready Structure
+- Payment Status
+- Printable Invoice
 
 ## ⚙️ Tech Stack
  
