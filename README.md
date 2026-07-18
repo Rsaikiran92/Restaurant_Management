@@ -44,6 +44,21 @@ Experience the application live:
 > | Kitchen | kitchen@example.com | ******** |
 > | Front Desk | frontdesk@example.com | ******** |
 
+
+# 📸 Project Preview
+
+| Login | Dashboard |
+|-------|-----------|
+| ![](https://i.postimg.cc/d1C6MDFL/Screenshot-(20).png) | ![](https://i.postimg.cc/HnHQf23S/Screenshot-(21).png) |
+
+| Create Order |  Orders |
+|---------|----------|
+| ![](https://i.postimg.cc/HkJ7vRdW/Screenshot-(24).png) | ![](https://i.postimg.cc/ncqLsxFw/Screenshot-(26).png) |
+
+| Billing | Revenue |
+|----------|----------|
+| ![](https://i.postimg.cc/zBfN0Z1Z/Screenshot-(25).png) | ![](images/revenue.png) |
+
 # ✨ Features
 
 ## 🔐 Authentication & Authorization
