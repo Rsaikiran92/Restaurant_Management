@@ -9,11 +9,12 @@ import { addOrder, successOrder } from "../../redux/slice/orderSlice";
 import { fetchMenu, fetchOrders } from "../../utils/api";
 import playNotificationSound from "../../components/playNotificationSound";
 import { UserContext } from "../../contextAPI/UserContextapi";
+import Loading from "../../components/Loading";
 
 
 export default function OrdersList({ type }) {
   const [modal, setModal] = useState({}); // "add" | "pay" | "print"
-  const { orders } = useSelector((state) => state.order);
+  const { loading,orders } = useSelector((state) => state.order);
   const dispatch = useDispatch();
   const filtered = orders.filter((o) => o.orderType === type);
   const {data}=useContext(UserContext)
@@ -59,13 +60,14 @@ export default function OrdersList({ type }) {
       </div>
 
       {/* Grid */}
+      {loading?<Loading/>:
       <div className="orders-list__grid">
         {filtered.length === 0 ? (
           <div className="orders-list__empty">No orders found</div>
         ) : (
           filtered.map((order) => <OrderCard key={order.id} order={order} setModal={setModal} key={order._id} />)
         )}
-      </div>
+      </div>}
       {modal.type === "add" && <AddItemsModal id={modal.id} onClose={() => setModal({})} />}
       {modal.type === "pay" && <PayModal order={modal.data} type={type} onClose={() => setModal({})} />}
     </div>

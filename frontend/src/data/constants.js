@@ -42,7 +42,8 @@ export const NAV_GROUPS = [
     label: "View Orders",
     items: [
       { id: "tkList",   label: "Takeaway Orders", icon: "ClipboardList",roles: ["frontdesk","admin"] },
-      { id: "dineList", label: "Dine-in Orders",  icon: "Users"    ,roles: ["frontdesk","admin","waiter"]     },
+      { id: "dineList", label: "Dine-in Orders",  icon: "Users"    ,roles: ["frontdesk","admin","waiter"]},
+      { id: "kitchen", label: "All Orders",  icon: "Users"    ,roles: ["kitchen"]},
     ],
   },
 ];

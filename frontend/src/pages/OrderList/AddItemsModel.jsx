@@ -13,7 +13,7 @@ function AddItemsModal({ onAdd, onClose, id }) {
   const [cat, setCat] = useState("All");
   const [picked, setPicked] = useState({});
   const [loading,setLoading]=useState(false)
-  const {  menu, error } = useSelector((state) => state.menu);
+  const { menu, error } = useSelector((state) => state.menu);
   const dispatch = useDispatch();
   const filtered = menu.filter(
     (m) =>

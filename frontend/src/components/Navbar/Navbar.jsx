@@ -8,7 +8,7 @@ import {
   Users,
 } from "lucide-react";
 import "./Navbar.css";
-import { Avatar, Menu, Portal } from "@chakra-ui/react";
+import { Avatar, Flex, Menu, Portal } from "@chakra-ui/react";
 import { Button, Card, HStack, Stack, Strong, Text } from "@chakra-ui/react";
 import { useContext } from "react";
 import { UserContext } from "../../contextAPI/UserContextapi";
@@ -69,7 +69,7 @@ function Navbar({ pendingCount }) {
             <Portal>
               <Menu.Positioner>
                 <Menu.Content
-                  style={{ backgroundColor: "white", color: "black" }}
+                  style={{ backgroundColor: "white", color: "black",boxShadow:"none",borderRadius:"10px",border:"1px solid #f0d5b0" }}
                 >
                   <div
                     style={{
@@ -78,7 +78,7 @@ function Navbar({ pendingCount }) {
                       padding: "1rem",
                     }}
                   >
-                    <HStack mb="6" gap="3">
+                    <HStack mb="6" gap="3" style={{border:"1px solid #f0d5b0",padding:"15px",borderRadius:"10px"}}>
                       <Avatar.Root>
                         {/* <Avatar.Image src="https://images.unsplash.com/photo-1511806754518-53bada35f930" /> */}
                         <Avatar.Fallback name={data.name} />
@@ -92,8 +92,9 @@ function Navbar({ pendingCount }) {
                         </Text>
                       </Stack>
                     </HStack>
-
-                    <button className="admin-page__add-btn" onClick={handlelogout}>Sign out</button>
+                    <Flex justifyContent={"end"}>
+                    <button className="admin-page__add-btn" onClick={handlelogout}  >Sign out</button>
+                    </Flex>
                   </div>
                 </Menu.Content>
               </Menu.Positioner>

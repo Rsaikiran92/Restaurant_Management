@@ -19,6 +19,7 @@ import { successTable } from "../../redux/slice/tableSlice";
 import { Box } from "@chakra-ui/react";
 import { toaster } from "../../components/ui/toaster";
 import { loadingOrder } from "../../redux/slice/orderSlice";
+import Loading from "../../components/Loading";
 
 export default function OrderPanel({ type, onPlace }) {
   const { cat, phone, query, table,orderPanelLoading } = useSelector((state) => state.orderPanel);
@@ -175,6 +176,7 @@ export default function OrderPanel({ type, onPlace }) {
         </div>
 
         {/* Menu grid */}
+          {loading? <Loading/>:
         <div className="order-panel__menu-grid">
           {filteredMenu.map((item) => {
             const inCart = cart.find((c) => c._id === item._id);
@@ -231,7 +233,7 @@ export default function OrderPanel({ type, onPlace }) {
               </div>
             );
           })}
-        </div>
+        </div>}
       </div>
 
       {/* ── Cart ── */}

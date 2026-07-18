@@ -14,7 +14,6 @@ function AllRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route path="/kitchen" element={<KitchenDashboard/>} />
       <Route element={<PrivateRoute />}>
         <Route element={<MainLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
@@ -25,6 +24,7 @@ function AllRoutes() {
           <Route path="/dine" element={<OrderPanel type="dine" />} />
           <Route path="/tkList" element={<OrdersList type="takeaway" />}/>
           <Route path="/dineList" element={<OrdersList type="dine-in"  />}/>
+          <Route path="/kitchen" element={<KitchenDashboard/>} />
         </Route>
       </Route>
     </Routes>
