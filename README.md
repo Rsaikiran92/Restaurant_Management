@@ -39,10 +39,10 @@ Experience the application live:
 >
 > | Role | Email | Password |
 > |------|-------|----------|
-> | Admin | admin@example.com | ******** |
-> | Waiter | waiter@example.com | ******** |
-> | Kitchen | kitchen@example.com | ******** |
-> | Front Desk | frontdesk@example.com | ******** |
+> | Admin | saikiran@gmail.com | saikiran92 |
+> | Waiter | neeraj@gmail.com | neeraj |
+> | Kitchen | sravan@gmail.com | sravan |
+> | Front Desk | kiran@gmail.com | kiran |
 
 
 # 📸 Project Preview
